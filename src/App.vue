@@ -1,7 +1,7 @@
 <template> 
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <router-link class="navbar-brand text-white" :to="{ name : 'Login' }">OutPick</router-link>
+      <router-link class="navbar-brand text-white" :to="{ name : 'Login' }"><img src="./assets/로고_이미지.png" alt=""></router-link>
   
       <!-- 누르면 항목들이 나오는 버튼 -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -58,6 +58,15 @@ export default {
 nav{
   background-color: #0D2DA2;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* 강조된 그림자 효과 */
+}
+
+.navbar-nav{
+  /* 가운데 정렬... */
+}
+
+img{
+  width: 100px;
+  height: 50px;
 }
 
 </style>
