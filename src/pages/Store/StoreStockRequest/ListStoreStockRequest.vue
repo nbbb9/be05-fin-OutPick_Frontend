@@ -1,7 +1,7 @@
 <template>
-  <div>
-    Login !!!
-  </div>
+    <div>
+      List Store Stock Request
+    </div>
 </template>
 
 <script>

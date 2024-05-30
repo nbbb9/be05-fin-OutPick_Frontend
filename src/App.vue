@@ -1,5 +1,6 @@
 <template> 
-  <nav class="navbar navbar-expand-lg">
+
+  <nav v-if="showNav" class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <router-link class="navbar-brand text-white" :to="{ name : 'Login' }"><img src="./assets/로고_이미지.png" alt=""></router-link>
   
@@ -19,7 +20,7 @@
           <li class="nav-item">
             <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">통계/분석</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAdmin">
             <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">관리자</router-link>
           </li>
         </ul>
@@ -34,13 +35,20 @@
 </template>
 
 <script>
+import {useStore} from 'vuex';
+import { computed } from 'vue';
 
 export default {
   name: 'App',
   setup(){
 
+    const store = useStore();
+    let showNav = computed( () => store.state.showNav )
+    let isAdmin = computed( () => store.state.isAdmin)
+
     return{
-      
+      showNav,
+      isAdmin
     }
   }
 }
@@ -62,6 +70,9 @@ nav{
 
 .navbar-nav{
   /* 가운데 정렬... */
+  display: flex;
+  align-items: center;
+
 }
 
 img{
