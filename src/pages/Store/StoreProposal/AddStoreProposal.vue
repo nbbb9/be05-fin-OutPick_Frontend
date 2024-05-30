@@ -30,12 +30,12 @@
           </select>
         </div>
 
-        <textarea
-          class="form-control listDiv-content content"
-          rows="14"
-          v-model="content"
-          placeholder="내용을 입력해 주세요"
-        ></textarea>
+          <textarea
+            class="form-control listDiv-content content"
+            rows="14"
+            v-model="content"
+            placeholder="내용을 입력해 주세요"
+          ></textarea>
 
         <button class="btn btn-dark" @click="addProposal" >추가</button>
       </div>
