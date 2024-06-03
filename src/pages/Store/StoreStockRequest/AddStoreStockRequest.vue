@@ -22,7 +22,7 @@
     <div class="AddSales">
 
     <div class="row row-right mt-5">
-      <div class="col-2" >
+      <div class="col-2 seeList" @click="initial">
         <h5>요청 상품 검색</h5>
       </div>
       <div class="col-2" >
@@ -55,7 +55,7 @@
           <th>핏</th>
         </thead>
         <tbody>
-          <tr v-for="(pd,index) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === index }">
+          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === pd.product_id }">
             <td>{{ pd.product_id }}</td>
             <td>{{ pd.name }}</td>
             <td>{{ pd.color }}</td>
@@ -125,6 +125,11 @@ export default {
     searchSalesText.value = "";
   }
 
+    // 상품 검색 초기화
+    const initial = () => {
+      copy_pd_list.value = [...production_list.value];
+    }
+
     // 재고 요청서 추가
     const inputAmount = ref();
     const selectPdId = ref();
@@ -137,8 +142,8 @@ export default {
           production_list.value = response.data
           copy_pd_list.value = [...production_list.value];
         })
-        .catch(() => {
-          console.log("ㅈ됨");
+        .catch((e) => {
+          console.log("error : ", e.message);
         })
     }
 
@@ -148,7 +153,7 @@ export default {
     const selectedIndex = ref();
     const selectSeles = ( select_id ) => {
       console.log("선택된 상품의 아이디 : ", select_id)
-      selectedIndex.value = select_id-1
+      selectedIndex.value = select_id
       selectPdId.value = select_id
     }
 
@@ -161,7 +166,6 @@ export default {
         product_id : selectPdId.value,
         amount : inputAmount.value
       }
-      console.log(data);
       // axios - 재고 요청서 추가 건의
       await store_stock_request_add(data)
         .then(() => {
@@ -233,7 +237,8 @@ export default {
       ifSuccess,
       ifFalse,
       currentDate,
-      selectedIndex
+      selectedIndex,
+      initial
     }
   }
 
@@ -252,6 +257,11 @@ export default {
 
 div{
   font-family: "Gowun Dodum", sans-serif; 
+}
+
+/* hover시 그림자 효과 */
+.seeList:hover{
+text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403); 
 }
 
 /* 아이템 가운데 정렬 */
