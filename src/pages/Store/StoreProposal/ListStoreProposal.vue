@@ -42,8 +42,8 @@
         </thead>
         <tbody  >
           <!-- v-for="(st, index) in copy_st_list" :key="st.stockId" -->
-          <tr v-on:click="select(p.proposal_id)" v-for="(p, index) in copy_p_list" :key="p.proposal_id" >
-            <td>{{ index+1 }}</td>
+          <tr v-on:click="select(p.proposal_id)" v-for="(p) in copy_p_list" :key="p.proposal_id" >
+            <td>{{ p.proposal_id }}</td>
             <td>{{ p.title }}</td>
             <td>{{ p.date }}</td>
             <td>{{ p.category }}</td>
@@ -64,14 +64,14 @@
         내용
       </div>
       <div class="listDiv-content mt-2 mb-3 content" >
-        {{p_view.content}}
+        {{ p_view ? p_view.content : 내용}}
       </div>
 
       <div>
         해결방안
       </div>
       <div class="listDiv-content mt-2 mb-3 content" >
-        {{p_view.solution}}
+        {{ p_view ? p_view.solution : 해결방안}}
       </div>
     </div>
 
@@ -83,6 +83,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import {store_proposal_list} from "@/axios.js"
 
 export default {
   components : {
@@ -93,37 +94,44 @@ export default {
     const searchText = ref(''); // search text
     let search_result = ref(false); // search 결과
 
-    const proposal_list = ref([{
-      proposal_id : 1,
-      shop_id : 1,
-      title : "tlqkf",
-      content : "tlqkf",
-      date : "2023.03.23",
-      category : "상품",
-      completed : "n",
-      solution : "시발!"
-    }]); // 최초 list정보만을 담을 배ㅕㅇㄹ
+    const proposal_list = ref([]); // 최초 list정보만을 담을 배ㅕㅇㄹ
     const copy_p_list = ref([{}]); // search를 위한 배열
 
-    const p_view = ref({
-      content : "집에 가고 싶어요!!!",
-      solution : "가세요!!!"
-    }); // 상세 정보를 위한 변수
+    const p_view = ref(); // 상세 정보를 위한 변수
 
 
     // 클릭시 상세 정보 출력
-    const select = (id) => {
-      console.log("debug >> " , id);
+    const select = (proposal_id) => {
+      console.log("debug >> " , proposal_id);
 
       p_view.value = proposal_list.value.filter( (p) => {
-        return p.proposal_id === id;
+        return p.proposal_id === proposal_id;
       })[0]
+
+      console.log(p_view.value);
     }
 
     // 건의사항 리스트 받아오기
-    const getProposalList = () => {
+    const store = useStore();   // store 변수
+    const getProposalList = async () => {
       // axios - 건의사항 리스트 받아오기 구현
-      copy_p_list.value = [...proposal_list.value];
+      await store_proposal_list(store.state.loginStoreId)
+        .then((response) => {
+          proposal_list.value = response.data;
+
+          proposal_list.value.forEach((item) => {
+            const fullDate = item.date
+
+            const year = fullDate.slice(0, 4);
+            const month = fullDate.slice(5, 7);
+            const day = fullDate.slice(8, 10);
+
+            item.date = `${year}-${month}-${day}`;
+          });
+
+          copy_p_list.value = [...proposal_list.value];
+        })
+      
     }
 
     getProposalList();
@@ -136,7 +144,6 @@ export default {
     }
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-    const store = useStore();   // store 변수
     const triggerShow = () => {
       store.dispatch('triggerShow', false);
       console.log(store.state.showNav)

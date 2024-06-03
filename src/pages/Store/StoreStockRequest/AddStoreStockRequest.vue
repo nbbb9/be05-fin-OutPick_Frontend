@@ -15,7 +15,7 @@
         요청 일자
       </div>
       <div class="col-8 listDiv">
-        2023.03.23
+        {{currentDate}}
       </div>
     </div>
 
@@ -44,29 +44,40 @@
 
     <hr>
 
-    <table class="table table-hover border-gray" >
-      <thead>
-        <th>상품 이름</th>
-        <th>계절</th>
-        <th>색깔</th>
-        <th>성별</th>
-        <th>사이즈</th>
-        <th>핏</th>
-      </thead>
-      <tbody>
-        <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" >
-          <td>{{ pd.product_id }}</td>
-          <td>{{ pd.name }}</td>
-          <td>{{ pd.season }}</td>
-          <td>{{ pd.gender }}</td>
-          <td>{{ pd.size }}</td>
-          <td>{{ pd.fit }}</td>
-          <td><button v-on:click.prevent="selectSeles(pd.product_id)" class="btn btn btn-dark">선택</button></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="listDiv">  
+      <table class="table table-hover border-gray" >
+        <thead>
+          <th>상품 이름</th>
+          <th>계절</th>
+          <th>색깔</th>
+          <th>성별</th>
+          <th>사이즈</th>
+          <th>핏</th>
+        </thead>
+        <tbody>
+          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id">
+            <td>{{ pd.product_id }}</td>
+            <td>{{ pd.name }}</td>
+            <td>{{ pd.color }}</td>
+            <td>{{ pd.gender }}</td>
+            <td>{{ pd.size }}</td>
+            <td>{{ pd.fit }}</td>
+            <td><button v-on:click.prevent="selectSeles(pd.product_id)" class="btn btn btn-dark selectBtn" >선택</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     </div>
+
+    <div v-if="ifSuccess" class="alert alert-info mt-4">
+      정상적으로 등록 되었습니다!
+    </div>
+
+    <div v-if="ifFalse" class="alert alert-danger mt-4">
+      등록에 실패 하였습니다!
+    </div>
+
   </div>
 
 </template>
@@ -76,6 +87,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import { store_stock_request_add, product_list } from "@/axios.js"
 
 export default {
   components : {
@@ -83,23 +95,16 @@ export default {
   },
   setup(){
 
+    // 오늘 일자 
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const currentDate = `${year}-${month}-${day}`;
+
     // 상품 검색
     const searchSalesText = ref('');  // search sales 
-    const production_list = ref([{
-      product_id : 1,
-      name : "검정 반팔티",
-      season : "겨울",
-      gender : "혼용",
-      size : 100,
-      fit : "기본핏"
-    }, {
-      product_id : 2,
-      name : "남색 반팔티",
-      season : "봄",
-      gender : "혼용",
-      size : 100,
-      fit : "기본핏"
-    }]);  // 상품 정보를 담을 배열
+    const production_list = ref([]);  // 상품 정보를 담을 배열
     const copy_pd_list = ref([]);
 
     const searchSales = () => {
@@ -125,8 +130,16 @@ export default {
     const selectPdId = ref();
 
     // 전체 상품 정보 get
-    const get_all_pd = () => {
-      copy_pd_list.value = [...production_list.value];
+    const get_all_pd = async () => {
+
+      await product_list()
+        .then((response) => {
+          production_list.value = response.data
+          copy_pd_list.value = [...production_list.value];
+        })
+        .catch(() => {
+          console.log("ㅈ됨");
+        })
     }
 
     get_all_pd();
@@ -137,16 +150,24 @@ export default {
       selectPdId.value = select_id
     }
 
-      const addRequest = () => {
-        const data = {
-          shop_id : store.state.loginStoreId,
-          product_id : selectPdId.value,
-          amount : inputAmount.value
-        }
-
-        console.log(data);
-
-        // axios - 재고 요청서 추가 건의
+    // 재고 요청서 등록
+    const ifSuccess = ref(false);
+    const ifFalse = ref(false);
+    const addRequest = async () => {
+      const data = {
+        shop_id : store.state.loginStoreId,
+        product_id : selectPdId.value,
+        amount : inputAmount.value
+      }
+      console.log(data);
+      // axios - 재고 요청서 추가 건의
+      await store_stock_request_add(data)
+        .then(() => {
+          ifSuccess.value = true;
+        })
+        .catch( () => {
+          ifFalse.value = true;
+        })
     }
   
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
@@ -206,7 +227,10 @@ export default {
       copy_pd_list,
       selectSeles,
       searchSalesText,
-      inputAmount
+      inputAmount,
+      ifSuccess,
+      ifFalse,
+      currentDate
     }
   }
 
@@ -236,6 +260,8 @@ div{
 
 /* list scroll, list 그림자 */
 .listDiv{
+  max-height : 30vh;
+  overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
 }
 

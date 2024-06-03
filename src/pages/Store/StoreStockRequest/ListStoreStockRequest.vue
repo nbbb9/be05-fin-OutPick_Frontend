@@ -33,7 +33,7 @@
         <thead>
           <tr>
             <th>요청서 ID</th>
-            <th>매장 이름</th>
+            <th>요청 상품 이름</th>
             <th>요청일</th>
             <th>결재상태</th>
           </tr>
@@ -42,9 +42,9 @@
           <!--  -->
           <tr v-on:click="select(rq.stock_request_id)" v-for="(rq) in copy_rq_list" :key="rq.stock_request_id" >
             <td>{{ rq.stock_request_id }}</td>
-            <td>{{rq.name}}</td>
-            <td>{{rq.request_date}}</td>
-            <td>{{rq.approval}}</td>
+            <td>{{ rq.product_name }}</td>
+            <td>{{ rq.request_date }}</td>
+            <td>{{ rq.approval }}</td>
             <!-- <td>{{  }}</td> -->
           </tr>
         </tbody>
@@ -82,7 +82,7 @@
                   담당자
                 </div>
                 <div class="col-6 row-left">
-                  ?
+                  {{ rq_view.employee_name }}
                 </div>
               </div>
             </div>
@@ -98,16 +98,21 @@
               </div>
             </div>
           </div>
-          <div class="row mt-2 atr">
-            <div class="col-4" >
-              날짜
-            </div>
-            <div class="col-8">
-              {{ rq_view.request_date }}
-            </div>
-          </div>
 
-          상품 데이터
+          <table class="mt-4 table border-gray" >
+            <thead>
+              <th>요청 상품 ID</th>
+              <th>요청 상품</th>
+              <th>수량</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{ rq_view.product_id }}</td>
+                <td>{{ rq_view.product_name }}</td>
+                <td>{{  rq_view.amount  }}</td>
+              </tr>
+            </tbody>
+          </table>
 
         </div>
         
@@ -123,6 +128,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import {store_stock_request_list} from "@/axios.js"
 
 export default {
   components : {
@@ -139,26 +145,32 @@ export default {
     const rq_view = ref(); // 상세정보를 위한 변수
 
     // 재고 요청서 검색 
-    const request_list = ref([{
-      stock_request_id : 1,
-      name : "검정 반팔티",
-      amount : "2",
-      request_date : "2024-05-29",
-      approval : "반려"
-    }, {
-      stock_request_id : 2,
-      name : "남색 반팔티",
-      amount : "99",
-      request_date : "2024-05-28",
-      approval : "승인"
-    }]);  // 재고 요청서 리스트를 담을 배열
+    const request_list = ref([]);  // 재고 요청서 리스트를 담을 배열
     const copy_rq_list = ref([]);
 
     // 재고 요청서 리스트 get
-    const get_all_rq = () => {
+    const get_all_rq = async () => {
       // axios - 재고 요청서 리스트 받아오기
+      await store_stock_request_list(store.state.loginStoreId)
+        .then( (response) => {
+          request_list.value = response.data;
 
-      copy_rq_list.value = [...request_list.value];
+          console.log(request_list.value)
+          
+          // 날짜 형식 바꾸기
+          request_list.value.forEach((item) => {
+            const fullDate = item.request_date
+
+            const year = fullDate.slice(0, 4);
+            const month = fullDate.slice(5, 7);
+            const day = fullDate.slice(8, 10);
+
+            item.request_date = `${year}-${month}-${day}`;
+          });
+
+          copy_rq_list.value = [...request_list.value];
+        })
+
     }
 
     get_all_rq();
