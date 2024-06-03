@@ -69,7 +69,7 @@
         <button v-on:click="searchSales()" class="btn btn-outline-light text-black" >검색</button>
       </div>
       <div class="col-2" >
-        <h5>요청 수량</h5>
+        <h5>판매 수량</h5>
       </div>
       <div class="col-2" >
         <input v-model="inputAmount" type="text" class="form-control" >
@@ -77,6 +77,14 @@
       <div class="col-2" >
         <button  v-on:click="addSales()" class="btn btn-outline-light text-black">추가</button>
       </div>
+    </div>
+
+    <div v-if="ifSuccess" class="alert alert-info mt-4">
+      정상적으로 등록 되었습니다!
+    </div>
+
+    <div v-if="ifFalse" class="alert alert-danger mt-4">
+      등록에 실패 하였습니다!
     </div>
 
     <hr>
@@ -93,7 +101,7 @@
           <th>핏</th>
         </thead>
         <tbody>
-          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" >
+          <tr v-for="(pd, index) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === index }">
             <td>{{ pd.product_id }}</td>
             <td>{{ pd.name }}</td>
             <td>{{ pd.season }}</td>
@@ -119,7 +127,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
-import {product_list, store_sales_list} from "@/axios.js"
+import {product_list, store_sales_list, store_sales_add} from "@/axios.js"
 
 export default {
   components : {
@@ -171,6 +179,27 @@ export default {
   const inputAmount = ref();
   const selectPdId = ref();
 
+  // 상품 판매 추가
+  const ifSuccess = ref(false);
+  const ifFalse = ref(false);
+  const addSales = async () => {
+
+    let data = {
+      product_id : selectPdId.value,
+      quantity : inputAmount.value
+    }
+
+    await store_sales_add(data)
+      .then(() => {
+        ifSuccess.value = true;
+      })
+      .catch(()=> {
+        ifFalse.value = true;
+      })
+
+    console.log("debug >> " , data);
+  }
+
   // 전체 상품 정보 get
   const get_all_pd = async () => {
 
@@ -195,22 +224,12 @@ export default {
   const copy_pd_list = ref([]);
 
   // 상품 선택
+  const selectedIndex = ref();
   const selectSeles = ( select_id ) => {
     console.log("선택된 상품의 아이디 : ", select_id)
+    selectedIndex.value = select_id-1
     selectPdId.value = select_id
   }
-
-  // 상품 판매 추가
-  const addSales = () => {
-
-    let data = {
-      product_id : selectPdId.value,
-      quantity : inputAmount.value
-    }
-
-    console.log("debug >> " , data);
-  }
-
 
   // 검색
   const searchSales = () => {
@@ -293,7 +312,10 @@ export default {
     searchSalesText,
     addSales,
     inputAmount,
-    searchSalesList
+    searchSalesList,
+    ifSuccess,
+    ifFalse,
+    selectedIndex
   }
 }
 

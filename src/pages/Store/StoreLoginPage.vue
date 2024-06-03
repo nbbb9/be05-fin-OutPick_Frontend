@@ -1,7 +1,7 @@
 <template>
     <div class="container" >
       <div class="mt-5" >
-        <img src="@/assets/로고_이미지.png" alt="">
+        <img src="@/assets/로고_아웃픽_forshop.png" alt="">
       </div>
 
       <div>
