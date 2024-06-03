@@ -36,19 +36,18 @@
               <th>상품ID</th>
               <th>상품 이름</th>
               <th>재고</th>
-              <th>카테고리</th>
               <th>색상</th>
               <th>사이즈</th>
             </tr>
           </thead>
           <tbody  >
             <!--  -->
-            <tr v-on:click="select(st.product_id)" v-for="(st) in copy_st_list" :key="st.shop_stock_id" >
+            <tr v-on:click="select(st.shop_stock_id)" v-for="(st) in copy_st_list" :key="st.shop_stock_id" >
               <td>{{ st.product_id }}</td>
               <td>{{ st.product_name }}</td>
               <td>{{ st.stock }}개</td>
-              <td>{{ st.category }}</td>
-              <td>{{  }}</td>
+              <td>{{ st.color }}</td>
+              <td>{{ st.size }}</td>
             </tr>
           </tbody>
         </table>
@@ -59,8 +58,7 @@
       </div>
 
       <div class="row row-right mt-5">
-        <h5>검정 티 상세</h5>
-        <!-- 나중에 상세정보 이름 {stock_view.name}으로 구현 -->
+        <h5>상품 상세</h5>
       </div>
 
       <div class="row listDiv" >
@@ -76,14 +74,13 @@
           </thead>
           <tbody>
           <tr>
-            <td>{{stock_view.color}}</td>
+            <td>{{stock_view.date}}</td>
             <td>{{stock_view.season}}</td>
             <td>{{stock_view.gender}}</td>
             <td>{{stock_view.fit}}</td>
-            <td>{{stock_view.size}}</td>
+            <td>{{stock_view.discount}}</td>
             <td>{{stock_view.consumer_price}}</td>
             <td>{{stock_view.first_cost}}</td>
-            <!-- <td>{{ pd_view.content }}</td> -->
           </tr>
           </tbody>
         </table>
@@ -128,21 +125,30 @@ export default {
     
 
     // 클릭시 상세 정보 출력
-    const select = async (product_id) => {
-      // api 호출이 아니라 stock_list에서 filter하기
-      await product_detail(product_id)
+    const select = async (stockid) => {
+      await product_detail(stockid)
         .then( (response) => {
           console.log(response.data);
 
-          stock_view.value = response.data[0];
+          stock_view.value = response.data;
+
+          // date 형식 맞추기
+          const fullDate = stock_view.value.date;
+
+          // 년, 월, 일 부분만 추출
+          const year = fullDate.slice(0, 4);
+          const month = fullDate.slice(5, 7);
+          const day = fullDate.slice(8, 10);
+
+          // 원하는 형식으로 날짜 문자열 만들기
+          stock_view.value.date = `${year}-${month}-${day}`;
         })
     }
 
     // 검색
     const search = () => {
       copy_st_list.value = stock_list.value.filter( (shop_stock) => {
-        shop_stock
-        // return shop_stock.shop_stock_id == shop_stock_id;
+        return shop_stock.product_name.includes(searchText.value);
       });
     }
 

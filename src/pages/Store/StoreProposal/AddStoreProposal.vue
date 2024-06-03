@@ -10,6 +10,14 @@
 
     <hr>
 
+    <div v-if="ifSuccess" class="alert alert-info mt-4">
+      정상적으로 등록 되었습니다!
+    </div>
+
+    <div v-if="ifFalse" class="alert alert-danger mt-4">
+      등록에 실패 하였습니다!
+    </div>
+
     <div class="mt-1 pt-2 pb-2 listDiv">
 
       <div class="row margin" >
@@ -41,6 +49,8 @@
       </div>
 
     </div>
+
+    
   
   </div>
 </template>
@@ -50,6 +60,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import {store_proposal_add} from '@/axios.js'
 
 export default {
   components : {
@@ -61,8 +72,12 @@ export default {
     const category = ref();
     const content = ref();
 
-    const addProposal = () => {
+    // 건의사항 작성
+    const ifSuccess = ref(false);
+    const ifFalse = ref(false);
+    const addProposal = async () => {
       const data = {
+        shop_id : store.state.loginStoreId,
         title : title.value,
         category : category.value,
         content : content.value
@@ -71,6 +86,13 @@ export default {
       console.log(data);
 
       // axios - 건의사항 추가 구현
+      await store_proposal_add(data)
+        .then(() => {
+          ifSuccess.value = true;
+        })
+        .catch(() => {
+          ifFalse.value = true;
+        })
     }
   
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
@@ -127,7 +149,9 @@ export default {
       title,
       category,
       content,
-      addProposal
+      addProposal,
+      ifSuccess,
+      ifFalse
     }
   }
 
