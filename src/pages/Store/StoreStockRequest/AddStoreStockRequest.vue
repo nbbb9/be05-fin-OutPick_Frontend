@@ -55,7 +55,7 @@
           <th>핏</th>
         </thead>
         <tbody>
-          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id">
+          <tr v-for="(pd,index) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === index }">
             <td>{{ pd.product_id }}</td>
             <td>{{ pd.name }}</td>
             <td>{{ pd.color }}</td>
@@ -145,8 +145,10 @@ export default {
     get_all_pd();
 
     // 상품 선택
+    const selectedIndex = ref();
     const selectSeles = ( select_id ) => {
       console.log("선택된 상품의 아이디 : ", select_id)
+      selectedIndex.value = select_id-1
       selectPdId.value = select_id
     }
 
@@ -230,7 +232,8 @@ export default {
       inputAmount,
       ifSuccess,
       ifFalse,
-      currentDate
+      currentDate,
+      selectedIndex
     }
   }
 

@@ -17,6 +17,11 @@ export function store_stock_list(shopId){
     return user_axios.get(`/store/stock/list/${shopId}`)
 }
 
+// 매장 판매 추가
+export function store_sales_add(data) {
+    return user_axios.post('/store/sales/add', data)
+}
+
 // 매장 판매 리스트
 export function store_sales_list(shopId) {
     return user_axios.get(`/store/sales/list/${shopId}`)
