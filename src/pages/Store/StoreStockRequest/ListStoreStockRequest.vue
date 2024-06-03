@@ -154,8 +154,6 @@ export default {
       await store_stock_request_list(store.state.loginStoreId)
         .then( (response) => {
           request_list.value = response.data;
-
-          console.log(request_list.value)
           
           // 날짜 형식 바꾸기
           request_list.value.forEach((item) => {
@@ -196,8 +194,6 @@ export default {
 
     // 클릭시 상세 정보 출력
     const select = (stock_request_id) => {
-      console.log("not happy!!");
-
       rq_view.value = request_list.value.filter( (rq) => {
         return rq.stock_request_id === stock_request_id;
       } )[0]

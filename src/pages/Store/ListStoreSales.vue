@@ -59,7 +59,7 @@
   <div class="AddSales">
 
     <div class="row row-right mt-5">
-      <div class="col-2" >
+      <div class="col-2 seeList" @click="initialProduct" >
         <h5>판매 상품 검색</h5>
       </div>
       <div class="col-2" >
@@ -101,7 +101,7 @@
           <th>핏</th>
         </thead>
         <tbody>
-          <tr v-for="(pd, index) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === index }">
+          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === pd.product_id }">
             <td>{{ pd.product_id }}</td>
             <td>{{ pd.name }}</td>
             <td>{{ pd.season }}</td>
@@ -153,7 +153,6 @@ export default {
     await store_sales_list(store.state.loginStoreId)
       .then((response) => {
         sales_list.value = response.data;
-        console.log(sales_list.value);
 
         // 날짜 형식 바꾸기
         sales_list.value.forEach((item) => {
@@ -174,6 +173,11 @@ export default {
   }
 
   get_sales_list();
+
+  // 검색 초기화
+  const initial = () => {
+    copy_s_list.value = [...sales_list.value];
+  }
 
   // 판매 추가
   const inputAmount = ref();
@@ -196,8 +200,6 @@ export default {
       .catch(()=> {
         ifFalse.value = true;
       })
-
-    console.log("debug >> " , data);
   }
 
   // 전체 상품 정보 get
@@ -227,7 +229,7 @@ export default {
   const selectedIndex = ref();
   const selectSeles = ( select_id ) => {
     console.log("선택된 상품의 아이디 : ", select_id)
-    selectedIndex.value = select_id-1
+    selectedIndex.value = select_id
     selectPdId.value = select_id
   }
 
@@ -248,6 +250,11 @@ export default {
     }
 
     searchSalesText.value = "";
+  }
+
+  // 상품 검색 초기화
+  const initialProduct = () => {
+    copy_pd_list.value = [...production_list.value];
   }
 
   // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
@@ -315,7 +322,9 @@ export default {
     searchSalesList,
     ifSuccess,
     ifFalse,
-    selectedIndex
+    selectedIndex,
+    initial,
+    initialProduct
   }
 }
 
