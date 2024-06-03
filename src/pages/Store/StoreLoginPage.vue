@@ -5,7 +5,7 @@
       </div>
 
       <div>
-        <form v-on:submit.prevent="store_login()" class="mt-5" >
+        <form v-on:submit.prevent="storeLogin()" class="mt-5" >
           <table class="table table-borderless ">
             <tbody>
               <tr>
@@ -37,12 +37,12 @@
 import {useStore} from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { store_login } from "@/axios.js"
 
 export default {
 
   setup(){
 
-    
     // 로그인 실패시 팝업을 띄울 변수
     const ifFalse = ref(false);
 
@@ -50,6 +50,40 @@ export default {
     let store_name = ref("");
     let store_email = ref("");
     let store_admin_name = ref("");
+
+    //router
+    const router = useRouter();
+
+    // 매장 로그인 요청
+    const storeLogin =  async () => {
+      
+      let data = {
+        name : store_name.value,
+        email : store_email.value,
+        manager : store_admin_name.value
+      };
+
+      console.log(data);
+
+      // axios - post : 매장 로그인
+      await store_login(data) 
+        .then( (response) => {
+
+          // 로그인 성공시 vuex에 변수 저장
+          store.dispatch('triggerLoginStoreId', response.data.shop_id);
+          store.dispatch('triggerLoginStoreUser', data.manager);
+          store.dispatch('triggerLoginStoreName', data.name)
+          // 페이지 이동
+          router.push({
+            name : "ListStoreStock"
+          })
+        })
+        .catch( () => {
+          // 로그인 실패시 실패했다는 팝업
+          ifFalse.value = true;
+        })
+  
+    }
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const store = useStore();   // store 변수
@@ -59,34 +93,8 @@ export default {
     }
     triggerShow();
 
-    //router
-    const router = useRouter();
-
-    // 매장 로그인 요청
-    const store_login = () => {
-      // 매장 로그인 요청 구현
-      
-      let data = {
-        name : store_name.value,
-        email : store_email.value,
-        manager : store_admin_name.value
-      }
-
-      console.log(data);
-
-      // 로그인 성공일 때
-      router.push({
-        name : "ListStoreStock"
-      })
-
-      // 로그인 실패일 때
-      // ifFalse.value = true;
-  
-    }
-
-
     return{
-      store_login,
+      storeLogin,
       ifFalse,
       store_name,
       store_email,
