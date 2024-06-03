@@ -1,6 +1,12 @@
 import { createStore } from "vuex";
+import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
+    plugins : [
+        createPersistedState()
+        // 만약 state 변수가 늘어난다면   
+        // paths로 설정해주기
+    ],
     state : {
         // 전역 변수
         showNav : true,
@@ -20,7 +26,7 @@ export default createStore({
         LoginStoreId(state, payload){
             state.loginStoreId = payload;
         },
-        LoginStore(state, payload){
+        LoginStoreUser(state, payload){
             state.loginStoreUser = payload
         },
         LoginStoreName(state, payload){
@@ -38,8 +44,8 @@ export default createStore({
         triggerLoginStoreId({commit}, payload){
             commit('LoginStoreId', payload)
         },
-        triggerLoginStore({commit}, payload){
-            commit('LoginStore', payload)
+        triggerLoginStoreUser({commit}, payload){
+            commit('LoginStoreUser', payload)
         },
         triggerLoginStoreName({commit}, payload){
             commit('LoginStoreName', payload)

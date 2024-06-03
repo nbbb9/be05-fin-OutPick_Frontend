@@ -81,28 +81,31 @@
 
     <hr>
 
-    <table class="table table-hover border-gray" >
-      <thead>
-        <th>상품 이름</th>
-        <th>계절</th>
-        <th>색깔</th>
-        <th>성별</th>
-        <th>사이즈</th>
-        <th>핏</th>
-      </thead>
-      <tbody>
-        <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" >
-          <td>{{ pd.product_id }}</td>
-          <td>{{ pd.name }}</td>
-          <td>{{ pd.season }}</td>
-          <td>{{ pd.gender }}</td>
-          <td>{{ pd.size }}</td>
-          <td>{{ pd.fit }}</td>
-          <td><button v-on:click.prevent="selectSeles(pd.product_id)" class="btn">선택</button></td>
-        </tr>
-      </tbody>
+    <div class="listDiv">
+      <table class="table table-hover border-gray" >
+        <thead>
+          <th>상품 이름</th>
+          <th>계절</th>
+          <th>색깔</th>
+          <th>성별</th>
+          <th>사이즈</th>
+          <th>핏</th>
+        </thead>
+        <tbody>
+          <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" >
+            <td>{{ pd.product_id }}</td>
+            <td>{{ pd.name }}</td>
+            <td>{{ pd.season }}</td>
+            <td>{{ pd.gender }}</td>
+            <td>{{ pd.size }}</td>
+            <td>{{ pd.fit }}</td>
+            <td><button v-on:click.prevent="selectSeles(pd.product_id)" class="btn">선택</button></td>
+          </tr>
+        </tbody>
 
-    </table>
+      </table>
+    </div>
+    
 
   </div>
 
@@ -114,6 +117,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import {product_list} from "@/axios.js"
 
 export default {
   components : {
@@ -133,30 +137,28 @@ export default {
   const selectPdId = ref();
 
   // 전체 상품 정보 get
-  const get_all_pd = () => {
-    copy_pd_list.value = [...production_list.value];
+  const get_all_pd = async () => {
+
+    await product_list()
+      .then((response) => {
+
+        production_list.value = response.data;
+
+        copy_pd_list.value = [...production_list.value];
+      })
+      .catch((e) => {
+        console.log(e.message);
+      })
+
+    
   }
+
+  get_all_pd();
 
   // 상품 검색
   const searchSalesText = ref('');  // search sales 
-  const production_list = ref([{
-    product_id : 1,
-    name : "검정 반팔티",
-    season : "겨울",
-    gender : "혼용",
-    size : 100,
-    fit : "기본핏"
-  }, {
-    product_id : 2,
-    name : "남색 반팔티",
-    season : "봄",
-    gender : "혼용",
-    size : 100,
-    fit : "기본핏"
-  }]);  // 상품 정보를 담을 배열
+  const production_list = ref([]);  // 상품 정보를 담을 배열
   const copy_pd_list = ref([]);
-
-  get_all_pd();
 
   // 상품 선택
   const selectSeles = ( select_id ) => {
@@ -164,6 +166,7 @@ export default {
     selectPdId.value = select_id
   }
 
+  // 상품 판매 추가
   const addSales = () => {
 
     let data = {

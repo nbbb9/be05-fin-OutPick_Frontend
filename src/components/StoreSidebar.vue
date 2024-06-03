@@ -5,7 +5,7 @@
 
       <div class="loginStoreUser" >
         {{ loginStoreName }} <br>
-        {{ loginStoreUser }}
+        {{ loginStoreUser }} 님
       </div>
 
       <ul>

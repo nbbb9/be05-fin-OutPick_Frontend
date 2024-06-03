@@ -14,7 +14,7 @@
             <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control" >
           </div>
           <div class="col-2" >
-            <button class="btn btn-outline-light text-black" >검색</button>
+            <button @click="search" class="btn btn-outline-light text-black" >검색</button>
           </div>
         </form>
       </div>
@@ -37,16 +37,18 @@
               <th>상품 이름</th>
               <th>재고</th>
               <th>카테고리</th>
+              <th>색상</th>
+              <th>사이즈</th>
             </tr>
           </thead>
           <tbody  >
-            <!-- v-for="(st, index) in copy_st_list" :key="st.stockId" -->
-            <tr v-on:click="select()" >
-              <td>1</td>
-              <td>검정 반팔티</td>
-              <td>300개</td>
-              <td>반팔</td>
-              <!-- <td>{{  }}</td> -->
+            <!--  -->
+            <tr v-on:click="select(st.product_id)" v-for="(st) in copy_st_list" :key="st.shop_stock_id" >
+              <td>{{ st.product_id }}</td>
+              <td>{{ st.product_name }}</td>
+              <td>{{ st.stock }}개</td>
+              <td>{{ st.category }}</td>
+              <td>{{  }}</td>
             </tr>
           </tbody>
         </table>
@@ -65,26 +67,22 @@
         <table class="table border-gray">
           <thead>
             <th>입고일</th>
-            <th>색상</th>
             <th>계절</th>
             <th>성별</th>
             <th>핏</th>
-            <th>사이즈</th>
             <th>할인율</th>
             <th>소비자 판매가</th>
             <th>판매가</th>
           </thead>
           <tbody>
           <tr>
-            <td>2023.03.02</td>
-            <td>검정</td>
-            <td>봄</td>
-            <td>혼용</td>
-            <td>기본핏</td>
-            <td>100</td>
-            <td>30%</td>
-            <td>15400</td>
-            <td>7900</td>
+            <td>{{stock_view.color}}</td>
+            <td>{{stock_view.season}}</td>
+            <td>{{stock_view.gender}}</td>
+            <td>{{stock_view.fit}}</td>
+            <td>{{stock_view.size}}</td>
+            <td>{{stock_view.consumer_price}}</td>
+            <td>{{stock_view.first_cost}}</td>
             <!-- <td>{{ pd_view.content }}</td> -->
           </tr>
           </tbody>
@@ -99,6 +97,7 @@ import {useStore} from "vuex"
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
+import { store_stock_list, product_detail } from "@/axios.js";
 
 export default {
   components : {
@@ -106,77 +105,112 @@ export default {
   },
   setup(){
 
-  const searchText = ref(''); // search text
-  let search_result = ref(false); // search 결과
+    const store = useStore();   // store 변수
 
-  const stock_list = ref([]); // 최초 list정보만을 담을 배ㅕㅇㄹ
-  const copy_st_list = ref([{}]); // search를 위한 배열
-  const stock_view = ref(); // 상세정보를 위한 변수
+    const searchText = ref(''); // search text
+    let search_result = ref(false); // search 결과
 
-  // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-  const store = useStore();   // store 변수
-  const triggerShow = () => {
-    store.dispatch('triggerShow', false);
-    console.log(store.state.showNav)
-  }
-  triggerShow();
+    const stock_list = ref([]); // 최초 list정보만을 담을 배열
+    const copy_st_list = ref([{}]); // search를 위한 배열
+    const stock_view = ref({}); // 상세정보를 위한 변수
 
-  // 클릭시 상세 정보 출력
-  const select = () => {
-    console.log("not happy!!");
-  }
+    // 전체 재고 리스트를 얻기 위한 메서드
+    const get_stock_list = async () => {
+      await store_stock_list(store.state.loginStoreId)
+        .then((response) => {
+          stock_list.value = response.data;
 
-  // 메뉴 이동
-  const router = useRouter();
-  const selectMenu = (selectMenu) => {
-    console.log(selectMenu);
-
-    switch (selectMenu) {
-      case 1:
-        router.push({
-          name : "ListStoreStock"
+          copy_st_list.value = [...stock_list.value];
         })
-        break;
-      case 2:
-        router.push({
-          name : "AddStoreStockRequest"
-        })
-        break;
-      case 3 :
-        router.push({
-          name : "ListStoreStockRequest"
-        })
-        break;
-      case 4 :
-        router.push({
-          name : "ListStoreSales"
-        })
-        break;
-      case 5 :
-        router.push({
-          name : "AddStoreProposal"
-        })
-        break;
-      case 6 :
-        router.push({
-          name : "ListStoreProposal"
-        })
-        break;
-      default:
-        break;
     }
-    
-  }
 
-  return{
-    select,
-    searchText,
-    search_result,
-    copy_st_list,
-    stock_list,
-    stock_view,
-    selectMenu
-  }
+    get_stock_list();
+    
+
+    // 클릭시 상세 정보 출력
+    const select = async (product_id) => {
+      // api 호출이 아니라 stock_list에서 filter하기
+      await product_detail(product_id)
+        .then( (response) => {
+          console.log(response.data);
+
+          stock_view.value = response.data[0];
+        })
+    }
+
+    // 검색
+    const search = () => {
+      copy_st_list.value = stock_list.value.filter( (shop_stock) => {
+        shop_stock
+        // return shop_stock.shop_stock_id == shop_stock_id;
+      });
+    }
+
+    // 재고 조회 버튼 누르면 검색 초기화
+    const initial = () => {
+      copy_st_list.value = [...stock_list.value];
+    }
+
+    // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
+    const triggerShow = () => {
+      store.dispatch('triggerShow', false);
+      console.log(store.state.showNav)
+    }
+    triggerShow();
+
+    // 메뉴 이동
+    const router = useRouter();
+    const selectMenu = (selectMenu) => {
+      console.log(selectMenu);
+
+      switch (selectMenu) {
+        case 1:
+          router.push({
+            name : "ListStoreStock"
+          })
+          break;
+        case 2:
+          router.push({
+            name : "AddStoreStockRequest"
+          })
+          break;
+        case 3 :
+          router.push({
+            name : "ListStoreStockRequest"
+          })
+          break;
+        case 4 :
+          router.push({
+            name : "ListStoreSales"
+          })
+          break;
+        case 5 :
+          router.push({
+            name : "AddStoreProposal"
+          })
+          break;
+        case 6 :
+          router.push({
+            name : "ListStoreProposal"
+          })
+          break;
+        default:
+          break;
+      }
+      
+    }
+
+    return{
+      select,
+      initial,
+      search,
+      searchText,
+      search_result,
+      copy_st_list,
+      stock_list,
+      stock_view,
+      selectMenu
+    }
 }
  
 }
