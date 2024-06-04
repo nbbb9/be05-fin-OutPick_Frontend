@@ -13,8 +13,7 @@ export default createStore({
         isAdmin : true,
         loginStoreId : 1,
         loginStoreUser : "여경원 매니저님",
-        loginStoreName : "신대방삼거리역",
-        sseConnect : null
+        loginStoreName : "신대방삼거리역"
     },
     mutations : {
         // 전역 변수 상태 변경 메소드
@@ -32,9 +31,6 @@ export default createStore({
         },
         LoginStoreName(state, payload){
             state.loginStoreName = payload
-        },
-        SseConnect(state, payload){
-            state.sseConnect = payload
         }
     },
     actions : {
@@ -53,9 +49,6 @@ export default createStore({
         },
         triggerLoginStoreName({commit}, payload){
             commit('LoginStoreName', payload)
-        },
-        triggerSseConnect({commit}, payload){
-            commit('SseConnect', payload)
         }
     }   
 })

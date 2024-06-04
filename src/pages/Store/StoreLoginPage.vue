@@ -77,14 +77,7 @@ export default {
           router.push({
             name : "ListStoreStock"
           })
-          // 통신 객체가 담겨짐
-          const sse = new EventSource("http://localhost:8080/connect");
 
-          store.dispatch('triggerSseConnect', sse);
-
-          if(sse){
-            console.log(sse);
-          }
         })
         .catch( () => {
           // 로그인 실패시 실패했다는 팝업
@@ -100,15 +93,6 @@ export default {
       console.log(store.state.showNav)
     }
     triggerShow();
-
-    // 통신 객체가 담겨짐
-    // const sse = new EventSource("http://localhost:8080/connect");
-
-    // store.dispatch('triggerSseConnect', sse);
-
-    // if(sse){
-    //   console.log(sse);
-    // }
 
     return{
       storeLogin,

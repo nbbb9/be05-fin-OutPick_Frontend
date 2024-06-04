@@ -21,15 +21,15 @@
   
 <script>
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 
 export default {
     emits : ["StoreSidebar"],
     setup(props, context){
 
         const store = useStore();
-        const loginStoreUser = computed( () => store.state.loginStoreUser )
-        const loginStoreName = computed( () => store.state.loginStoreName )
+        const loginStoreUser = computed( () => store.state.loginStoreUser );
+        const loginStoreName = computed( () => store.state.loginStoreName );
 
         const select = (id) => {
 
@@ -38,14 +38,36 @@ export default {
           context.emit("StoreSidebar", id)
         }
 
-        const sseconnect = store.state.sseConnect
+        //const sseconnect = store.state.sseconnect
 
-        sseconnect.addEventListener('proposal_solution', (e) => {
-          const {data : receivedConnectData } = e;
-          console.log('connect proposal_solution : ', receivedConnectData);
+        let sseconnect;
+
+        // onMounted(() => {
+        //     if (sseconnect instanceof EventSource) {
+        //         sseconnect.addEventListener('proposal_solution', (e) => {
+        //             const { data: receivedConnectData } = e;
+        //             console.log('connect proposal_solution:', receivedConnectData);
+        //         });
+        //     } else {
+        //         console.error('sseconnect is not an instance of EventSource');
+        //     }
+        // });
+
+        onBeforeMount(() => {
+            try {
+                sseconnect = new EventSource('http://localhost:8080/connect');
+                console.log(sseconnect);
+                sseconnect.addEventListener('proposal_solution', (e) => {
+                    if (sseconnect) {
+                      sseconnect.close();
+                    }
+                    const { data: receivedConnectData } = e;
+                    console.log('connect proposal_solution:', receivedConnectData);
+                });
+            } catch (error) {
+                console.error('Failed to initialize EventSource:', error);
+            }
         });
-
-        console.log(sseconnect);
 
         return {
             select,
