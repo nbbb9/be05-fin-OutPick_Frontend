@@ -21,7 +21,7 @@
   
 <script>
 import { useStore } from 'vuex';
-import { computed, onBeforeMount } from 'vue';
+import { computed, onBeforeUnmount } from 'vue';
 
 export default {
     emits : ["StoreSidebar"],
@@ -38,22 +38,12 @@ export default {
           context.emit("StoreSidebar", id)
         }
 
-        //const sseconnect = store.state.sseconnect
-
         let sseconnect;
 
-        // onMounted(() => {
-        //     if (sseconnect instanceof EventSource) {
-        //         sseconnect.addEventListener('proposal_solution', (e) => {
-        //             const { data: receivedConnectData } = e;
-        //             console.log('connect proposal_solution:', receivedConnectData);
-        //         });
-        //     } else {
-        //         console.error('sseconnect is not an instance of EventSource');
-        //     }
-        // });
+        onBeforeUnmount( () => {
 
-        onBeforeMount(() => {
+          console.log("dsfsd");
+
             try {
                 sseconnect = new EventSource('http://localhost:8080/connect');
                 console.log(sseconnect);
