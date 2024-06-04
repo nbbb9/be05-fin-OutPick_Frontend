@@ -2,6 +2,11 @@ import {createRouter, createWebHistory} from "vue-router";
 
 import Login from "@/pages/LoginPage.vue"
 import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
+
+// 본 프로그램
+import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
+
+// 매장
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
 import AddStoreStockRequest from "@/pages/Store/StoreStockRequest/AddStoreStockRequest.vue"
 import ListStoreStockRequest from "@/pages/Store/StoreStockRequest/ListStoreStockRequest.vue"
@@ -20,6 +25,12 @@ const router = createRouter({
             name : "Login",
             component : Login
         },
+        {
+            path : "/shop_list",
+            name : "ListShop",
+            component : ListShop
+        },
+        // 매장
         {
             path : "/store_login",
             name : "StoreLogin",
