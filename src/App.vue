@@ -2,8 +2,8 @@
 
   <nav v-if="showNav" class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <router-link class="navbar-brand text-white" :to="{ name : 'Login' }"><img src="./assets/로고_이미지.png" alt=""></router-link>
-  
+      <router-link class="navbar-brand text-white" :to="{ name : 'Login' }"><img src="./assets/로고_이미지.png" alt=""></router-link>     
+
       <!-- 누르면 항목들이 나오는 버튼 -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -25,6 +25,11 @@
           </li>
         </ul>
       </div>
+
+      <div style="color: white">
+        {{ loginUserName }} 님
+      </div>
+
     </div>
   </nav>
 
@@ -45,10 +50,12 @@ export default {
     const store = useStore();
     let showNav = computed( () => store.state.showNav )
     let isAdmin = computed( () => store.state.isAdmin)
+    let loginUserName = computed( () => store.state.loginUserName);
 
     return{
       showNav,
-      isAdmin
+      isAdmin,
+      loginUserName
     }
   }
 }

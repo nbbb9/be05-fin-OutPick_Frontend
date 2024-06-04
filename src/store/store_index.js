@@ -11,6 +11,8 @@ export default createStore({
         // 전역 변수
         showNav : true,
         isAdmin : true,
+        loginToken : "",
+        loginUserName : "여경원",
         loginStoreId : 1,
         loginStoreUser : "여경원 매니저님",
         loginStoreName : "신대방삼거리역"
@@ -22,6 +24,12 @@ export default createStore({
         },
         IsAdmin(state, payload){
             state.isAdmin = payload;
+        },
+        LoginToken(state, payload){
+            state.loginToken = payload;
+        },
+        LoginUserName(state, payload){
+            state.loginUserName = payload;
         },
         LoginStoreId(state, payload){
             state.loginStoreId = payload;
@@ -40,6 +48,12 @@ export default createStore({
         },
         triggerIsAdmin({commit}, payload){
             commit('IsAdmin', payload)
+        },
+        triggerLoginToken({commit}, payload){
+            commit('LoginToken', payload)
+        },
+        triggerLoginUserName({commit}, payload){
+            commit('LoginUserName', payload)
         },
         triggerLoginStoreId({commit}, payload){
             commit('LoginStoreId', payload)

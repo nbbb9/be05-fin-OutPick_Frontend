@@ -7,6 +7,23 @@ let user_axios = axios.create({
     }
 });
 
+// 일반 로그인
+export function login(data) {
+    return user_axios.post('/user/login', data);
+}
+
+// 로그인 정보 얻어오기
+export function login_info_get(token) {
+    return user_axios.get('/user/getInfo', {
+        headers : {
+            login_token : token
+        }
+    })
+}
+
+
+////////////////////////////////////////////////////
+
 // 매장 로그인
 export function store_login(data) {
     return user_axios.post('/store/login', data);
