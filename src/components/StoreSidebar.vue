@@ -38,6 +38,15 @@ export default {
           context.emit("StoreSidebar", id)
         }
 
+        const sseconnect = store.state.sseconnect
+
+        // sseconnect.addEventListener('proposal_solution', (e) => {
+        //   const {data : receivedConnectData } = e;
+        //   console.log('connect proposal_solution : ', receivedConnectData);
+        // });
+
+        console.log(sseconnect);
+
         return {
             select,
             loginStoreUser,
