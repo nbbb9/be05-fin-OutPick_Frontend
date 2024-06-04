@@ -102,13 +102,9 @@ export default {
 
     // 클릭시 상세 정보 출력
     const select = (proposal_id) => {
-      console.log("debug >> " , proposal_id);
-
       p_view.value = proposal_list.value.filter( (p) => {
         return p.proposal_id === proposal_id;
       })[0]
-
-      console.log(p_view.value);
     }
 
     // 건의사항 리스트 받아오기

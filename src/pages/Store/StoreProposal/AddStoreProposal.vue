@@ -83,8 +83,6 @@ export default {
         content : content.value
       }
 
-      console.log(data);
-
       // axios - 건의사항 추가 구현
       await store_proposal_add(data)
         .then(() => {

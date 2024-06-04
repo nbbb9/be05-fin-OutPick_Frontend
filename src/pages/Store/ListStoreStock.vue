@@ -128,7 +128,6 @@ export default {
     const select = async (stockid) => {
       await product_detail(stockid)
         .then( (response) => {
-          console.log(response.data);
 
           stock_view.value = response.data;
 
