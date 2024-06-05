@@ -12,7 +12,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">매장</router-link>
+            <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'ListShop'}">매장</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">재고</router-link>
