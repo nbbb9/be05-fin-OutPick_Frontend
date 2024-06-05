@@ -7,6 +7,14 @@ let user_axios = axios.create({
     }
 });
 
+//전체 매장 리스트
+export function shop_list(){
+    return user_axios.get('/shop/tolist/all');
+}
+//담당 매장 리스트
+export function shop_my_list(shopid){
+    return user_axios.get(`/shop/detail/${shopid}`);
+}
 
 
 // 건의사항 리스트
