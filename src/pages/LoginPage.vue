@@ -12,7 +12,15 @@
               <td> <input v-model="employee_number" type="text" placeholder="사원번호" class="form-control"></td>
             </tr>
             <tr>
-              <td> <input v-model="password" type="text" placeholder="비밀번호" class="form-control"></td>
+              <td> <input v-model="password" type="password" placeholder="비밀번호" class="form-control"></td>
+            </tr>
+            <tr>
+              <td> 
+                <select class="form-select" v-model="role" >
+                  <option value="사원">사원</option>
+                  <option value="관리자">관리자</option>
+                </select> 
+              </td>
             </tr>
           </tbody>
         </table>
@@ -64,12 +72,13 @@ setup(){
   const router = useRouter();
 
   // 로그인 요청
+  const role = ref();
   const origin_login =  async () => {
     
     let data = {
       employee_number : employee_number.value,
       password : password.value,
-      role : "사원"
+      role : role.value
     };
 
     // axios - post : 매장 로그인
@@ -82,6 +91,7 @@ setup(){
         login_info_get(store.state.loginToken)
           .then( (response) => {
             store.dispatch('triggerLoginUserName', response.data.name);
+            store.dispatch('triggerLoginUserId', response.data.id);
           })
           .catch((e) => {
             console.log("error : ", e.message);
@@ -112,6 +122,7 @@ setup(){
     ifFalse,
     employee_number,
     password,
+    role
   } 
 }
 }
@@ -124,7 +135,7 @@ img{
   height: 300px;
 }
 
-input{
+input, select{
   background-color: #FFFFDB;
   border-radius: 1em;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2); 

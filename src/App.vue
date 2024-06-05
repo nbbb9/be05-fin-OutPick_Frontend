@@ -21,7 +21,7 @@
             <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">통계/분석</router-link>
           </li>
           <li class="nav-item" v-if="isAdmin">
-            <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'Login'}">관리자</router-link>
+            <router-link class="nav-link active text-white" aria-current="page" :to="{name : 'ListEmployee'}">관리자</router-link>
           </li>
         </ul>
       </div>
