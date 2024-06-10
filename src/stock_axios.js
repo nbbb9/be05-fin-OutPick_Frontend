@@ -20,8 +20,13 @@ export function user_shop_list(token) {
 export function shop_item_list(shopId, token) {
     return user_axios.get(`/shopstock/${shopId}`, {
         headers: {
-            'login_token': token
+            login_token: token
         }
     })
+}
+
+// 할인율 수정
+export function update_discount(productName, discount) {
+    return user_axios.put(`/discount`, {productName}, discount)
 }
 

@@ -8,7 +8,7 @@
         <div class="top-space-2">
             <h3>매장별 재고 조회</h3>
         </div>
-        <form v-on:submit.prevent="search" class="flex top-space-2">
+        <form v-on:submit.prevent="search" class="flex top-space-4">
           <div class="block-1">
             <h6>매장 선택</h6>
             <select v-model="shop_name" class="form-control">
@@ -41,8 +41,8 @@
       
       <!-- 조회 -->
       <div>
-      <div>
-        <table class="table table-hover border-gray top-space-4">
+      <div class="listDiv">
+        <table class="table table-hover border-gray top-space-4 ">
           <thead>
             <tr>
               <th>상품명</th>
@@ -52,9 +52,9 @@
           </thead>
           <tbody>
             <tr v-for="(i) in unique_items" :key="i.product_id">
-              <td @click="show_detail">{{ i.product_name }}</td>
-              <td @click="show_detail">{{ i.stock_date }}</td>
-              <td @click="show_detail">{{ i.discount }}</td>
+              <td @click="show_detail(i.product_name)">{{ i.product_name }}</td>
+              <td @click="show_detail(i.product_name)">{{ i.stock_date }}</td>
+              <td @click="show_detail(i.product_name)">{{ i.discount }}</td>
             </tr>
           </tbody>
         </table>
@@ -68,25 +68,50 @@
     <div class="chooseItem">
       <div class=flex>
       <div>
-        <h5 class="top-space-4 block-2">선택 상품 조회</h5>
+        <h5 class="top-space-12 block-2">선택 상품 조회</h5>
       </div>
     </div>
-      <div>
+      <div class="listDiv">
         <table class="table table-hover border-gray top-space-2">
           <thead>
-            <tr class="flex">
-              <th class="block-1">상품ID</th>
-              <th class="block-3">상품명</th>
-              <th class="block-1">사이즈</th>
-              <th class="block-1">색상</th>
-              <th class="block-2">입고일</th>
-              <th class="block-1">할인율</th>
+            <tr>
+              <th>상품ID</th>
+              <th>상품명</th>
+              <th>사이즈</th>
+              <th>색상</th>
+              <th>재고</th>
+              <th>입고일</th>
+              <th>할인율</th>
             </tr>
           </thead>
+          <tbody>
+            <tr v-for="(id) in item_detail" :key="id.product_id">
+              <th>{{ id.product_id }}</th>
+              <th :v-model="product_name">{{ id.product_name }}</th>
+              <th>{{ id.size }}</th>
+              <th>{{ id.color }}</th>
+              <th>{{ id.stock }}</th>
+              <th>{{ id.stock_date }}</th>
+              <th>{{ id.discount }}
+                <button @click="show_modal" class="btn btn-outline-light text-black">수정</button>
+                <StockModal
+                  v-if="is_modal_visible"
+                  :is_visible="is_modal_visible"
+                  modal_message="할인율 입력"
+                  @close="is_modal_visible = false"
+                  @submit="update_discount_rate"
+                />
+              </th>
+            </tr>
+          </tbody>
         </table> 
       </div>
     </div>
+
+
     <div class="container">
+
+
 
     </div>  <!-- sidebar -->
 </div>
@@ -96,9 +121,13 @@
   <script>
   import { ref, watchEffect, computed } from 'vue';
   import { useStore } from 'vuex';
-  import { user_shop_list, shop_item_list } from '@/stock_axios';
-  export default {
+  import { user_shop_list, shop_item_list, update_discount } from '@/stock_axios';
+  import StockModal from '@/components/StockModal.vue';
 
+  export default {
+    components : {
+      StockModal
+    },
     setup() {
 
       // 매장 선택
@@ -133,6 +162,7 @@
         });
       });
 
+      // shop_id 찾기
       watchEffect(() => {
         const shop = shop_list.value.find(s => s.name === shop_name.value);
         if (shop) {
@@ -140,6 +170,7 @@
         }
       });
 
+      // 아이템 리스트 불러오기
       watchEffect(async () => {
         if (shop_id.value) {
           try {
@@ -151,10 +182,67 @@
         }
       })
 
+      // 상세정보 불러오기
+      const item_detail = ref([]);
+
+      const show_detail = (product_name) => {
+        const items = item_list.value.filter(item => item.product_name === product_name);
+        if (items.length) {
+          item_detail.value = items;
+        }
+      }
+
+      // 할인율 수정
+
+      const is_modal_visible = ref(false);
+      const discount_rate = ref();
+
+      const show_modal = () => {
+        try{
+          is_modal_visible.value = true;
+          console.log("완료!");
+          console.log(is_modal_visible.value);
+        } catch(e) {
+          console.error(e.error);
+        }
+        
+        
+      }
+
+      
+      const product_name = ref();
+
+      const update_discount_rate = async (discount_rate) => {
+        await update_discount(product_name.value, discount_rate)
+          .then
+      }
+
+
+
+      // const update_discount_rate = async () => {
+      //   await update_discount(product_name, discount_rate.value)
+      //     .then ((response) => {
+      //       if(product_name === shop_item_list.product_name) {
+      //         shop_item_list.discount = discount_rate.value;
+      //       }
+      //     })
+      //     .catch(e => {
+      //       console.log(e.message)
+      //     })
+      // }
+      
+
       return{
       shop_list,
       shop_name,
-      unique_items
+      unique_items,
+      item_detail,
+      show_detail,
+      is_modal_visible,
+      discount_rate,
+      show_modal,
+      handleInput,
+      update_discount
       }
         
     
@@ -248,6 +336,10 @@ vertical-align: middle;
 
 .top-space-2 {
   margin-top: 2%;
+}
+
+.top-space-12 {
+  margin-top: 12%
 }
 
 </style>
