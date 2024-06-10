@@ -16,3 +16,12 @@ export function user_shop_list(token) {
     })
 }
 
+// 매장의 전체 재고
+export function shop_item_list(shopId, token) {
+    return user_axios.get(`/shopstock/${shopId}`, {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+

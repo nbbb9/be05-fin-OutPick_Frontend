@@ -5,15 +5,17 @@
 
       <!-- 제목, 검색창 -->
       <div>
-        <form v-on:submit.prevent="search" class="flex top-space-4">
+        <div class="top-space-2">
+            <h3>매장별 재고 조회</h3>
+        </div>
+        <form v-on:submit.prevent="search" class="flex top-space-2">
           <div class="block-1">
-            <h6>매장별 재고 조회</h6>
-            
-            <select class="form-control">
-              <option v-for="(sl) in shop_list" :key=sl.shop_id>{{ sl.name }}</option>
+            <h6>매장 선택</h6>
+            <select v-model="shop_name" class="form-control">
+              <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
-          <div class="flex block-3 top-space-2">
+          <div class="flex block-3 row-right top-space-4">
             <div class="block-3">
               <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
             </div>
@@ -42,19 +44,17 @@
       <div>
         <table class="table table-hover border-gray top-space-4">
           <thead>
-            <tr class="flex">
-              <th class="block-3">상품명</th>
-              <th class="block-1">재고</th>
-              <th class="block-2">입고일</th>
-              <th class="block-2">할인율</th>
+            <tr>
+              <th>상품명</th>
+              <th>입고일</th>
+              <th>할인율</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(s) in copy_stock_list" :key="s.product_id">
-              <td>{{ s.product_name }}</td>
-              <td>{{ s.stock }}</td>
-              <td>{{ s.stock_date }}</td>
-              <td>{{ s.discount }}</td>
+            <tr v-for="(i) in unique_items" :key="i.product_id">
+              <td @click="show_detail">{{ i.product_name }}</td>
+              <td @click="show_detail">{{ i.stock_date }}</td>
+              <td @click="show_detail">{{ i.discount }}</td>
             </tr>
           </tbody>
         </table>
@@ -94,13 +94,15 @@
 </template>
   
   <script>
-  import { ref } from 'vue';
+  import { ref, watchEffect, computed } from 'vue';
   import { useStore } from 'vuex';
-  import { user_shop_list } from '@/stock_axios';
+  import { user_shop_list, shop_item_list } from '@/stock_axios';
   export default {
 
     setup() {
-      const shop_list = ref([]);
+
+      // 매장 선택
+      const shop_list = ref([]); // 매장 리스트를 담는 변수
 
       const store = useStore();
       const get_user_shop_list = async () => {
@@ -116,8 +118,43 @@
 
       get_user_shop_list();
       
+      // 매장 재고 전체 리스트
+      const shop_name = ref();
+      const shop_id = ref();
+      const item_list = ref([]);
+
+      // 중복된 상품 제거
+      const unique_items = computed(() => {
+        const seen = new Set();
+        return item_list.value.filter(item => {
+          const duplicate = seen.has(item.product_name);
+          seen.add(item.product_name);
+          return !duplicate;
+        });
+      });
+
+      watchEffect(() => {
+        const shop = shop_list.value.find(s => s.name === shop_name.value);
+        if (shop) {
+          shop_id.value = shop.shop_id;
+        }
+      });
+
+      watchEffect(async () => {
+        if (shop_id.value) {
+          try {
+            const response = await shop_item_list(shop_id.value, store.state.loginToken);
+            item_list.value = response.data;
+          } catch (e) {
+            console.error(e.message);
+          }
+        }
+      })
+
       return{
-      shop_list
+      shop_list,
+      shop_name,
+      unique_items
       }
         
     
