@@ -32,21 +32,46 @@ export function shop_my_detail(shopid, token){
 
 
 // 건의사항 리스트
-export function proposal_list(data){
-    return user_axios.get('/proposal/list', data)
+export function proposal_list(token){
+    return user_axios.get('/proposal/list',{
+        headers : {
+            login_token : token
+        }
+    });
 }
 
 // 건의사항 상세보기
-export function proposal_detail(propsalId, data){
-    return user_axios.get(`/proposal/${propsalId}`, data)
+export function proposal_detail(propsalId, token){
+    return user_axios.get(`/proposal/${propsalId}`,{
+        headers : {
+            login_token : token
+        }
+    })
 }
 
 // 건의문 해결방안 작성
-export function proposal_solution(data){
-    return user_axios.get('/proposal/solution_write', data)
+export function proposal_solution(data, token){
+    return user_axios.put('/proposal/solution_write', data, {
+        headers: {
+            login_token : token
+        }
+    })
 }
 
 // 건의문 해결완료
-export function propsal_check(data){
-    return user_axios.get('/proposal/checkComplete', data)
+// export function proposal_check(token){
+//     return user_axios.put('/proposal/checkComplete',{
+//         headers : {
+//             login_token : token
+//         }
+//     })
+// }
+export function proposal_check(data, token) {
+    return user_axios.put('/proposal/checkComplete', data, {
+        headers: {
+            login_token: token
+        }
+    });
 }
+
+

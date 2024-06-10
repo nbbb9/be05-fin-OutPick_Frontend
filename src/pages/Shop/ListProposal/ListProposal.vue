@@ -1,280 +1,398 @@
 <template>
-  <div class="container" >
+  <div class="container-fluid p-1">
+    <div class="row mt-4">
+      <h5 class="text-left">건의사항</h5>
+    </div>
 
     <!-- sidebar -->
     <ShopSidebar @ShopSidebar="selectMenu" />
 
     <!-- 검색창 -->
-    <div class="search_div">
-      <form v-on:submit.prevent="search" class="row mt-4" >
-        <div class="col-3" >
-          <h5>건의사항</h5>
+    <div class="search_div row mt-4">
+      <div class="col-4">
+        <input type="text" v-model="searchText" placeholder="검색할 내용을 입력해주세요." class="form-control">
+      </div>
+      <div class="col-1">
+        <button class="btn btn-outline-light text-black" @click="search">검색</button>
+      </div>
+      <div class="col-1">
+        <button class="btn btn-outline-light text-black" @click="resetSearch">초기화</button>
+      </div>
+    </div>
+
+    <div class="row mt-3">
+      <!-- 리스트 -->
+      <div class="col-7 listDiv">
+        <table class="table table-hover border-gray">
+          <thead>
+            <tr>
+              <th>건의사항 ID</th>
+              <th>제목</th>
+              <th>요청일</th>
+              <th>카테고리</th>
+              <th>해결 여부</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-on:click="select(p.proposal_id)" v-for="(p) in copy_p_list" :key="p.proposal_id">
+              <td>{{ p.proposal_id }}</td>
+              <td>{{ p.title }}</td>
+              <td>{{ p.date }}</td>
+              <td>{{ p.category }}</td>
+              <td>{{ p.completed }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 상세 내용 -->
+      <div class="col-5">
+        <div v-if="p_view" class="detail-view p-3">
+          <h6 class="mb-4 text-left">건의사항 상세</h6>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+            <strong>지점</strong>
+            <div>{{ p_view.shop_name }}</div>
+          </div>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+            <strong>제목</strong>
+            <div>{{ p_view.title }}</div>
+          </div>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+            <strong>날짜</strong>
+            <div>{{ p_view.date }}</div>
+          </div>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+            <strong>담당자</strong>
+            <div>{{ p_view.manager }}</div>
+          </div>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+            <strong>카테고리</strong>
+            <div>{{ p_view.category }}</div>
+          </div>
+          <div class="mb-3 p-2 border rounded">
+            <strong class="d-block text-left">내용</strong>
+            <div class="mt-2 listDiv-content text-left">
+              {{ p_view.content }}
+            </div>
+          </div>
+          <div class="mb-3 p-2 border rounded">
+            <strong class="d-block text-left">해결방안</strong>
+            <div class="mt-2 listDiv-content text-left">
+              {{ p_view.solution }}
+            </div>
+          </div>
+          <div class="button-container text-center mt-auto">
+            <button class="btn btn-primary" @click="openSolutionModal">해결방안 작성</button>
+            <button class="btn btn-primary" @click="checkComplete">해결 완료</button>
+          </div>
         </div>
-        <div class="col-7" >
-          <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control" >
+
+        <div v-else class="detail-view p-3">
+          <h6 class="mb-4 text-left">건의사항 상세</h6>
+          <p>건의사항을 선택해 주세요.</p>
         </div>
-        <div class="col-2" >
-          <button class="btn btn-outline-light text-black" >검색</button>
+      </div>
+    </div>
+
+    <!-- 해결방안 작성 모달 -->
+    <div v-if="showSolutionModal" class="modal" tabindex="-1" style="display: block;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">해결방안 작성</h5>
+            <button type="button" class="btn-close" @click="closeSolutionModal"></button>
+          </div>
+          <div class="modal-body">
+            <textarea v-model="solutionText" class="form-control" rows="5" placeholder="해결방안을 입력하세요"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeSolutionModal">닫기</button>
+            <button type="button" class="btn btn-primary" @click="saveSolution">저장</button>
+          </div>
         </div>
-      </form>
-    </div>
-
-    <hr>
-
-    <!-- 재고 조회 -->
-    <div class="row row-right mt-4" >
-      <div class="col">
-        <h5 class="seeList" @click="initial" >건의사항 조회</h5>
       </div>
     </div>
-
-    <div class="row mt-1 listDiv" >
-
-      <table class="table table-hover border-gray" >
-        <thead>
-          <tr>
-            <th>건의사항 ID</th>
-            <th>제목</th>
-            <th>작성일</th>
-            <th>카테고리</th>
-            <th>해결여부</th>
-          </tr>
-        </thead>
-        <tbody  >
-          <!-- v-for="(st, index) in copy_st_list" :key="st.stockId" -->
-          <tr v-on:click="select(p.proposal_id)" v-for="(p) in copy_p_list" :key="p.proposal_id" >
-            <td>{{ p.proposal_id }}</td>
-            <td>{{ p.title }}</td>
-            <td>{{ p.date }}</td>
-            <td>{{ p.category }}</td>
-            <td v-bind:style="{ color: p.completed === 'y' ? 'red' : 'blue' }" >{{ p.completed }}</td>
-            <!-- <td>{{  }}</td> -->
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div v-if="search_result" class="alert alert-info mt-3" >
-      검색 결과가 존재하지 않습니다.
-    </div>
-
-    <div class="margin text-left" >
-
-      <div class="mt-4 " >
-        내용
-      </div>
-      <div class="listDiv-content mt-2 mb-3 content" >
-        {{ p_view ? p_view.content : 내용}}
-      </div>
-
-      <div>
-        해결방안
-      </div>
-      <div class="listDiv-content mt-2 mb-3 content" >
-        {{ p_view ? p_view.solution : 해결방안}}
-      </div>
-    </div>
-
   </div>
 </template>
 
 <script>
-import {useStore} from "vuex"
-import { ref } from 'vue';
-import ShopSidebar from '@/components/ShopSidebar.vue'
+import { useStore } from "vuex";
+import { ref, watch } from 'vue';
+import ShopSidebar from '@/components/ShopSidebar.vue';
 import { useRouter } from 'vue-router';
-import { proposal_list } from "@/axios.js"
+import { proposal_list, proposal_check, proposal_solution } from "@/shop_axios.js";
 
 export default {
-  components : {
+  components: {
     ShopSidebar
   },
-  setup(){
+  setup() {
+    const store = useStore();
+    const router = useRouter();
 
-    const searchText = ref(''); // search text
-    let search_result = ref(false); // search 결과
+    const searchText = ref('');
+    let search_result = ref(false);
 
-    const proposal = ref([]); // 최초 list정보만을 담을 배ㅕㅇㄹ
-    const copy_p_list = ref([{}]); // search를 위한 배열
+    const proposals = ref([]);
+    const copy_p_list = ref([]);
 
-    const p_view = ref(); // 상세 정보를 위한 변수
+    const p_view = ref(null);
 
+    const showSolutionModal = ref(false);
+    const solutionText = ref('');
 
-    // 클릭시 상세 정보 출력
     const select = (proposal_id) => {
-      p_view.value = proposal.value.filter( (p) => {
-        return p.proposal_id === proposal_id;
-      })[0]
-    }
+      p_view.value = proposals.value.find((p) => p.proposal_id === proposal_id);
+      solutionText.value = p_view.value ? p_view.value.solution : '';
+    };
 
-    // 건의사항 리스트 받아오기
-    const store = useStore();   // store 변수
     const getProposalList = async () => {
-      // axios - 건의사항 리스트 받아오기 구현
-      await proposal_list(store.state.loginId)
+      await proposal_list(store.state.loginToken)
         .then((response) => {
-          proposal.value = response.data;
+          proposals.value = response.data;
 
-          proposal.value.forEach((item) => {
-            const fullDate = item.date
-
+          // 날짜 형식 정리
+          proposals.value.forEach((item) => {
+            const fullDate = item.date;
             const year = fullDate.slice(0, 4);
             const month = fullDate.slice(5, 7);
             const day = fullDate.slice(8, 10);
-
             item.date = `${year}-${month}-${day}`;
           });
 
-          copy_p_list.value = [...proposal.value];
-        })
-      
-    }
+          // completed 상태에 따라 정렬
+          sortProposals();
+
+          console.log("Sorted proposals:", proposals.value); // 정렬된 데이터 확인
+          copy_p_list.value = [...proposals.value];
+        });
+    };
+
+    const sortProposals = () => {
+      proposals.value.sort((a, b) => {
+        if (a.completed === b.completed) {
+          return new Date(b.date) - new Date(a.date); // 동일한 completed 상태라면 날짜 순 정렬
+        }
+        return a.completed === 'N' ? -1 : 1; // 'N'이 'Y'보다 상단에 오도록 정렬
+      });
+      copy_p_list.value = [...proposals.value];
+    };
 
     getProposalList();
 
-    // 검색
     const search = () => {
-      copy_p_list.value = proposal.value.filter( (p) => {
-        return p.title.includes(searchText.value);
-      })
-    }
+      copy_p_list.value = proposals.value.filter((p) => p.title.includes(searchText.value));
+    };
 
-    // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
+    const resetSearch = () => {
+      searchText.value = '';
+      copy_p_list.value = [...proposals.value];
+    };
+
     const triggerShow = () => {
       store.dispatch('triggerShow', true);
-      console.log(store.state.showNav)
-    }
+      console.log(store.state.showNav);
+    };
     triggerShow();
 
-    // 메뉴 이동
-    const router = useRouter();
     const selectMenu = (selectMenu) => {
       console.log(selectMenu);
-
       switch (selectMenu) {
         case 1:
-          router.push({
-            name : "ListStoreStock"
-          })
+          router.push({ name: "ListShop" });
           break;
         case 2:
-          router.push({
-            name : "ListProposal"
-          })
+          router.push({ name: "ListStockRequest" });
           break;
-        case 3 :
-          router.push({
-            name : "ListStoreStockRequest"
-          })
+        case 3:
+          router.push({ name: "ListProposal" });
           break;
-
         default:
           break;
-      } 
-    }
+      }
+    };
 
-    return{
+    const checkComplete = async () => {
+      if (p_view.value) {
+        const data = { proposal_id: p_view.value.proposal_id };
+        await proposal_check(data, store.state.loginToken)
+          .then(() => {
+            alert('해결 완료되었습니다.');
+            p_view.value.completed = 'Y';
+            proposals.value = proposals.value.map(p =>
+              p.proposal_id === p_view.value.proposal_id ? { ...p, completed: 'Y' } : p
+            );
+            // 리스트 정렬
+            sortProposals();
+          })
+          .catch((error) => {
+            console.error('해결 완료 오류:', error);
+            alert('해결 완료 중 오류가 발생했습니다.');
+          });
+      }
+    };
+
+    const openSolutionModal = () => {
+      showSolutionModal.value = true;
+    };
+
+    const closeSolutionModal = () => {
+      showSolutionModal.value = false;
+    };
+
+    const saveSolution = async () => {
+      if (p_view.value) {
+        const data = {
+          proposal_id: p_view.value.proposal_id,
+          solution: solutionText.value
+        };
+        await proposal_solution(data, store.state.loginToken)
+          .then(() => {
+            alert('해결방안이 저장되었습니다.');
+            p_view.value.solution = solutionText.value;
+            proposals.value = proposals.value.map(p =>
+              p.proposal_id === p_view.value.proposal_id ? { ...p, solution: solutionText.value } : p
+            );
+            copy_p_list.value = [...proposals.value];
+            closeSolutionModal();
+          })
+          .catch((error) => {
+            console.error('해결방안 저장 오류:', error);
+            alert('해결방안 저장 중 오류가 발생했습니다.');
+          });
+      }
+    };
+
+    // watch 함수를 사용하여 proposals가 변경될 때 copy_p_list도 업데이트
+    watch(proposals, (newProposals) => {
+      copy_p_list.value = [...newProposals];
+    });
+
+    return {
       select,
       searchText,
       search_result,
       copy_p_list,
-      proposal,
+      proposals,
       selectMenu,
       p_view,
-      search
-    }
+      search,
+      resetSearch,
+      checkComplete,
+      showSolutionModal,
+      solutionText,
+      openSolutionModal,
+      closeSolutionModal,
+      saveSolution
+    };
   }
-
-}
+};
 </script>
 
 <style scoped>
-/* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-  font-family: "Gowun Dodum", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-
-div{
-  font-family: "Gowun Dodum", sans-serif; 
-}
-
-/* 검색 div 정렬 */
-form > .col-3{
-  text-align: right;
-}
-
-form > .col-2{
+.container-fluid {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
 }
 
-/* 아이템 가운데 정렬 */
-.row{
+.search_div {
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+
+.listDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 600px; /* 최소 높이를 늘림 */
+  overflow-y: auto;
+}
+
+.listDiv-content {
+  white-space: pre-wrap;
+}
+
+.detail-view {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.border {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.table tbody tr {
+  padding: 10px 0; /* 행 간격을 늘림 */
+}
+
+.table tbody tr td {
+  padding: 15px 10px; /* 각 셀에 패딩을 추가 */
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px; /* 버튼 사이의 간격을 조절 */
+}
+
+/* 모달 스타일 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-dialog {
+  max-width: 500px;
+  margin: auto;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.modal-header,
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
-/* 왼쪽 정렬 */
-.row-right{
-  text-align: left;
-  padding-left: 5%;
-} 
-
-/* hover시 그림자 효과 */
-.seeList:hover{
-  text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403); 
+.modal-title {
+  margin: 0;
 }
 
-/* 세로 방향 가운데 정렬 */
-td {
-  vertical-align: middle; 
-}
-
-/* list scroll, list 그림자 */
-.listDiv{
-  max-height : 30vh;
-  overflow-y: auto;
-  box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-}
-
-.listDiv-content{
-  border : 1px solid rgb(220, 220, 220);
-}
-
-/* alert 설정 */
-.alert{
-  font-weight: bold;
-  box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403); 
-}
-
-.margin{
-  margin-top: 10%;
-}
-
-.content{
-  height: 20vh;
-  text-align: left;
-  padding-left: 1%;
-}
-
-.text-left{
-  text-align: left;
-}
-
-/* sidebar 이동과 전체 설정  */
-.sidebar {
-  width: 250px;
-  height : 90vh;
-  position: fixed;
-  left: 0; top : 11%;
-  background-color: #F3F7FA;
-  border-radius: 20px;
-
-  transform: translateX(-210px);  
-  transition: .5s;
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
 }
 </style>
