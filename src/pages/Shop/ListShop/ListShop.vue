@@ -28,7 +28,7 @@
 
     <!-- 매장 리스트 조회 -->
     <div class="row mt-1 listDiv" >
-        <table class="table table-hover border-gray" >
+        <table class="table table-hover border-gray">
           <thead>
             <tr>
               <th>매장ID</th>
@@ -65,8 +65,7 @@ import { useStore } from 'vuex';
 import { ref } from 'vue';
 import ShopSidebar from '@/components/ShopSidebar.vue'
 import { useRouter } from 'vue-router';
-import { shop_all_list } from "@/shop_axios.js";
-import { shop_my_list } from '@/shop_axios';
+import { shop_my_list, shop_all_list } from '@/shop_axios';
 
 export default {
   components :{
@@ -75,6 +74,7 @@ export default {
   setup(){
 
     const store = useStore();   // store Vuex 변수
+    const router = useRouter(); //router 변수
 
     let all_shop_list = ref([]); //전체 매장정보를 위한 배열
 
@@ -117,12 +117,11 @@ export default {
     }
 
     //내 담당 매장 상세 보기
-    // const showMyShopDetails = () => {
-    //   const response = await shop_my_detail(shop_idm, store.state.loginToken);
-    // }
+    const showMyShopDetails = (shop) => {
+      router.push({name: 'DetailShop', params: { shopId: shop.shop_id} });
+    }
 
     // 메뉴 이동
-    const router = useRouter();
     const selectMenu = (selectMenu) => {
       console.log(selectMenu);
 
@@ -156,14 +155,15 @@ export default {
       search,
       selectMenu,
       showAllShop,
-      showMyChargeShop
+      showMyChargeShop,
+      showMyShopDetails
     }
   }
 
 }
 </script>
 
-<style>
+<style scoped>
 
 /* 폰트 */
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
