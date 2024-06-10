@@ -8,12 +8,26 @@ let user_axios = axios.create({
 });
 
 //전체 매장 리스트
-export function shop_list(){
+export function shop_all_list(){
     return user_axios.get('/shop/tolist/all');
 }
+
 //담당 매장 리스트
-export function shop_my_list(shopid){
-    return user_axios.get(`/shop/detail/${shopid}`);
+export function shop_my_list(token){
+    return user_axios.get('/shop/tolist',{
+        headers : {
+            login_token : token
+        }
+    });
+}
+
+//담당 매장 리스트 상세조회
+export function shop_my_detail(shopid, token){
+    return user_axios.get(`/shop/detail/${shopid}`,{
+        headers : {
+            login_token : token
+        }
+    });
 }
 
 

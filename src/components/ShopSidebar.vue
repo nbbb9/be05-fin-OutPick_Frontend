@@ -3,11 +3,6 @@
     <div class="sidebar">
       <!-- 사이드바 내용 -->
 
-      <div class="loginStoreUser" >
-        {{ loginStoreName }} <br>
-        {{ loginStoreUser }} 님
-      </div>
-
       <ul>
         <li @click="select(1)">매장 리스트</li>
         <li @click="select(2)">재고요청서</li>
@@ -130,6 +125,19 @@ li {
   font-weight: bold;
   font-size: large;
   text-align: left;
+}
+
+/* sidebar 이동과 전체 설정  */
+.sidebar {
+  width: 250px;
+  height : 90vh;
+  position: fixed;
+  left: 0; top : 11%;
+  background-color: #F3F7FA;
+  border-radius: 20px;
+
+  transform: translateX(-210px);  
+  transition: .5s;
 }
 </style>
   

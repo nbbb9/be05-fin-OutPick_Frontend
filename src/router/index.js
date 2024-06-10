@@ -5,6 +5,7 @@ import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 
 // 본 프로그램
 import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
+import DetailShop from "@/pages/Shop/ListShop/DetailShop.vue";
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
 
 // 매장
@@ -30,6 +31,12 @@ const router = createRouter({
             path : "/shop_list",
             name : "ListShop",
             component : ListShop
+        },
+        {
+            path: '/detail/:shopId',
+            name: 'DetailShop',
+            component: DetailShop,
+            props: true
         },
         {
             path : "/employee_list",
