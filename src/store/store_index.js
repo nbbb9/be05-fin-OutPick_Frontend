@@ -13,6 +13,8 @@ export default createStore({
         isAdmin : true,
         loginToken : "",
         loginUserName : "여경원",
+        loginUserNumber : 20190234,
+        loginUserId : 1,
         loginStoreId : 1,
         loginStoreUser : "여경원 매니저님",
         loginStoreName : "신대방삼거리역"
@@ -31,6 +33,9 @@ export default createStore({
         LoginUserName(state, payload){
             state.loginUserName = payload;
         },
+        LoginUserId(state, payload){
+            state.loginUserId = payload;
+        },
         LoginStoreId(state, payload){
             state.loginStoreId = payload;
         },
@@ -39,6 +44,9 @@ export default createStore({
         },
         LoginStoreName(state, payload){
             state.loginStoreName = payload
+        },
+        LoginUserNumber(state, payload){
+            state.loginUserNumber = payload
         }
     },
     actions : {
@@ -55,6 +63,9 @@ export default createStore({
         triggerLoginUserName({commit}, payload){
             commit('LoginUserName', payload)
         },
+        triggerLoginUserId({commit}, payload){
+            commit('LoginUserId',payload)
+        },
         triggerLoginStoreId({commit}, payload){
             commit('LoginStoreId', payload)
         },
@@ -63,6 +74,9 @@ export default createStore({
         },
         triggerLoginStoreName({commit}, payload){
             commit('LoginStoreName', payload)
+        },
+        triggerLoginUserNumber({commit}, payload){
+            commit('LoginUserNumber', payload)
         }
     }   
 })

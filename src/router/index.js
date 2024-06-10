@@ -4,7 +4,8 @@ import Login from "@/pages/LoginPage.vue"
 import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 
 // 본 프로그램
-import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
+import ListShopStock from "@/pages/Stock/ListShopStock.vue";
+import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
 
 // 매장
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
@@ -14,6 +15,8 @@ import DetailStoreStockRequest from "@/pages/Store/StoreStockRequest/DetailStore
 import ListStoreSales from "@/pages/Store/ListStoreSales.vue"
 import AddStoreProposal from "@/pages/Store/StoreProposal/AddStoreProposal.vue"
 import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue"
+import ListShop from "@/pages/Shop/ListShop/ListShop.vue";
+
 
 
 
@@ -29,6 +32,11 @@ const router = createRouter({
             path : "/shop_list",
             name : "ListShop",
             component : ListShop
+        },
+        {
+            path : "/employee_list",
+            name : "ListEmployee",
+            component : ListEmployee
         },
         // 매장
         {
@@ -71,6 +79,12 @@ const router = createRouter({
             path : "/store_proposal_add",
             name : "AddStoreProposal",
             component : AddStoreProposal
+        },
+        // 매장 재고
+        {
+            path : "/shopstock",
+            name : "ListShopStock",
+            component : ListShopStock
         }
     ]
 });
