@@ -6,6 +6,9 @@ import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 // 본 프로그램
 import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
+import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
+import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
+import ListProductionRequest from "@/pages/Admin/ListProductionRequest.vue";
 
 // 매장
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
@@ -35,6 +38,21 @@ const router = createRouter({
             path : "/employee_list",
             name : "ListEmployee",
             component : ListEmployee
+        },
+        {
+            path : "/employee_analysis",
+            name : "AnalysisEmployee",
+            component : AnalysisEmployee
+        },
+        {
+            path : "/admin_stock_request",
+            name : "ListAdminStockRequest",
+            component : ListAdminStockRequest
+        },
+        {
+            path : "/production_list",
+            name : "ListProductionRequest",
+            component : ListProductionRequest
         },
         // 매장
         {
