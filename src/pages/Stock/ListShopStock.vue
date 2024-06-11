@@ -51,10 +51,19 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(i) in unique_items" :key="i.product_id">
-              <td @click="show_detail(i.product_name)">{{ i.product_name }}</td>
-              <td @click="show_detail(i.product_name)">{{ i.stock_date }}</td>
-              <td @click="show_detail(i.product_name)">{{ i.discount }}</td>
+            <tr v-for="(i) in unique_items" :key="i.product_id"  @click="show_detail(i.product_name)">
+              <td>{{ i.product_name }}</td>
+              <td>{{ i.stock_date }}</td>
+              <td>{{ i.discount }}
+                <button @click="show_modal" class="btn btn-outline-light text-black">수정</button>
+                <StockModal
+                  v-if="is_modal_visible"
+                  :is_visible="is_modal_visible"
+                  modal_message="할인율 입력"
+                  @close="is_modal_visible = false"
+                  @submit="handleInput"
+                />
+              </td>
             </tr>
           </tbody>
         </table>
@@ -92,16 +101,7 @@
               <th>{{ id.color }}</th>
               <th>{{ id.stock }}</th>
               <th>{{ id.stock_date }}</th>
-              <th>{{ id.discount }}
-                <button @click="show_modal" class="btn btn-outline-light text-black">수정</button>
-                <StockModal
-                  v-if="is_modal_visible"
-                  :is_visible="is_modal_visible"
-                  modal_message="할인율 입력"
-                  @close="is_modal_visible = false"
-                  @submit="update_discount_rate"
-                />
-              </th>
+              <th>{{ id.discount }}</th>
             </tr>
           </tbody>
         </table> 
@@ -184,11 +184,12 @@
 
       // 상세정보 불러오기
       const item_detail = ref([]);
-
+      const item_names = ref([]);
       const show_detail = (product_name) => {
         const items = item_list.value.filter(item => item.product_name === product_name);
         if (items.length) {
           item_detail.value = items;
+          item_names.value.push(product_name);
         }
       }
 
@@ -196,6 +197,7 @@
 
       const is_modal_visible = ref(false);
       const discount_rate = ref();
+      
 
       const show_modal = () => {
         try{
@@ -209,27 +211,12 @@
         
       }
 
-      
-      const product_name = ref();
-
-      const update_discount_rate = async (discount_rate) => {
-        await update_discount(product_name.value, discount_rate)
-          .then
+      const handleInput = async () => {
+        const discount_rate = input.value;
       }
 
+      
 
-
-      // const update_discount_rate = async () => {
-      //   await update_discount(product_name, discount_rate.value)
-      //     .then ((response) => {
-      //       if(product_name === shop_item_list.product_name) {
-      //         shop_item_list.discount = discount_rate.value;
-      //       }
-      //     })
-      //     .catch(e => {
-      //       console.log(e.message)
-      //     })
-      // }
       
 
       return{

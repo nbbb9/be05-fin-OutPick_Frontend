@@ -4,7 +4,8 @@ import Login from "@/pages/LoginPage.vue"
 import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 
 // 본 프로그램
-import ListShopStock from "@/pages/Stock/ListShopStock.vue";
+import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
+import DetailShop from "@/pages/Shop/ListShop/DetailShop.vue";
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
 
 // 매장
@@ -15,10 +16,11 @@ import DetailStoreStockRequest from "@/pages/Store/StoreStockRequest/DetailStore
 import ListStoreSales from "@/pages/Store/ListStoreSales.vue"
 import AddStoreProposal from "@/pages/Store/StoreProposal/AddStoreProposal.vue"
 import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue"
-import ListShop from "@/pages/Shop/ListShop/ListShop.vue";
-
-
-
+import ListProposal from "@/pages/Shop/ListProposal/ListProposal.vue";
+import DetailProposal from "@/pages/Shop/ListProposal/DetailProposal.vue";
+import ListStockRequest from "@/pages/Shop/ListStockRequest/ListStockRequest.vue";
+import ListShopStock from "@/pages/Stock/ListShopStock.vue";
+import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
 
 const router = createRouter({
     history : createWebHistory(),
@@ -32,6 +34,12 @@ const router = createRouter({
             path : "/shop_list",
             name : "ListShop",
             component : ListShop
+        },
+        {
+            path: '/detail/:shopId',
+            name: 'DetailShop',
+            component: DetailShop,
+            props: true
         },
         {
             path : "/employee_list",
@@ -80,12 +88,38 @@ const router = createRouter({
             name : "AddStoreProposal",
             component : AddStoreProposal
         },
-        // 매장 재고
+
+        ///////////////////////////////////////
+        {
+            path : "/proposal_list",
+            name : "ListProposal",
+            component : ListProposal
+        },
+
+        {
+            path : "/proposal_detail",
+            name : "DetailProposal",
+            component : DetailProposal
+        },
+
+        {
+            path : "/stock_request_list",
+            name : "ListStockRequest",
+            component : ListStockRequest
+        },
         {
             path : "/shopstock",
             name : "ListShopStock",
             component : ListShopStock
+        },
+        {
+            path : "/officestock",
+            name : "ListCompanyStock",
+            component : ListCompanyStock
         }
+
+        
+
     ]
 });
 
