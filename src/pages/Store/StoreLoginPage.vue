@@ -38,10 +38,15 @@ import {useStore} from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { store_login } from "@/axios.js"
+import EventSourceService from "@/pages/Sse/EventSourceService.js"
 
 export default {
 
   setup(){
+
+    const store = useStore();   // store 변수
+
+    store.dispatch('triggerClearEL')
 
     // 로그인 실패시 팝업을 띄울 변수
     const ifFalse = ref(false);
@@ -73,21 +78,41 @@ export default {
           store.dispatch('triggerLoginStoreId', response.data.shop_id);
           store.dispatch('triggerLoginStoreUser', data.manager);
           store.dispatch('triggerLoginStoreName', data.name)
+        
+          // sse에 listener 추가
+          let sse = new EventSourceService(store.state.loginStoreId, store);
+          console.log("event source 받아옴 : ", sse);
+
+          sse.addESEventListener('proposal_solution',(e) => {
+
+            const { data: receivedConnectData } = e;
+    
+            console.log("shop id 비교 전 데이터 검증 : ", receivedConnectData)
+            const data = JSON.parse(receivedConnectData);
+            console.log("shop_id : " ,data.shop_id);
+    
+            if(store.state.loginStoreId === data.shop_id){
+              console.log('connect proposal_solution:', receivedConnectData);
+            }
+      
+          } )
+
           // 페이지 이동
           router.push({
             name : "ListStoreStock"
           })
 
         })
-        .catch( () => {
+        .catch( (e) => {
           // 로그인 실패시 실패했다는 팝업
+          console.log("store login page error : ",e)
           ifFalse.value = true;
         })
   
     }
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-    const store = useStore();   // store 변수
+  
     const triggerShow = () => {
       store.dispatch('triggerShow', false);
       console.log(store.state.showNav)

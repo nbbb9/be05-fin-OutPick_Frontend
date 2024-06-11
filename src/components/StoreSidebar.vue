@@ -21,7 +21,7 @@
   
 <script>
 import { useStore } from 'vuex';
-import { computed, onBeforeUnmount } from 'vue';
+import { computed } from 'vue';
 
 export default {
     emits : ["StoreSidebar"],
@@ -38,34 +38,34 @@ export default {
           context.emit("StoreSidebar", id)
         }
 
-        let sseconnect;
+        // let sseconnect;
 
-        onBeforeUnmount( () => {
+        // onBeforeMount( () => {
 
           console.log("dsfsd");
 
-            try {
-                sseconnect = new EventSource('http://localhost:8080/connect');
-                console.log(sseconnect);
-                sseconnect.addEventListener('proposal_solution', (e) => {
-                    if (sseconnect) {
-                      sseconnect.close();
-                    }
-                    const { data: receivedConnectData } = e;
-
-                    console.log("shop id 비교 전 데이터 검증 : ", receivedConnectData)
-                    const data = JSON.parse(receivedConnectData);
-                    console.log("shop_id : " ,data.shop_id);
-
-                    if(store.state.loginStoreId === data.shop_id){
-                      console.log('connect proposal_solution:', receivedConnectData);
-                    }
-                    
-                });
-            } catch (error) {
-                console.error('Failed to initialize EventSource:', error);
-            }
-        });
+            // try {
+            //     sseconnect = new EventSource(`http://localhost:8080/connect?shop_id=${store.state.loginStoreId}`);
+            //     console.log(sseconnect);
+            //     sseconnect.addEventListener('proposal_solution', (e) => {
+            //         if (sseconnect) {
+            //           sseconnect.close();
+            //         }
+            //         const { data: receivedConnectData } = e;
+            //
+            //         console.log("shop id 비교 전 데이터 검증 : ", receivedConnectData)
+            //         const data = JSON.parse(receivedConnectData);
+            //         console.log("shop_id : " ,data.shop_id);
+            //
+            //         if(store.state.loginStoreId === data.shop_id){
+            //           console.log('connect proposal_solution:', receivedConnectData);
+            //         }
+            //
+            //     });
+            // } catch (error) {
+            //     console.error('Failed to initialize EventSource:', error);
+            // }
+        // });
 
         return {
             select,

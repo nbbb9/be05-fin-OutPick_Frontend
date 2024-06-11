@@ -84,6 +84,7 @@ import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
 import {store_proposal_list} from "@/axios.js"
+import EventSourceService from "@/pages/Sse/EventSourceService";
 
 export default {
   components : {
@@ -98,7 +99,6 @@ export default {
     const copy_p_list = ref([{}]); // search를 위한 배열
 
     const p_view = ref(); // 상세 정보를 위한 변수
-
 
     // 클릭시 상세 정보 출력
     const select = (proposal_id) => {
@@ -138,6 +138,11 @@ export default {
         return p.title.includes(searchText.value);
       })
     }
+
+    // 복구 테스트
+    let sse = new EventSourceService(store.state.loginStoreId, store);
+    sse.restoreEventListeners();
+
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const triggerShow = () => {
