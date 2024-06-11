@@ -61,6 +61,7 @@ import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
 import {store_proposal_add} from '@/axios.js'
+import EventSourceService from "@/pages/Sse/EventSourceService";
 
 export default {
   components : {
@@ -92,9 +93,13 @@ export default {
           ifFalse.value = true;
         })
     }
+
+    // sse test
+    const store = useStore();   // store 변수
+    let sse = new EventSourceService(store.state.loginStoreId, store)
+    sse.getEventSource();
   
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-    const store = useStore();   // store 변수
     const triggerShow = () => {
       store.dispatch('triggerShow', false);
       console.log(store.state.showNav)
