@@ -75,6 +75,7 @@ li {
 
   transform: translateX(-210px);  
   transition: .5s;
+  z-index: 2
 }
 
 .sidebar:hover {

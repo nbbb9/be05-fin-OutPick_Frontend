@@ -41,7 +41,7 @@ export function admin_employee_shop_list() {
 
 // 영업 사원 분석
 export function admin_employee_analyze(em_id, month, year, token) {
-    return user_axios.get(`/employee_analyze?employee_id`, {
+    return user_axios.get(`/employee_analyze?employee_id=${em_id}&month=${month}&year=${year}`, {
         headers : {
             login_token : token
         }

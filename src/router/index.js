@@ -22,6 +22,7 @@ import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue
 import ListProposal from "@/pages/Shop/ListProposal/ListProposal.vue";
 import DetailProposal from "@/pages/Shop/ListProposal/DetailProposal.vue";
 import ListStockRequest from "@/pages/Shop/ListStockRequest/ListStockRequest.vue";
+import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest.vue";
 
 const router = createRouter({
     history : createWebHistory(),
@@ -122,8 +123,13 @@ const router = createRouter({
             path : "/stock_request_list",
             name : "ListStockRequest",
             component : ListStockRequest
-        }
+        },
 
+        {
+            path : "/stock_request_detail",
+            name : "DetailStockRequest",
+            component : DetailStockRequest
+        }
         
 
     ]

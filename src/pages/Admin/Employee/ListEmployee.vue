@@ -4,7 +4,7 @@
   
   
     <div class="mt-4" >
-      <h5 style="text-align: left;" >영업 사원</h5>
+      <h5 style="text-align: left;">영업 사원</h5>
     </div>
 
     <hr>
@@ -14,7 +14,7 @@
       <div class="col-6" style="flex: 1;" v-if="!isMidify" >
 
         <!-- 영업 사원 검색창 -->
-        <div class="search_div">
+        <div class="search_div mb-1">
           <form v-on:submit.prevent="searchEmName" class="row mt-4" >
             <div class="col-3" >
               <h5>사원 이름</h5>
@@ -22,7 +22,7 @@
             <div class="col-6" >
               <input type="text" v-model="search_em_name" placeholder="검색하세요" class="form-control" >
             </div>
-            <div class="col-2" >
+            <div class="col-3" >
               <button class="btn btn-dark" >검색</button>
             </div>
           </form>
@@ -30,8 +30,8 @@
 
         <!-- 영업 사원 리스트 -->
         <div class="listDiv" >
-          <table class="mt-2 table table-hover border-gray listDiv" >
-            <thead>
+          <table class="mt-2 table table-hover border-gray" >
+            <thead style="position: sticky; top: 0; z-index: 1;">
               <tr>
                 <th>사원 번호</th>
                 <th>사원 이름</th>
@@ -115,23 +115,30 @@
               </div>
             </div>
           </div>
-          <div class="row mt-2 atr">
-            <div class="col-4" >
-              담당 매장ID
-            </div>
-            <div class="col-8">
-              {{ em_detail.shop }}
-            </div>
+
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="row atr">
+                <div class="col-4">
+                  담당 매장ID
+                </div>
+                <div class="col-6">
+                  {{ em_detail.shop }}
+                </div>
+              </div>
+            </div>  <!-- 담당 매장 끝 -->
+            <div class="col-6">
+              <div class="row mt-2 atr">
+                <div class="col-4">
+                  연락처
+                </div>
+                <div class="col-8">
+                  {{ em_detail.contact }}
+                </div>
+              </div>
+            </div> <!-- 연락처 끝 -->
           </div>
-          <div class="row mt-2 atr">
-            <div class="col-4" >
-              연락처
-            </div>
-            <div class="col-8">
-              {{ em_detail.contact }}
-            </div>
-          </div>
-          <div class="row mt-2 atr">
+          <div class="row atr">
             <div class="col-4" >
               주소
             </div>
@@ -162,6 +169,7 @@
         영업사원 상세정보
       </div>
       <div class="col-6">
+        <button class="btn btn-warning mr" @click="cancleMo" >수정취소</button>
         <button class="btn btn-warning" @click="modifyEm" >수정완료</button>
       </div>
     </div>
@@ -216,52 +224,101 @@
           </div>
         </div>
         <div class="row mt-2">
-          <div class="row col-6 atr atr_shop">
-            <div class="col-4" >
-              담당 매장ID
+          <div class="col-6">
+            <div class="row atr">
+              <div class="col-4" >
+                담당 매장ID
+              </div>
+              <div class="col-8">
+                {{ em_detail.shop }}
+              </div>
             </div>
-            <div class="col-8">
-              {{ em_detail.shop }}
-            </div>
-          </div>
-          <div class="row col-5">
-            <div class="col-5">
-              추가 매장 :
-              <!-- <input type="text" v-model="addShop" class="form-control"> -->
-              <select v-for="(shop) in shop_list" :key="shop.shop_id">
-                <option :value="shop.shop_id">{{ shop.shop_id }} : {{ shop.shop_name }}</option>
-              </select>
-            </div>
-            <div class="col-5">
-              삭제 매장 : 
-              <input type="text" v-model="delShop" class="form-control">
+          </div>  <!-- 담당 매장 끝 -->
+          <div class="col-6 ">
+            <div class="row atr">
+              <div class="col-4">
+                연락처
+              </div>
+              <div class="col-8">
+                <input type="text" v-model="emContact" class="form-control" >
+              </div>
             </div>
           </div>
         </div>
-        <div class="row mt-2 atr">
-          <div class="col-4" >
-            연락처
+
+        <div class="row mt-2">
+          <div class="col-6" >
+            <div class="row atr">
+              <div class="col-4">
+                추가 매장 :
+              </div>
+              <div class="col-8">
+                <select  class="form-select" @change="selectAddShop" >
+                  <option value="" disabled selected>추가할 매장을 선택하세요</option>
+                  <option v-for="(shop) in select_add_shop_list" :key="shop.shop_id">
+                    {{ shop.shop_id }} : {{ shop.name }}
+                  </option>
+                </select>
+              </div>
+            </div> <!-- 매장 추가 드롭다운 -->
           </div>
-          <div class="col-8">
-            <input type="text" v-model="emContact" class="form-control" >
+          <div class="col-6">
+            <div class="atr">
+              <div v-for="(add) in select_add_shop" :key="add" class="d-inline-block" >
+                <button @click="cancle_add(add)" class="btn btn-primary m-1" > {{ add }} </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row mt-2 atr">
-          <div class="col-4" >
-            주소
+
+        <div class="row mt-2">
+          <div class="col-6" >
+            <div class="row atr">
+              <div class="col-4">
+                삭제 매장 : 
+              </div>
+              <div class="col-8">
+                <select  class="form-select" @change="selectDelShop" >
+                  <option value="" disabled selected>삭제할 매장을 선택하세요</option>
+                  <option v-for="(shop) in select_del_shop_list" :key="shop.shop_id">
+                    {{ shop.shop_id }} : {{ shop.name }}
+                  </option>
+                </select>
+              </div>
+            </div> <!-- 삭제 매장 추가 드롭다운 -->
           </div>
-          <div class="col-8">
-            <input type="text" v-model="emAddress" class="form-control" >
+          <div class="col-6">
+            <div class="atr" >
+              <div v-for="(del) in select_del_shop" :key="del" class="d-inline-block" >
+                <button @click="cancle_del(del)" class="btn btn-danger m-1" > {{ del }} </button>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row mt-2 atr">
-          <div class="col-4" >
-            현재 상태
-          </div>
-          <div class="col-8">
-            <input type="text" v-model="emState" class="form-control" >
+
+        <div class="row mt-2">
+          <div class="col-6">
+            <div class="row atr">
+              <div class="col-4" >
+                주소
+              </div>
+              <div class="col-8">
+                <input type="text" v-model="emAddress" class="form-control" >
+              </div>
+            </div>
+          </div> <!-- 주소 끝 -->
+          <div class="col-6">
+            <div class="row atr">
+              <div class="col-4" >
+                현재 상태
+              </div>
+              <div class="col-8">
+                <input type="text" v-model="emState" class="form-control" >
+              </div>
+            </div>
           </div>
         </div>
+
         
       </div>
     </div>
@@ -279,7 +336,8 @@ import { useRouter } from 'vue-router';
 import AdminSidebar from '@/components/AdminSidebar.vue';
 import { ref, watch } from 'vue';
 import {admin_employee_list, admin_employee_detail,
-  admin_employee_modify, admin_employee_shop_list
+  admin_employee_modify, 
+  admin_employee_shop_list
 } from "@/admin_axios.js"
 
 export default {
@@ -349,6 +407,14 @@ export default {
       emPosition.value = em_detail.value.position
       emAddress.value = em_detail.value.address
       emState.value = em_detail.value.state
+      getADList()
+    }
+
+    // 정보 수정 취소
+    const cancleMo = () => {
+      isMidify.value = false;
+      select_add_shop.value = [];
+      select_del_shop.value = [];
     }
 
     // 영업 사원 정보 수정을 위한 매장 리스트
@@ -361,9 +427,72 @@ export default {
     }
     shopList();
 
+    // 사용자가 선택할 수 있는 매장 리스트
+    const select_add_shop_list = ref([]);
+    const select_del_shop_list = ref([]);
+
+    const getADList = () => {
+      select_add_shop_list.value = shop_list.value.filter((item) => {
+        return !em_detail.value.shop.includes(item.shop_id);
+      })
+
+      select_del_shop_list.value = shop_list.value.filter((item) => {
+        return em_detail.value.shop.includes(item.shop_id);
+      })
+    }
+
     // 사용자가 선택한 매장
-    const select_add_shop = ref();
-    const select_del_shop = ref();
+    const select_add_shop = ref([]);
+    const select_del_shop = ref([]);
+
+    const selectAddShop = (event) => {
+      const selectedShopId = parseInt(event.target.value, 10);
+      select_add_shop.value.push(selectedShopId);
+      console.log("추가된 shop : " , select_add_shop.value);
+      select_add_shop_list.value = select_add_shop_list.value.filter((item) => {
+        return item.shop_id != selectedShopId
+      })
+
+
+      event.target.value = "";
+
+    }
+
+    const selectDelShop = (event) => {
+      const selectedShopId = parseInt(event.target.value, 10);
+      select_del_shop.value.push(selectedShopId);
+      console.log("삭제된 shop : " , select_del_shop.value);
+      select_del_shop_list.value = select_del_shop_list.value.filter((item) => {
+        return item.shop_id != selectedShopId
+      })
+
+
+      event.target.value = "";
+
+    }
+
+    // 사용자가 선택한 매장을 삭제
+    const cancle_add = (shop_id) => {
+      select_add_shop.value = select_add_shop.value.filter(item => {return item !== shop_id});
+    
+      const re_push = shop_list.value.filter((item) => {
+        return item.shop_id == shop_id
+      })[0]
+
+      select_add_shop_list.value.push(re_push)
+      select_add_shop_list.value.sort((a, b) => a.shop_id - b.shop_id);
+    }
+
+    const cancle_del = (shop_id) => {
+      select_del_shop.value = select_del_shop.value.filter(item => {return item !== shop_id});
+    
+      const re_push = shop_list.value.filter((item) => {
+        return item.shop_id == shop_id
+      })[0]
+
+      select_del_shop_list.value.push(re_push)
+      select_del_shop_list.value.sort((a, b) => a.shop_id - b.shop_id);
+    }
 
     // 영업 사원 정보 수정
     const modifyEm = async () => {
@@ -372,15 +501,12 @@ export default {
         "employee_id": em_detail.value.employee_id,
         "position": emPosition.value,
         "address": emAddress.value,
-        "contact" : emContact.value
+        "contact" : emContact.value,
+        "add_shop" : select_add_shop.value,
+        "delete_shop" : select_del_shop.value
       }
 
-      if (addShop.value) {
-        data["add_shop"] = addShop.value.split(',').map(Number);
-      }
-      if (delShop.value) {
-        data["delete_shop"] = delShop.value.split(',').map(Number);
-      }
+      console.log(data);
 
       await admin_employee_modify(data, store.state.loginToken)
         .then((response) => {
@@ -459,6 +585,7 @@ export default {
     isMidify,
     toModifyEm,
     toAnalysis,
+    cancleMo,
     modifyEm,
     emContact,
     emPosition,
@@ -468,7 +595,13 @@ export default {
     delShop,
     shop_list,
     select_add_shop,
-    select_del_shop
+    select_del_shop,
+    selectAddShop,
+    selectDelShop,
+    select_add_shop_list,
+    select_del_shop_list,
+    cancle_add,
+    cancle_del
   }
 
   }
@@ -476,6 +609,18 @@ export default {
 </script>
 
 <style scoped>
+/* 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+.gowun-dodum-regular {
+font-family: "Gowun Dodum", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
+
+div{
+font-family: "Gowun Dodum", sans-serif;
+}
 
 /* 검색 div 정렬 */
 form > .col-3{
@@ -512,6 +657,13 @@ form > .col-2{
   align-items: center;
 }
 
+/* item-vertical - right*/
+.item-vertical-start{
+  display: flex;
+  justify-content: center;
+  align-items: start;
+}
+
 /* hover시 그림자 효과 */
 .seeList:hover{
   text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403); 
@@ -530,15 +682,15 @@ td {
   margin: 1%;
 }
 
+.mr{
+  margin-right: 2%;
+}
+
 .atr{
   height: 6vh;
   max-width: 40vw;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 2%;
-}
-
-.mr{
-  margin-right: 2%;
 }
 
 .detail{
@@ -551,6 +703,11 @@ td {
 .alert{
   font-weight: bold;
   box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403); 
+}
+
+/* 글자 굵기 */
+h5{
+  font-weight: bold;
 }
 
 </style>
