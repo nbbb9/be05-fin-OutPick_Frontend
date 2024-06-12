@@ -6,7 +6,7 @@
 
       <div class="col-6">
 
-        <div>재고 요청서</div>
+        <div><h5>재고 요청서</h5></div>
 
         <!-- 검색창 -->
         <form v-on:submit.prevent="searchStRe">
@@ -16,7 +16,6 @@
             </div>
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
-                <option value="반려">반려</option>
                 <option value="승인">승인</option>
                 <option value="대기">대기</option>
               </select>
@@ -30,7 +29,7 @@
         <!-- 재고 요청서 리스트 -->
         <div class="listDiv mt-4">
           <table class="table table-hover border-gray">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>요청서 ID</th>
                 <th>매장 이름</th>
@@ -141,7 +140,9 @@ export default {
     const stReList = async () => {
       await admin_stock_request_list(store.state.loginToken)
         .then( (response) => {
-          stre_list.value = response.data;
+          stre_list.value = response.data.filter((item) => {
+            return item.approval == "승인"
+          })
 
           stre_list.value.forEach((item) => {
             const fullDate = item.request_date
@@ -223,7 +224,7 @@ export default {
         }
 
         if (filterSelect.value) {
-          matchesFilterSelect = item.approval === filterSelect.value;
+          matchesFilterSelect = item.admin_approval === filterSelect.value;
         }
 
         return matchesSearchText && matchesFilterSelect;
@@ -301,6 +302,18 @@ export default {
 </script>
 
 <style scoped>
+/* 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+.gowun-dodum-regular {
+font-family: "Gowun Dodum", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
+
+div{
+font-family: "Gowun Dodum", sans-serif;
+}
 
 /* 세로 방향 가운데 정렬 */
 td {
@@ -330,7 +343,7 @@ td {
   max-height : 60vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-  padding: 1%;
+  margin: 1%;
 }
 
 /* 상세 */
@@ -345,6 +358,11 @@ td {
   max-width: 40vw;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 2%;
+}
+
+/* 글자 굵기 */
+h5{
+  font-weight: bold;
 }
 
 </style>
