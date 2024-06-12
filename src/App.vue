@@ -7,7 +7,6 @@
         <img src="./assets/로고_이미지.png" alt="로고">
       </router-link>
 
-
       <!-- 누르면 항목들이 나오는 버튼 -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -187,5 +186,11 @@ img {
 /* 관리자 전용 아이템 숨기기 */
 .nav-item[v-if="isAdmin"] {
   display: none;
+}
+
+/* 추가: 드롭다운 항목 호버 스타일 */
+.dropdown-item:hover {
+  background-color: #0D2DA2 !important; /* 호버 시 배경색 유지 */
+  color: white !important; /* 호버 시 글자색 유지 */
 }
 </style>
