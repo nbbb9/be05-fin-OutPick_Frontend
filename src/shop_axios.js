@@ -59,19 +59,21 @@ export function proposal_solution(data, token){
 }
 
 // 건의문 해결완료
-// export function proposal_check(token){
-//     return user_axios.put('/proposal/checkComplete',{
-//         headers : {
-//             login_token : token
-//         }
-//     })
-// }
 export function proposal_check(data, token) {
     return user_axios.put('/proposal/checkComplete', data, {
         headers: {
             login_token: token
         }
     });
+}
+
+// 재고요청서 리스트 
+export function stock_request_list(token) {
+    return user_axios.get('/stockrequest/list', {
+        headers: {
+            login_token : token
+        } 
+    })
 }
 
 

@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid p-1">
     <div class="row mt-4">
-      <h5 class="text-left">건의사항</h5>
+      <h4 class="text-left">건의사항</h4>
     </div>
 
     <!-- sidebar -->
@@ -9,20 +9,28 @@
 
     <!-- 검색창 -->
     <div class="search_div row mt-4">
-      <div class="col-4">
-        <input type="text" v-model="searchText" placeholder="검색할 내용을 입력해주세요." class="form-control">
+      <div class="col-md-2">
+        <select v-model="selectedCategory" @change="filterByCategory" class="form-select">
+          <option value="">카테고리 선택</option>
+          <option value="상품">상품</option>
+          <option value="운영방식">운영방식</option>
+          <option value="인력">인력</option>
+        </select>
       </div>
-      <div class="col-1">
-        <button class="btn btn-outline-light text-black" @click="search">검색</button>
+      <div class="col-md-3">
+        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="검색할 내용을 입력해주세요." class="form-control">
       </div>
-      <div class="col-1">
-        <button class="btn btn-outline-light text-black" @click="resetSearch">초기화</button>
+      <div class="col-md-1">
+        <button class="btn btn-dark" @click="search">검색</button>
+      </div>
+      <div class="col-md-1">
+        <button class="btn btn-secondary" @click="resetSearch">초기화</button>
       </div>
     </div>
 
     <div class="row mt-3">
       <!-- 리스트 -->
-      <div class="col-7 listDiv">
+      <div class="col-md-7 listDiv">
         <table class="table table-hover border-gray">
           <thead>
             <tr>
@@ -34,20 +42,20 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-on:click="select(p.proposal_id)" v-for="(p) in copy_p_list" :key="p.proposal_id">
+            <tr v-on:click="select(p.proposal_id)" v-for="(p) in filteredProposals" :key="p.proposal_id">
               <td>{{ p.proposal_id }}</td>
               <td>{{ p.title }}</td>
               <td>{{ p.date }}</td>
               <td>{{ p.category }}</td>
-              <td>{{ p.completed }}</td>
+              <td v-bind:style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <!-- 상세 내용 -->
-      <div class="col-5">
-        <div v-if="p_view" class="detail-view p-3">
+      <div class="col-md-5 detail-view">
+        <div v-if="p_view" class="detail-view-content p-3">
           <h6 class="mb-4 text-left">건의사항 상세</h6>
           <div class="mb-3 p-2 border rounded d-flex justify-content-between">
             <strong>지점</strong>
@@ -82,12 +90,12 @@
             </div>
           </div>
           <div class="button-container text-center mt-auto">
-            <button class="btn btn-primary" @click="openSolutionModal">해결방안 작성</button>
+            <button class="btn btn-secondary" @click="openSolutionModal">해결방안 작성</button>
             <button class="btn btn-primary" @click="checkComplete">해결 완료</button>
           </div>
         </div>
 
-        <div v-else class="detail-view p-3">
+        <div v-else class="detail-view-content p-3">
           <h6 class="mb-4 text-left">건의사항 상세</h6>
           <p>건의사항을 선택해 주세요.</p>
         </div>
@@ -117,7 +125,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import ShopSidebar from '@/components/ShopSidebar.vue';
 import { useRouter } from 'vue-router';
 import { proposal_list, proposal_check, proposal_solution } from "@/shop_axios.js";
@@ -131,13 +139,10 @@ export default {
     const router = useRouter();
 
     const searchText = ref('');
-    let search_result = ref(false);
-
+    const selectedCategory = ref('');
     const proposals = ref([]);
     const copy_p_list = ref([]);
-
     const p_view = ref(null);
-
     const showSolutionModal = ref(false);
     const solutionText = ref('');
 
@@ -160,33 +165,33 @@ export default {
             item.date = `${year}-${month}-${day}`;
           });
 
-          // completed 상태에 따라 정렬
-          sortProposals();
-
-          console.log("Sorted proposals:", proposals.value); // 정렬된 데이터 확인
           copy_p_list.value = [...proposals.value];
         });
-    };
-
-    const sortProposals = () => {
-      proposals.value.sort((a, b) => {
-        if (a.completed === b.completed) {
-          return new Date(b.date) - new Date(a.date); // 동일한 completed 상태라면 날짜 순 정렬
-        }
-        return a.completed === 'N' ? -1 : 1; // 'N'이 'Y'보다 상단에 오도록 정렬
-      });
-      copy_p_list.value = [...proposals.value];
     };
 
     getProposalList();
 
     const search = () => {
-      copy_p_list.value = proposals.value.filter((p) => p.title.includes(searchText.value));
+      filterProposals();
     };
 
     const resetSearch = () => {
       searchText.value = '';
-      copy_p_list.value = [...proposals.value];
+      selectedCategory.value = '';
+      filterProposals();
+      p_view.value = null; // 상세 내용을 초기화
+    };
+
+    const filterByCategory = () => {
+      filterProposals();
+    };
+
+    const filterProposals = () => {
+      copy_p_list.value = proposals.value.filter((p) => {
+        const matchesCategory = selectedCategory.value ? p.category === selectedCategory.value : true;
+        const matchesSearch = p.title.includes(searchText.value);
+        return matchesCategory && matchesSearch;
+      });
     };
 
     const triggerShow = () => {
@@ -218,12 +223,10 @@ export default {
         await proposal_check(data, store.state.loginToken)
           .then(() => {
             alert('해결 완료되었습니다.');
-            p_view.value.completed = 'Y';
+            p_view.value.completed = 'y';
             proposals.value = proposals.value.map(p =>
-              p.proposal_id === p_view.value.proposal_id ? { ...p, completed: 'Y' } : p
+              p.proposal_id === p_view.value.proposal_id ? { ...p, completed: 'y' } : p
             );
-            // 리스트 정렬
-            sortProposals();
           })
           .catch((error) => {
             console.error('해결 완료 오류:', error);
@@ -265,19 +268,24 @@ export default {
 
     // watch 함수를 사용하여 proposals가 변경될 때 copy_p_list도 업데이트
     watch(proposals, (newProposals) => {
-      copy_p_list.value = [...newProposals];
+      console.log(newProposals)
+      filterProposals();
     });
+
+    const filteredProposals = computed(() => copy_p_list.value);
 
     return {
       select,
       searchText,
-      search_result,
+      selectedCategory,
       copy_p_list,
       proposals,
       selectMenu,
       p_view,
       search,
       resetSearch,
+      filterByCategory,
+      filteredProposals,
       checkComplete,
       showSolutionModal,
       solutionText,
@@ -290,6 +298,20 @@ export default {
 </script>
 
 <style scoped>
+
+/* 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+.gowun-dodum-regular {
+  font-family: "Gowun Dodum", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+div {
+  font-family: "Gowun Dodum", sans-serif;
+}
+
 .container-fluid {
   display: flex;
   flex-direction: column;
@@ -306,7 +328,7 @@ export default {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 600px; /* 최소 높이를 늘림 */
+  height: 650px; /* 최소 높이를 늘림 */
   overflow-y: auto;
 }
 
@@ -318,6 +340,8 @@ export default {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: #f9f9f9;
+  height: 650px; /* 고정 높이 설정 */
+  overflow-y: auto; /* 스크롤 생성 */
 }
 
 .d-flex {
@@ -352,7 +376,7 @@ export default {
 .button-container {
   display: flex;
   justify-content: center;
-  gap: 10px; /* 버튼 사이의 간격을 조절 */
+  gap: 30px; /* 버튼 사이의 간격을 조절 */
 }
 
 /* 모달 스타일 */
@@ -394,5 +418,9 @@ export default {
   background: none;
   border: none;
   font-size: 1.5rem;
+}
+
+.detail-view h6 {
+  font-size: 1.25rem; /* 글씨 크기 조정 */
 }
 </style>
