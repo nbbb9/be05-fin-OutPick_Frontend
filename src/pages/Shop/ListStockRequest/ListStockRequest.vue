@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid p-1">
+  <div class="container">
     <div class="row mt-4">
       <h4 class="text-left title">재고요청서</h4>
     </div>

@@ -16,7 +16,8 @@ export default createStore({
         loginUserId : 1,
         loginStoreId : 1,
         loginStoreUser : "여경원 매니저님",
-        loginStoreName : "신대방삼거리역"
+        loginStoreName : "신대방삼거리역",
+        eventListener : []
     },
     mutations : {
         // 전역 변수 상태 변경 메소드
@@ -43,6 +44,12 @@ export default createStore({
         },
         LoginStoreName(state, payload){
             state.loginStoreName = payload
+        },
+        EventListener(state, listener){
+            state.eventListener.push(listener)
+        },
+        ClearEventListener(state){
+            state.eventListener = []
         }
     },
     actions : {
@@ -70,6 +77,12 @@ export default createStore({
         },
         triggerLoginStoreName({commit}, payload){
             commit('LoginStoreName', payload)
+        },
+        triggerEventListener({commit}, payload){
+            commit('EventListener', payload);
+        },
+        triggerClearEL({commit}){
+            commit('ClearEventListener');
         }
     }   
 })

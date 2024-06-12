@@ -57,12 +57,30 @@
       검색 결과가 존재하지 않습니다.
     </div>
 
+    <!-- 접근 불가 모달 -->
+    <div class="modal" tabindex="-1" v-if="showModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">접근 불가</h5>
+            <button type="button" class="btn-close" @click="closeModal"></button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-message">{{ modalMessage }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeModal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
 import { useStore } from 'vuex';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import ShopSidebar from '@/components/ShopSidebar.vue'
 import { useRouter } from 'vue-router';
 import { shop_my_list, shop_all_list } from '@/shop_axios';
@@ -81,7 +99,15 @@ export default {
     const copy_shop_list = ref([{}]); // search를 위한 배열
     const searchText = ref(''); // search text
     let search_result = ref(false); // search 결과
-    
+
+    const showModal = ref(false); // 모달 표시 여부
+    const modalMessage = ref(''); // 모달 메시지
+
+    // 로그인한 employee_id를 computed 속성으로 참조
+    const loggedInEmployeeId = computed(() => store.state.loginUserId);
+
+    console.log(loggedInEmployeeId.value);
+
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const triggerShow = () => {
       store.dispatch('triggerShow', true);
@@ -118,7 +144,18 @@ export default {
 
     //내 담당 매장 상세 보기
     const showMyShopDetails = (shop) => {
-      router.push({name: 'DetailShop', params: { shopId: shop.shop_id} });
+      console.log('LoggedInEmployeeId:', loggedInEmployeeId.value);
+      console.log('Shop EmployeeId:', shop.employee_id);
+      if (shop.employee_id === loggedInEmployeeId.value) {
+        router.push({name: 'DetailShop', params: { shopId: shop.shop_id} });
+      } else {
+        modalMessage.value = '담당 매장이 아닙니다.';
+        showModal.value = true;
+      }
+    }
+
+    const closeModal = () => {
+      showModal.value = false;
     }
 
     // 메뉴 이동
@@ -156,7 +193,10 @@ export default {
       selectMenu,
       showAllShop,
       showMyChargeShop,
-      showMyShopDetails
+      showMyShopDetails,
+      showModal,
+      modalMessage,
+      closeModal
     }
   }
 
@@ -221,6 +261,23 @@ td {
 .alert{
   font-weight: bold;
   box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403); 
+}
+
+/* 모달 스타일 */
+.modal {
+  display: block; /* 항상 모달을 보이도록 설정 */
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+}
+
+.modal-dialog {
+  margin: 10% auto; /* 상단 여백 설정 */
+}
+
+/* 모달 메시지 스타일 */
+.modal-message {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: red;
 }
 
 </style>
