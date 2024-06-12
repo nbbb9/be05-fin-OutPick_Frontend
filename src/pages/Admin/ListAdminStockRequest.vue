@@ -12,7 +12,7 @@
         <form v-on:submit.prevent="searchStRe">
           <div class="row mt-4" > 
             <div class="col-4">
-              <input v-model="search_text" type="text" class="form-control">
+              <input v-model="search_text" type="text" class="form-control" placeholder="매장 이름">
             </div>
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
@@ -45,7 +45,7 @@
                 <td>{{ sr.shop_name }}</td>
                 <td>{{ sr.request_date }}</td>
                 <td>{{ sr.approval }}</td>
-                <td>{{ sr.admin_approval }}</td>
+                <td :class="sr.admin_approval === '대기' ? 'red-text' : 'blue-text'" >{{ sr.admin_approval }}</td>
                 <td> <input type="checkbox" v-on:click="checkStRe(sr.stock_request_id)" > </td>
               </tr>
             </tbody>
@@ -306,13 +306,13 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 .gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+  font-family: "Gowun Dodum", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: "Gowun Dodum", sans-serif;
 }
 
 /* 세로 방향 가운데 정렬 */
@@ -340,7 +340,7 @@ td {
 
 /* list scroll, 그림자 */
 .listDiv{
-  max-height : 60vh;
+  max-height : 58vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 1%;
@@ -358,6 +358,14 @@ td {
   max-width: 40vw;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 2%;
+}
+
+/* 색깔 변경 */
+.red-text {
+  color: red;
+}
+.blue-text {
+  color: blue;
 }
 
 /* 글자 굵기 */

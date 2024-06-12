@@ -58,7 +58,7 @@
       <div class="col-5 detail" style="flex: 1;" v-if="!isMidify" >
         <div class="row mt-2" >
           <div class="col-6">
-            영업사원 상세정보
+            <h5>영업사원 상세정보</h5>
           </div>
           <div class="col-6">
             <button class="btn btn-warning mr" @click="toModifyEm">수정</button>
@@ -166,7 +166,7 @@
   <div class="detail" style="flex: 1;" v-if="isMidify" >
     <div class="row mt-2" >
       <div class="col-6">
-        영업사원 상세정보
+        <h5>영업사원 상세정보</h5>
       </div>
       <div class="col-6">
         <button class="btn btn-warning mr" @click="cancleMo" >수정취소</button>
