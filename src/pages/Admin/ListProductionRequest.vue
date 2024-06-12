@@ -6,7 +6,7 @@
 
       <div class="col-6">
 
-        <div>생산 요청서</div>
+        <div><h5>생산 요청서</h5></div>
 
         <!-- 검색창 -->
         <form v-on:submit.prevent="searchPr">
@@ -29,7 +29,7 @@
         <!-- 재고 요청서 리스트 -->
         <div class="listDiv mt-4">
           <table class="table table-hover border-gray">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>요청서 ID</th>
                 <th>요청자</th>
@@ -44,7 +44,7 @@
                 <td>{{ pr.employee_name }}</td>
                 <td>{{ pr.request_date }}</td>
                 <td :class="pr.approval === 'n' ? 'red-text' : 'blue-text'" >{{ pr.approval === 'n' ? 'N' : 'Y' }}</td>
-                <td> <input type="checkbox" v-on:click="checkPr(pr.production_request_id)" > </td>
+                <td> <input type="checkbox" v-if="pr.approval === 'n'" v-on:click="checkPr(pr.production_request_id)" > </td>
               </tr>
             </tbody>
           </table>
@@ -296,6 +296,18 @@ export default {
 </script>
 
 <style scoped>
+/* 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+.gowun-dodum-regular {
+font-family: "Gowun Dodum", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
+
+div{
+font-family: "Gowun Dodum", sans-serif;
+}
 
 /* 세로 방향 가운데 정렬 */
 td {
@@ -325,7 +337,7 @@ td {
   max-height : 60vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-  padding: 1%;
+  margin: 1%;
 }
 
 /* 상세 */
@@ -348,5 +360,10 @@ td {
 }
 .blue-text {
   color: blue;
+}
+
+/* 글자 굵기 */
+h5{
+  font-weight: bold;
 }
 </style>
