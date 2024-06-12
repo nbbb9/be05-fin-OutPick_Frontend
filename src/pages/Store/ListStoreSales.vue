@@ -189,6 +189,7 @@ export default {
   const addSales = async () => {
 
     let data = {
+      shop_id : store.state.loginStoreId,
       product_id : selectPdId.value,
       quantity : inputAmount.value
     }
