@@ -1,4 +1,4 @@
-<template>
+npm <template>
     <div class="container" >
 
       <!-- sidebar -->
