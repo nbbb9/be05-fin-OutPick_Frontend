@@ -247,7 +247,8 @@ export default {
       if (p_view.value) {
         const data = {
           proposal_id: p_view.value.proposal_id,
-          solution: solutionText.value
+          solution: solutionText.value,
+          shop_id: p_view.value.shop_id
         };
         await proposal_solution(data, store.state.loginToken)
           .then(() => {
