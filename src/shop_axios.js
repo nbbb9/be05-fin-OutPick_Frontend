@@ -30,6 +30,24 @@ export function shop_my_detail(shopid, token){
     });
 }
 
+//담당 매장 재고 리스트
+export function shop_stock(shopid, token){
+    return user_axios.get(`/shopstock/${shopid}`,{
+        headers : {
+            login_token : token
+        }
+    });
+}
+
+//담당 매장 재고요청서 리스트
+export function shop_stockrequest_list(shopid){
+    return user_axios(`/stockrequest/list/${shopid}`);
+}
+
+//담당 매장 건의사항 리스트
+export function shop_proposal_list(shopid){
+    return user_axios(`/proposal/shop/${shopid}`);
+}
 
 // 건의사항 리스트
 export function proposal_list(token){
