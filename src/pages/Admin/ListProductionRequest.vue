@@ -12,7 +12,7 @@
         <form v-on:submit.prevent="searchPr">
           <div class="row mt-4" > 
             <div class="col-4">
-              <input v-model="search_text" type="text" class="form-control">
+              <input v-model="search_text" type="text" class="form-control" placeholder="요청자 이름">
             </div>
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
@@ -210,11 +210,14 @@ export default {
     let search_text = ref();
     const searchPr = () => {
       copy_pr_list.value = pr_list.value.filter((item) => {
+
+        console.log(item);
+
         let matchesSearchText = true;
         let matchesFilterSelect = true;
 
         if (search_text.value) {
-          matchesSearchText = item.product_name.includes(search_text.value);
+          matchesSearchText = item.employee_name.includes(search_text.value);
         }
 
         if (filterSelect.value) {
@@ -300,13 +303,13 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 .gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+  font-family: "Gowun Dodum", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: "Gowun Dodum", sans-serif; 
 }
 
 /* 세로 방향 가운데 정렬 */
@@ -334,7 +337,7 @@ td {
 
 /* list scroll, 그림자 */
 .listDiv{
-  max-height : 60vh;
+  max-height : 58vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 1%;
