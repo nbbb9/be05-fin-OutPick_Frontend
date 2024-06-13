@@ -150,7 +150,6 @@ export default {
   
     // 검색
     const searchText = ref();
-    const search_result = ref(false);
     const category = ref();
 
     const filtereditems = () => {
@@ -178,11 +177,7 @@ export default {
           })  
         }
       }
-    }
-
-    // 정렬
-   
-    
+    }  
 
 
     return {
@@ -190,7 +185,6 @@ export default {
       show_detail,
       item_detail,
       searchText,
-      search_result,
       filtereditems,
       delete_duplicated,
       category,
