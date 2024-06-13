@@ -12,17 +12,18 @@
         <div class="block-3">
           <input type="text" v-model="searchText" placeholder="상품을 검색하세요" class="form-control">
         </div>
-        <div class="block-1">
-          <button @click="search_item_list" class="btn btn-outline-light text-black">검색</button>
+        
+        <div class="block-2">
+          <select class="form-select" v-model="category">
+            <option value="기본">기본</option>
+            <option value="인기순">인기순</option>
+            <option value="비인기순">비인기순</option>
+            <option value="가나다순">가나다순</option>
+            <option value="창고">창고</option>
+          </select>
         </div>
         <div class="block-1">
-          <select class="form-select" v-model="category">
-            <option @click="search_item_list" value="기본" selected>기본</option>
-            <option @click="search_famous" value="인기순">인기순</option>
-            <option @click="search_not_famous" value="비인기순">비인기순</option>
-            <option @click="search_abc" value="가나다순">가나다순</option>
-            <option @click="search_warehouse" value="계절">창고</option>
-          </select>
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
         </div>
         <div class="block-3"></div>
         <div class="block-3"></div>
@@ -41,7 +42,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(i) in filtereditems" :key="i.stock_id" @click="show_detail(i.product_name)">
+            <tr v-for="(i) in copy_st_list" :key="i.stock_id" @click="show_detail(i.product_name)">
               <td>{{ i.product_name }}</td> 
               <td>{{ i.stock_date }}</td>
               <td>{{ i.warehouse_name }}</td>
@@ -92,7 +93,7 @@
 </template>
 
 <script>
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
 import { company_stock } from '@/stock_axios';
 
 export default {
@@ -130,7 +131,9 @@ export default {
     const unique_items = ref([]);
     watch(company_stock_list, (newVal) => {
       unique_items.value = delete_duplicated(newVal);
+      copy_st_list.value = [...unique_items.value];
     }, {immediate: true});
+
 
 
     // 상세보기
@@ -148,24 +151,38 @@ export default {
     // 검색
     const searchText = ref();
     const search_result = ref(false);
-    const filtereditems = computed(() => {
-      if (searchText.value) {
-        return unique_items.value.filter(item => item.product_name.includes(searchText.value));
-      
-      }
-      return unique_items.value;
-    })
+    const category = ref();
 
-    watch([searchText, filtereditems], ([newSearchText, newFilteredItems]) => {
-      if (newSearchText) {
-        search_result.value = newFilteredItems.length === 0;
-      } else {
-        search_result.value = false;
+    const filtereditems = () => {
+      if (searchText.value) {
+        console.log("검색 단어 :", searchText.value);
+        copy_st_list.value = unique_items.value.filter(item => {
+          console.log(item);
+          return item.product_name.includes(searchText.value)
+        })
       }
-    });
+      if (category.value) {
+        if (category.value === '가나다순') {
+          copy_st_list.value.sort((a,b) => {
+            return a.product_name.localeCompare(b.product_name);
+          })
+        } else if (category.value === '기본') {
+          copy_st_list.value = [...unique_items.value]; 
+        } else if (category.value === '인기순') {
+          copy_st_list.value.sort((a,b) => {
+            return b.quantity - a.quantity;
+          })
+        } else if (category.value === '비인기순') {
+          copy_st_list.value.sort((a,b) => {
+            return a.quantity - b.quantity;
+          })  
+        }
+      }
+    }
 
     // 정렬
    
+    
 
 
     return {
@@ -175,7 +192,9 @@ export default {
       searchText,
       search_result,
       filtereditems,
-      delete_duplicated
+      delete_duplicated,
+      category,
+      copy_st_list
     }
   }
 }
