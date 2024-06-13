@@ -17,7 +17,7 @@
         </select>
       </div>
       <div class="col-md-3">
-        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="검색할 내용을 입력해주세요." class="form-control">
+        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="매장 검색" class="form-control">
       </div>
       <div class="col-md-1">
         <button class="btn btn-dark" @click="search">검색</button>
@@ -37,7 +37,7 @@
               <th>요청서ID</th>
               <th>매장 이름</th>
               <th>요청일</th>
-              <th>내 결제상태</th>
+              <th>나의 결재상태</th>
               <th>관리자 결제상태</th>
               <th>상세보기</th>
             </tr>
@@ -47,10 +47,10 @@
               <td>{{ sr.stock_request_id }}</td>
               <td>{{ sr.shop_name }}</td>
               <td>{{ sr.request_date }}</td>
-              <td>{{ sr.approval }}</td>
-              <td>{{ sr.admin_approval }}</td>
+              <td :style="{ color: sr.approval === '승인' ? 'blue' : sr.approval === '반려' ? 'red' : 'gray' }">{{ sr.approval }}</td>
+              <td :style="{ color: sr.admin_approval === '승인' ? 'blue' : sr.admin_approval === '반려' ? 'red' : 'gray' }">{{ sr.admin_approval }}</td>
               <td>
-                <button class="btn btn-outline-light text-black" @click="showSrDetails(sr)">
+                <button class="btn btn-outline-secondary" @click="showSrDetails(sr)">
                   상세보기
                 </button>
               </td>
@@ -138,10 +138,11 @@ export default {
       filterAllStockRequest();
     };
 
-    // 재고요청서 상세 보기
-    const showSrDetails = (sr) => {
-      router.push({name: 'DetailStockRequest', params: { srId: sr.stock_request_id }});
-    };
+// 재고요청서 상세 보기
+const showSrDetails = (sr) => {
+    console.log('Selected SR:', sr);
+    router.push({name: 'DetailStockRequest', params: { stock_request_id: sr.stock_request_id }});
+};
 
     // watch 함수를 사용하여 stock_request가 변경될 때 copy_sr_list도 업데이트
     watch(all_stock_request, (newStockReq) => {

@@ -1,15 +1,16 @@
 <template>
   <div class="container">
+    <!-- 사이드바 -->
+    <ShopSidebar @ShopSidebar="selectMenu" />
+
+    <!-- 제목 -->
     <div class="row mt-4">
       <h4 class="text-left">건의사항</h4>
     </div>
 
-    <!-- sidebar -->
-    <ShopSidebar @ShopSidebar="selectMenu" />
-
     <!-- 검색창 -->
-    <div class="search_div row mt-4">
-      <div class="col-md-2">
+    <div class="row mt-4 search_div">
+      <div class="col-2">
         <select v-model="selectedCategory" @change="filterByCategory" class="form-select">
           <option value="">카테고리 선택</option>
           <option value="상품">상품</option>
@@ -17,22 +18,22 @@
           <option value="인력">인력</option>
         </select>
       </div>
-      <div class="col-md-3">
-        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="검색할 내용을 입력해주세요." class="form-control">
+      <div class="col-3">
+        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="제목 검색" class="form-control">
       </div>
-      <div class="col-md-1">
+      <div class="col-1 pl-2">
         <button class="btn btn-dark" @click="search">검색</button>
       </div>
-      <div class="col-md-1">
+      <div class="col-1">
         <button class="btn btn-secondary" @click="resetSearch">초기화</button>
       </div>
     </div>
 
     <div class="row mt-3">
       <!-- 리스트 -->
-      <div class="col-md-7 listDiv">
+      <div class="listDiv">
         <table class="table table-hover border-gray">
-          <thead>
+          <thead style="position: sticky; top:0; z-index: 1;">
             <tr>
               <th>건의사항 ID</th>
               <th>제목</th>
@@ -42,51 +43,57 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-on:click="select(p.proposal_id)" v-for="(p) in filteredProposals" :key="p.proposal_id">
+            <tr v-for="(p) in filteredProposals" :key="p.proposal_id" @click="select(p.proposal_id)">
               <td>{{ p.proposal_id }}</td>
               <td>{{ p.title }}</td>
               <td>{{ p.date }}</td>
               <td>{{ p.category }}</td>
-              <td v-bind:style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
+              <td :style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
       <!-- 상세 내용 -->
-      <div class="col-md-5 detail-view">
+      <div class="detail">
         <div v-if="p_view" class="detail-view-content p-3">
-          <h6 class="mb-4 text-left">건의사항 상세</h6>
-          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+          <h5 class="mb-4">건의사항 상세</h5>
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between atr">
             <strong>지점</strong>
             <div>{{ p_view.shop_name }}</div>
           </div>
-          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between atr">
             <strong>제목</strong>
             <div>{{ p_view.title }}</div>
           </div>
-          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
+          <div class="mb-3 p-2 border rounded d-flex justify-content-between atr">
             <strong>날짜</strong>
             <div>{{ p_view.date }}</div>
           </div>
-          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
-            <strong>담당자</strong>
-            <div>{{ p_view.manager }}</div>
-          </div>
-          <div class="mb-3 p-2 border rounded d-flex justify-content-between">
-            <strong>카테고리</strong>
-            <div>{{ p_view.category }}</div>
-          </div>
-          <div class="mb-3 p-2 border rounded">
-            <strong class="d-block text-left">내용</strong>
-            <div class="mt-2 listDiv-content text-left">
-              {{ p_view.content }}
+          <div class="d-flex">
+            <div class="half mb-3 p-2 border rounded d-flex justify-content-between atr ">
+              <strong>담당자</strong>
+              <div>{{ p_view.manager }}</div>
+            </div>
+            <div class="half mb-3 p-2 border rounded d-flex justify-content-between atr ">
+              <strong>카테고리</strong>
+              <div>{{ p_view.category }}</div>
             </div>
           </div>
-          <div class="mb-3 p-2 border rounded">
+          <div class="mb-3 p-2 border rounded atr2">
+            <strong class="d-block text-left">내용</strong>
+            <div class="mt-2">
+              <div class="solution-body mt-2">
+                {{ p_view.content }}
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 p-2 border rounded atr2">
             <strong class="d-block text-left">해결방안</strong>
-            <div class="mt-2 listDiv-content text-left">
-              {{ p_view.solution }}
+            <div class="mt-2">
+              <div class="solution-body mt-2">
+                {{ p_view.solution }}
+              </div>
             </div>
           </div>
           <div class="button-container text-center mt-auto">
@@ -94,9 +101,9 @@
             <button class="btn btn-primary" @click="checkComplete">해결 완료</button>
           </div>
         </div>
-
         <div v-else class="detail-view-content p-3">
-          <h6 class="mb-4 text-left">건의사항 상세</h6>
+          <h5 class="mb-4">건의사항 상세</h5>
+          <br><br><br><br><br>
           <p>건의사항을 선택해 주세요.</p>
         </div>
       </div>
@@ -313,9 +320,11 @@ div {
   font-family: "Gowun Dodum", sans-serif;
 }
 
-.container-fluid {
+.container {
   display: flex;
   flex-direction: column;
+  max-width: 150vh; /* 화면 너비의 90%로 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
 }
 
 .search_div {
@@ -326,23 +335,43 @@ div {
 }
 
 .listDiv {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 650px; /* 최소 높이를 늘림 */
+  max-height: 70vh;
   overflow-y: auto;
+  box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+  margin: 1%;
+  width : 80vh;
 }
 
 .listDiv-content {
   white-space: pre-wrap;
 }
 
-.detail-view {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f9f9f9;
-  height: 650px; /* 고정 높이 설정 */
-  overflow-y: auto; /* 스크롤 생성 */
+.detail {
+  box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+  padding: 1%;
+  height: 650px;
+  overflow-y: auto;
+  width : 60vh;
+}
+
+.atr {
+  width: 100%;
+  box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+  margin: 2%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  word-wrap: break-word;
+}
+.atr2 {
+  width: 100%;
+  box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+  margin: 2%;
+  text-align: left;
+  align-items: left;
+  padding: 10px;
+  word-wrap: break-word;
 }
 
 .d-flex {
@@ -359,7 +388,7 @@ div {
 }
 
 .mt-2 {
-  margin-top: 0.5rem;
+  margin-top: 5rem;
 }
 
 .text-left {
@@ -380,7 +409,10 @@ div {
   gap: 30px; /* 버튼 사이의 간격을 조절 */
 }
 
-/* 모달 스타일 */
+.half {
+  width : 30vh;
+}
+
 .modal {
   position: fixed;
   top: 0;

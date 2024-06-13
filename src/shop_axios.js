@@ -94,4 +94,22 @@ export function stock_request_list(token) {
     })
 }
 
+// 재고요청서 상세조회(사원)
+export function stock_request_detail(stock_request_id, token){
+    return user_axios.get(`/stockrequest/${stock_request_id}`, {
+        headers : {
+            login_token : token
+        }
+    })
+}
+
+// 재고요청서 승인(사원)
+export function stock_request_approval(stock_request_id, token){
+    return user_axios.put(`/stockrequest/confirm/${stock_request_id}`, {}, {
+        headers : {
+            login_token : token
+        }
+    })
+}
+
 
