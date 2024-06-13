@@ -10,22 +10,20 @@ export default createStore({
     state : {
         // 전역 변수
         showNav : true,
-        isAdmin : true,
         loginToken : "",
         loginUserName : "여경원",
         loginUserNumber : 20190234,
         loginUserId : 1,
+        loginUserRole : "",
         loginStoreId : 1,
         loginStoreUser : "여경원 매니저님",
-        loginStoreName : "신대방삼거리역"
+        loginStoreName : "신대방삼거리역",
+        eventListener : []
     },
     mutations : {
         // 전역 변수 상태 변경 메소드
         SHOW(state, payload){
             state.showNav = payload;
-        },
-        IsAdmin(state, payload){
-            state.isAdmin = payload;
         },
         LoginToken(state, payload){
             state.loginToken = payload;
@@ -36,6 +34,9 @@ export default createStore({
         LoginUserId(state, payload){
             state.loginUserId = payload;
         },
+        LoginUserRole(state, payload){
+            state.loginUserRole = payload
+        },
         LoginStoreId(state, payload){
             state.loginStoreId = payload;
         },
@@ -44,6 +45,12 @@ export default createStore({
         },
         LoginStoreName(state, payload){
             state.loginStoreName = payload
+        },
+        EventListener(state, listener){
+            state.eventListener.push(listener)
+        },
+        ClearEventListener(state){
+            state.eventListener = []
         },
         LoginUserNumber(state, payload){
             state.loginUserNumber = payload
@@ -54,9 +61,6 @@ export default createStore({
         triggerShow( {commit}, payload ){
             commit('SHOW', payload);
         },
-        triggerIsAdmin({commit}, payload){
-            commit('IsAdmin', payload)
-        },
         triggerLoginToken({commit}, payload){
             commit('LoginToken', payload)
         },
@@ -66,6 +70,9 @@ export default createStore({
         triggerLoginUserId({commit}, payload){
             commit('LoginUserId',payload)
         },
+        triggerLoginUserRole({commit}, payload){
+            commit('LoginUserRole',payload)
+        },
         triggerLoginStoreId({commit}, payload){
             commit('LoginStoreId', payload)
         },
@@ -74,6 +81,12 @@ export default createStore({
         },
         triggerLoginStoreName({commit}, payload){
             commit('LoginStoreName', payload)
+        },
+        triggerEventListener({commit}, payload){
+            commit('EventListener', payload);
+        },
+        triggerClearEL({commit}){
+            commit('ClearEventListener');
         },
         triggerLoginUserNumber({commit}, payload){
             commit('LoginUserNumber', payload)
