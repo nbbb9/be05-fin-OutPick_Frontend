@@ -24,7 +24,7 @@
           <li class="nav-item">
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'Login'}">통계/분석</router-link>
           </li>
-          <li class="nav-item" v-if="isAdmin">
+          <li class="nav-item" v-if="loginUserRole === '관리자'">
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListEmployee'}">관리자</router-link>
           </li>
         </ul>
@@ -41,9 +41,9 @@
           </li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-white" href="#">이름 : {{ loginUserName }}</a></li>
-          <li><a class="dropdown-item text-white" href="#">직급 : 사원</a></li>
+          <li><a class="dropdown-item text-white" href="#">직급 : {{ loginUserRole }}</a></li>
           <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-white" href="#">Logout</a></li>
+          <li><a class="dropdown-item text-white" @click="logout">Logout</a></li>
         </ul>
       </div><!-- 사용자 정보 드롭다운 -->
 
@@ -58,25 +58,54 @@
 <script>
 import { useStore } from 'vuex';
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: 'App',
   setup() {
     const store = useStore();
+    const router = useRouter()
     let showNav = computed(() => store.state.showNav);
     let isAdmin = computed(() => store.state.isAdmin);
     let loginUserName = computed(() => store.state.loginUserName);
+    let loginUserRole = computed(() => store.state.loginUserRole);
+
+    const logout = () => {
+      store.dispatch('triggerLoginUserName', ""); // 로그인 이름 초기화
+      store.dispatch('triggerLoginUserId',0);     // 로그인 아이디 초기화
+      store.dispatch('triggerLoginToken', "");    // 로그인 토큰 초기화
+      store.dispatch('triggerLoginUserRole',"")   // 로그인 직급 초기화
+
+      router.push({
+        name : "Login"
+      })
+    }
 
     return {
       showNav,
       isAdmin,
-      loginUserName
+      loginUserName,
+      loginUserRole,
+      logout
     };
   }
 };
 </script>
 
 <style>
+/* 폰트 */
+@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+.gowun-dodum-regular {
+font-family: "Gowun Dodum", sans-serif;
+font-weight: 400;
+font-style: normal;
+}
+
+div{
+font-family: "Gowun Dodum", sans-serif;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

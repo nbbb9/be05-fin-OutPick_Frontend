@@ -16,6 +16,7 @@
             </div>
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
+                <option value="" disabled selected hidden>관리자 결재 여부</option>
                 <option value="승인">승인</option>
                 <option value="대기">대기</option>
               </select>
@@ -46,7 +47,7 @@
                 <td>{{ sr.request_date }}</td>
                 <td>{{ sr.approval }}</td>
                 <td :class="sr.admin_approval === '대기' ? 'red-text' : 'blue-text'" >{{ sr.admin_approval }}</td>
-                <td> <input type="checkbox" v-on:click="checkStRe(sr.stock_request_id)" > </td>
+                <td> <input type="checkbox" v-if="sr.admin_approval === '대기'" v-on:click="checkStRe(sr.stock_request_id)" > </td>
               </tr>
             </tbody>
           </table>
@@ -212,7 +213,7 @@ export default {
     }
 
     // 검색
-    let filterSelect = ref(); // filter 클릭
+    let filterSelect = ref(''); // filter 클릭
     let search_text = ref();
     const searchStRe = () => {
       copy_sr_list.value = stre_list.value.filter((item) => {

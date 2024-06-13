@@ -14,14 +14,6 @@
             <tr>
               <td> <input v-model="password" type="password" placeholder="비밀번호" class="form-control"></td>
             </tr>
-            <tr>
-              <td> 
-                <select class="form-select" v-model="role" >
-                  <option value="사원">사원</option>
-                  <option value="관리자">관리자</option>
-                </select> 
-              </td>
-            </tr>
           </tbody>
         </table>
         <div class="flex_item_center">
@@ -48,18 +40,17 @@ export default {
 
 setup(){
 
-  // 통신 객체가 담겨짐
-  const sse = new EventSource("http://localhost:8080/connect");
+  const store = useStore();   // store 변수
+  const router = useRouter(); //router
 
-  sse.addEventListener('connect', (e) => {
-    const {data : receivedConnectData } = e;
-    console.log('connect event data : ', receivedConnectData);
-  })
-
-  sse.addEventListener('count', e => {  
-    const { data: receivedCount } = e;  
-    console.log("count event data",receivedCount);  
-});
+  if(store.state.loginToken.length > 0 && store.state.loginUserName.length > 0
+      && store.state.loginUserId !== 0
+  ){
+    console.log("tlq")
+    router.push({
+      name : "ListShop"
+    })
+  }
 
   // 로그인 실패시 팝업을 띄울 변수
   const ifFalse = ref(false);
@@ -68,17 +59,12 @@ setup(){
   let employee_number = ref("");
   let password = ref("");
 
-  //router
-  const router = useRouter();
-
   // 로그인 요청
-  const role = ref();
   const origin_login =  async () => {
     
     let data = {
       employee_number : employee_number.value,
       password : password.value,
-      role : role.value
     };
 
     // axios - post : 매장 로그인
@@ -92,6 +78,7 @@ setup(){
           .then( (response) => {
             store.dispatch('triggerLoginUserName', response.data.name);
             store.dispatch('triggerLoginUserId', response.data.id);
+            store.dispatch('triggerLoginUserRole',response.data.role); 
           })
           .catch((e) => {
             console.log("error : ", e.message);
@@ -110,7 +97,6 @@ setup(){
   }
 
   // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-  const store = useStore();   // store 변수
   const triggerShow = () => {
     store.dispatch('triggerShow', false);
     console.log(store.state.showNav)
@@ -121,8 +107,7 @@ setup(){
     origin_login,
     ifFalse,
     employee_number,
-    password,
-    role
+    password
   } 
 }
 }

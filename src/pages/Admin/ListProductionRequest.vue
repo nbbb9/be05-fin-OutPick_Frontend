@@ -16,6 +16,7 @@
             </div>
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
+                <option value="" disabled selected hidden>관리자 결재 여부</option>
                 <option value="y">Y</option>
                 <option value="n">N</option>
               </select>
@@ -206,7 +207,7 @@ export default {
     }
 
     // 검색
-    let filterSelect = ref(); // filter 클릭
+    let filterSelect = ref(''); // filter 클릭
     let search_text = ref();
     const searchPr = () => {
       copy_pr_list.value = pr_list.value.filter((item) => {
