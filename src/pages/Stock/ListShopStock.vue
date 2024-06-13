@@ -212,7 +212,6 @@
         
       }
 
-<<<<<<< Updated upstream
       const product_name = ref();
       const product_ids = ref([]);
       const product_id = ref();
@@ -244,12 +243,10 @@
         }
       };
       
-=======
       // const handleInput = async () => {
       //   const discount_rate = input.value;
       // }
 
->>>>>>> Stashed changes
       
 
 
@@ -276,13 +273,9 @@
       is_modal_visible,
       discount_rate,
       show_modal,
-<<<<<<< Updated upstream
       update_discount,
       handleInput,
       send_name
-=======
-      update_discount
->>>>>>> Stashed changes
       }
         
     

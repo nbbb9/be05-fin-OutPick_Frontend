@@ -23,6 +23,9 @@ import ListProposal from "@/pages/Shop/ListProposal/ListProposal.vue";
 import DetailProposal from "@/pages/Shop/ListProposal/DetailProposal.vue";
 import ListStockRequest from "@/pages/Shop/ListStockRequest/ListStockRequest.vue";
 import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest.vue";
+import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
+import ListShopStock from "@/pages/Stock/ListShopStock.vue";
+import ListProduct from "@/pages/Stock/ListProduct.vue";
 
 const router = createRouter({
     history : createWebHistory(),
@@ -129,9 +132,25 @@ const router = createRouter({
             path : "/stock_request_detail",
             name : "DetailStockRequest",
             component : DetailStockRequest
-        }
+        },
+       
+        {
+            path : "/officestock",
+            name : "ListCompanyStock",
+            component : ListCompanyStock
+        },
         
+        {
+            path : "/shopstock",
+            name : "ListShopStock",
+            component : ListShopStock
+        },
 
+        {
+            path : "/product/list",
+            name : "ListProduct",
+            component : ListProduct
+        }
     ]
 });
 
