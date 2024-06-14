@@ -1,4 +1,5 @@
 <template>
+
   <div class="container">
 
     <!-- sidebar -->
@@ -285,5 +286,3 @@ margin-top: 2%;
 .top-space-12 {
 margin-top: 12%
 }
-
-</style>

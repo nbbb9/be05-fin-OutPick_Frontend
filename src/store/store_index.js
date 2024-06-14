@@ -12,6 +12,7 @@ export default createStore({
         showNav : true,
         loginToken : "",
         loginUserName : "여경원",
+        loginUserNumber : 20190234,
         loginUserId : 1,
         loginUserRole : "",
         loginStoreId : 1,
@@ -50,6 +51,8 @@ export default createStore({
         },
         ClearEventListener(state){
             state.eventListener = []
+        LoginUserNumber(state, payload){
+            state.loginUserNumber = payload
         }
     },
     actions : {
@@ -83,6 +86,8 @@ export default createStore({
         },
         triggerClearEL({commit}){
             commit('ClearEventListener');
+        triggerLoginUserNumber({commit}, payload){
+            commit('LoginUserNumber', payload)
         }
     }   
 })

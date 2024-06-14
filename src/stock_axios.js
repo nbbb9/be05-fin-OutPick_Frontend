@@ -40,3 +40,8 @@ export function company_stock() {
 export function all_product() {
     return user_axios.get(`/product/list`)
 }
+            'login_token': token
+        }
+    })
+}
+

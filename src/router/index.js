@@ -6,6 +6,7 @@ import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 // 본 프로그램
 import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
 import DetailShop from "@/pages/Shop/ListShop/DetailShop.vue";
+import ListShopStock from "@/pages/Stock/ListShopStock.vue";
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
 import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
 import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
@@ -25,6 +26,10 @@ import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest
 import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
 import ListShopStock from "@/pages/Stock/ListShopStock.vue";
 import ListProduct from "@/pages/Stock/ListProduct.vue";
+import ListShop from "@/pages/Shop/ListShop/ListShop.vue";
+
+
+
 
 const router = createRouter({
     history : createWebHistory(),
@@ -133,6 +138,7 @@ const router = createRouter({
             component : ListCompanyStock
         },
         
+        // 매장 재고
         {
             path : "/shopstock",
             name : "ListShopStock",

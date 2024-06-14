@@ -12,6 +12,11 @@
           <div class="block-1">
             <h6>매장 선택</h6>
             <select v-model="shop_name" class="form-control" @change="get_shop_id">
+        <form v-on:submit.prevent="search" class="flex top-space-2">
+          <div class="block-1">
+            <h6>매장 선택</h6>
+            <select v-model="shop_name" class="form-control">
+
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
@@ -26,6 +31,15 @@
               <select class="form-select" v-model="category" >
                 <option value="기본" selected>기본</option>
                 <option value="가나다순">가나다순</option>
+              <button @click="searchItemList" class="btn btn-outline-light text-black">검색</button>
+            </div>
+            <div class="block-1">
+              <select class="form-select" v-model="category" >
+                <option @click="searchItemList" value="기본" selected>기본</option>
+                <option @click="searchFamous" value="인기순">인기순</option>
+                <option @click="searchNotFamous" value="비인기순">비인기순</option>
+                <option @click="searchABC" value="가나다순">가나다순</option>
+                <option @click="searchSeason" value="계절별">계절</option>
               </select>
             </div>
             <div class="block-2">
@@ -40,6 +54,8 @@
       <div>
       <div class="listDiv">
         <table class="table table-hover border-gray top-space-4 ">
+      <div>
+        <table class="table table-hover border-gray top-space-4">
           <thead>
             <tr>
               <th>상품명</th>
@@ -61,6 +77,10 @@
                   @submit="handleInput"
                 />
               </td>
+            <tr v-for="(i) in unique_items" :key="i.product_id">
+              <td @click="show_detail">{{ i.product_name }}</td>
+              <td @click="show_detail">{{ i.stock_date }}</td>
+              <td @click="show_detail">{{ i.discount }}</td>
             </tr>
           </tbody>
         </table>
@@ -110,11 +130,31 @@
 
 
 
+        <h5 class="top-space-4 block-2">선택 상품 조회</h5>
+      </div>
+    </div>
+      <div>
+        <table class="table table-hover border-gray top-space-2">
+          <thead>
+            <tr class="flex">
+              <th class="block-1">상품ID</th>
+              <th class="block-3">상품명</th>
+              <th class="block-1">사이즈</th>
+              <th class="block-1">색상</th>
+              <th class="block-2">입고일</th>
+              <th class="block-1">할인율</th>
+            </tr>
+          </thead>
+        </table> 
+      </div>
+    </div>
+    <div class="container">
     </div>  <!-- sidebar -->
 </div>
 
 </template>
   
+
 <script>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
@@ -126,10 +166,17 @@
     components : {
       StockModal
     },
+  <script>
+  import { ref, watchEffect, computed } from 'vue';
+  import { useStore } from 'vuex';
+  import { user_shop_list, shop_item_list } from '@/stock_axios';
+  export default {
+
     setup() {
 
       // 매장 선택
       const shop_list = ref([]); // 매장 리스트를 담는 변수
+
       const copy_shop_list = ref([]); // 매장 카피본
 
       const store = useStore();
@@ -138,6 +185,7 @@
           .then((response) => {
             shop_list.value = response.data;
             copy_shop_list.value = [...shop_list.value];
+            console.log(shop_list);
           })
           .catch(e => {
             console.log(e.message);
@@ -287,27 +335,36 @@
           console.error(e.message);
         }
       };
-      
-      // const handleInput = async () => {
-      //   const discount_rate = input.value;
-      // }
 
-      
+   
 
+      // 중복된 상품 제거
+      const unique_items = computed(() => {
+        const seen = new Set();
+        return item_list.value.filter(item => {
+          const duplicate = seen.has(item.product_name);
+          seen.add(item.product_name);
+          return !duplicate;
+        });
+      });
 
+      watchEffect(() => {
+        const shop = shop_list.value.find(s => s.name === shop_name.value);
+        if (shop) {
+          shop_id.value = shop.shop_id;
+        }
+      });
 
-      // const update_discount_rate = async () => {
-      //   await update_discount(product_name, discount_rate.value)
-      //     .then ((response) => {
-      //       if(product_name === shop_item_list.product_name) {
-      //         shop_item_list.discount = discount_rate.value;
-      //       }
-      //     })
-      //     .catch(e => {
-      //       console.log(e.message)
-      //     })
-      // }
-      
+      watchEffect(async () => {
+        if (shop_id.value) {
+          try {
+            const response = await shop_item_list(shop_id.value, store.state.loginToken);
+            item_list.value = response.data;
+          } catch (e) {
+            console.error(e.message);
+          }
+        }
+      })
 
       return{
       shop_list,
@@ -328,7 +385,8 @@
       copy_item_list,
       filtereditems,
       category,
-      stockRequestList
+      stockRequestList,
+      unique_items
       }
         
     
@@ -427,5 +485,4 @@ vertical-align: middle;
 .top-space-12 {
   margin-top: 12%
 }
-
 </style>
