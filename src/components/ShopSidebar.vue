@@ -109,6 +109,7 @@ border-radius: 1em;
   left: 0; top : 11%;
   background-color: #F3F7FA;
   border-radius: 20px;
+  z-index: 2;
 
   transform: translateX(-210px);  
   transition: .5s;

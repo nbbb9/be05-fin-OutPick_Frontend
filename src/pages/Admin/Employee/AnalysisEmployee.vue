@@ -3,7 +3,7 @@
     <AdminSidebar @AdminSidebar="selectMenu" :showMenu_p = "show"/>
   
     <div class="mt-4" >
-      <h5>{{ em_name }}사원의 담당 매장 월 매출 분석</h5>
+      <h5>{{ em_name }}사원의 담당 매장 월 판매량 분석</h5>
     </div>
 
     <hr>
@@ -94,7 +94,7 @@ export default {
         data : {
           labels : data.value.shop_list,
           datasets : [{
-            label : '매출',
+            label : '판매량',
             borderWidth : 3,
             backgroundColor: [
               'rgba(255, 99, 132, 0.2)',
