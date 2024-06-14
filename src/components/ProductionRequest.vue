@@ -72,19 +72,29 @@ export default defineComponent({
 </script>
 
 <style scoped>
+@font-face {
+    font-family: 'ChosunGu';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 .modal-overlay {
+    font-family: 'ChosunGu';
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
+    font-family: 'ChosunGu';
   background: white;
   padding: 20px;
   width: 30%;

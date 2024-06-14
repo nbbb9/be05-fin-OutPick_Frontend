@@ -94,7 +94,7 @@ export default {
 
 <style>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 .gowun-dodum-regular {
   font-family: "Gowun Dodum", sans-serif;
@@ -104,6 +104,19 @@ export default {
 
 div{
 font-family: "Gowun Dodum", sans-serif;
+} */
+
+
+@font-face {
+    font-family: 'ChosunGu';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+div{
+  font-family: 'ChosunGu';
 }
 
 #app {

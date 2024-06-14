@@ -364,17 +364,24 @@
   
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 .gowun-dodum-regular {
 font-family: "Gowun Dodum", sans-serif;
 font-weight: 400;
 font-style: normal;
+} */
+
+@font-face {
+    font-family: 'ChosunGu';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGu.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: 'ChosunGu';
 }
 
 /* 검색 div 정렬 */
