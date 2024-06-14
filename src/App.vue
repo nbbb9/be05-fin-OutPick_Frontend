@@ -19,7 +19,7 @@
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShop'}">매장</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'Login'}">재고</router-link>
+            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShopStock'}">재고</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'Login'}">통계/분석</router-link>

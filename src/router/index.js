@@ -10,7 +10,9 @@ import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
 import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
 import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
 import ListProductionRequest from "@/pages/Admin/ListProductionRequest.vue";
-
+import ListAllStockRequest from "@/pages/Stock/StockRequest/ListAllStockRequest.vue";
+import ListWarehouse from "@/pages/Stock/ListWarehouse.vue";
+    
 // 매장
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
 import AddStoreStockRequest from "@/pages/Store/StoreStockRequest/AddStoreStockRequest.vue"
@@ -143,6 +145,18 @@ const router = createRouter({
             path : "/product/list",
             name : "ListProduct",
             component : ListProduct
+        },
+
+        {
+            path : "/production_request_list",
+            name : "ListAllStockRequest",
+            component : ListAllStockRequest
+        },
+
+        {
+            path : "/warehouse_list",
+            name : "ListWarehouse",
+            component : ListWarehouse
         }
     ]
 });

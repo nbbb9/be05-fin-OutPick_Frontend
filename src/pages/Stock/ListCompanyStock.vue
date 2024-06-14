@@ -2,6 +2,8 @@
   <div class="container">
 
     <!-- sidebar -->
+    <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
+
 
     <!-- 제목, 검색창 -->
     <div>
@@ -95,11 +97,17 @@
 <script>
 import { ref, watch } from 'vue';
 import { company_stock } from '@/stock_axios';
+import { useRouter } from 'vue-router';
+import StockSidebar from "@/components/StockSidebar.vue";
 
 export default {
+  components: {StockSidebar},
 
   setup() {
-    
+
+    const router = useRouter();
+
+
     // 회사 재고 리스트
     const company_stock_list = ref([]);
     const copy_st_list = ref([]);
@@ -150,7 +158,6 @@ export default {
   
     // 검색
     const searchText = ref();
-    const search_result = ref(false);
     const category = ref();
 
     const filtereditems = () => {
@@ -180,9 +187,28 @@ export default {
       }
     }
 
-    // 정렬
-   
-    
+    const selectMenu = (selectId) => {
+      console.log("select Id:", selectId);
+      switch (selectId) {
+        case 1:
+          router.push({name: "ListShopStock"});
+          break;
+        case 2:
+          router.push({name: "ListCompanyStock"});
+          break;
+        case 3:
+          router.push({name: "ListAllStockRequest"});
+          break;
+        case 4:
+          router.push({name: "ListProduct"});
+          break;
+        case 5:
+          router.push({name: "ListWarehouse"});
+          break;
+        default:
+          break;
+      }
+    };
 
 
     return {
@@ -190,11 +216,11 @@ export default {
       show_detail,
       item_detail,
       searchText,
-      search_result,
       filtereditems,
       delete_duplicated,
       category,
-      copy_st_list
+      copy_st_list,
+      selectMenu
     }
   }
 }
