@@ -2,6 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
+      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
 
       <!-- 검색창, 제목 -->
       <div>
@@ -122,15 +123,18 @@
 <script>
   import { ref , watch } from 'vue';
   import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
   import { all_product, production_request } from '@/stock_axios';
   import ProductionRequest from '@/components/ProductionRequest.vue';
+  import StockSidebar from "@/components/StockSidebar.vue";
 
   export default {
     components: {
+      StockSidebar,
       ProductionRequest
     },
     setup() {
-
+      const router = useRouter();
       // const category = ref('');
       
       // 상품 불러오기
@@ -374,6 +378,30 @@
 
       }
 
+      const selectMenu = (selectId) => {
+        console.log("select Id:", selectId);
+        switch (selectId) {
+          case 1:
+            router.push({name: "ListShopStock"});
+            break;
+          case 2:
+            router.push({name: "ListCompanyStock"});
+            break;
+          case 3:
+            router.push({name: "ListAllStockRequest"});
+            break;
+          case 4:
+            router.push({name: "ListProduct"});
+            break;
+          case 5:
+            router.push({name: "ListWarehouse"});
+            break;
+          default:
+            break;
+        }
+      };
+
+
       return {
         get_all_product,
         unique_items,
@@ -396,7 +424,8 @@
         is_modal_open,
         sel_pd,
         store,
-        handleInput
+        handleInput,
+        selectMenu
       }
 
     }

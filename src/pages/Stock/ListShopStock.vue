@@ -2,6 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
+      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
 
       <!-- 제목, 검색창 -->
       <div>
@@ -121,9 +122,11 @@
   import { useStore } from 'vuex';
   import { user_shop_list, shop_item_list, update_discount } from '@/stock_axios';
   import StockModal from '@/components/StockModal.vue';
+  import StockSidebar from "@/components/StockSidebar.vue";
 
   export default {
     components : {
+      StockSidebar,
       StockModal
     },
     setup() {
@@ -307,7 +310,29 @@
       //       console.log(e.message)
       //     })
       // }
-      
+
+      const selectMenu = (selectId) => {
+        console.log("select Id:", selectId);
+        switch (selectId) {
+          case 1:
+            router.push({name: "ListShopStock"});
+            break;
+          case 2:
+            router.push({name: "ListCompanyStock"});
+            break;
+          case 3:
+            router.push({name: "ListAllStockRequest"});
+            break;
+          case 4:
+            router.push({name: "ListProduct"});
+            break;
+          case 5:
+            router.push({name: "ListWarehouse"});
+            break;
+          default:
+            break;
+        }
+      };
 
       return{
       shop_list,
@@ -328,7 +353,8 @@
       copy_item_list,
       filtereditems,
       category,
-      stockRequestList
+      stockRequestList,
+      selectMenu
       }
         
     

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let user_axios = axios.create({
-    baseURL : "http://localhost:8080/",
+    baseURL : "http://localhost:8081/",
     headers: {
         'Content-Type': 'application/json; charset=utf-8'
     }
@@ -48,4 +48,33 @@ export function production_request(data, token) {
             login_token: token
         }
     })
+}
+
+export function warehouse_list() {
+    return user_axios.get(`/warehouse`)
+}
+
+export function production_request_list(token) {
+    return user_axios.get(`/productionrequest/list`, {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function production_request_detail(prId, token) {
+    return user_axios.get(`/productionrequest/${prId}`, {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function update_pr_detail(data, token) {
+    return user_axios.put(`/productionrequest/update`, data , {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function product_list() {
+    return user_axios.get('/product/list')
 }
