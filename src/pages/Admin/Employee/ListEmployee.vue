@@ -60,7 +60,7 @@
           <div class="col-6">
             <h5>영업사원 상세정보</h5>
           </div>
-          <div class="col-6">
+          <div class="col-6" v-if="em_detail">
             <button class="btn btn-warning mr" @click="toModifyEm">수정</button>
             <button class="btn btn-warning" @click="toAnalysis" >판매량 조회</button>
           </div>
