@@ -4,8 +4,13 @@ import Login from "@/pages/LoginPage.vue"
 import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 
 // 본 프로그램
+import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
+import DetailShop from "@/pages/Shop/ListShop/DetailShop.vue";
 import ListShopStock from "@/pages/Stock/ListShopStock.vue";
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
+import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
+import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
+import ListProductionRequest from "@/pages/Admin/ListProductionRequest.vue";
 
 // 매장
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
@@ -15,6 +20,12 @@ import DetailStoreStockRequest from "@/pages/Store/StoreStockRequest/DetailStore
 import ListStoreSales from "@/pages/Store/ListStoreSales.vue"
 import AddStoreProposal from "@/pages/Store/StoreProposal/AddStoreProposal.vue"
 import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue"
+import ListProposal from "@/pages/Shop/ListProposal/ListProposal.vue";
+import ListStockRequest from "@/pages/Shop/ListStockRequest/ListStockRequest.vue";
+import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest.vue";
+import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
+import ListShopStock from "@/pages/Stock/ListShopStock.vue";
+import ListProduct from "@/pages/Stock/ListProduct.vue";
 import ListShop from "@/pages/Shop/ListShop/ListShop.vue";
 
 
@@ -34,9 +45,30 @@ const router = createRouter({
             component : ListShop
         },
         {
+            path: '/detail/:shopId',
+            name: 'DetailShop',
+            component: DetailShop,
+            props: true
+        },
+        {
             path : "/employee_list",
             name : "ListEmployee",
             component : ListEmployee
+        },
+        {
+            path : "/employee_analysis",
+            name : "AnalysisEmployee",
+            component : AnalysisEmployee
+        },
+        {
+            path : "/admin_stock_request",
+            name : "ListAdminStockRequest",
+            component : ListAdminStockRequest
+        },
+        {
+            path : "/production_list",
+            name : "ListProductionRequest",
+            component : ListProductionRequest
         },
         // 매장
         {
@@ -80,11 +112,43 @@ const router = createRouter({
             name : "AddStoreProposal",
             component : AddStoreProposal
         },
+
+        ///////////////////////////////////////
+        {
+            path : "/proposal_list",
+            name : "ListProposal",
+            component : ListProposal
+        },
+
+        {
+            path : "/stock_request_list",
+            name : "ListStockRequest",
+            component : ListStockRequest
+        },
+
+        {
+            path : "/stock_request_detail/:stock_request_id",
+            name : "DetailStockRequest",
+            component : DetailStockRequest
+        },
+       
+        {
+            path : "/officestock",
+            name : "ListCompanyStock",
+            component : ListCompanyStock
+        },
+        
         // 매장 재고
         {
             path : "/shopstock",
             name : "ListShopStock",
             component : ListShopStock
+        },
+
+        {
+            path : "/product/list",
+            name : "ListProduct",
+            component : ListProduct
         }
     ]
 });
