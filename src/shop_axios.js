@@ -112,4 +112,13 @@ export function stock_request_approval(stock_request_id, token){
     })
 }
 
+// 재고요청서 반려(사원)
+export function stock_request_reject(stock_request_id, token){
+    return user_axios.put(`/stockrequest/reject/${stock_request_id}`, {}, {
+        headers : {
+            login_token : token
+        }
+    })
+}
+
 

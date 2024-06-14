@@ -49,7 +49,7 @@
                         </div> <!-- 요청 상품 상세 끝 -->
                         <br/><br/><br/>
                         <div v-if="sr_detail.approval !== '승인' && sr_detail.approval !== '반려'">
-                            <button class="btn btn-outline-success font-weight-bold" @click="sr_approval">승인</button> &emsp;&emsp;&emsp;
+                            <button class="btn btn-success font-weight-bold" @click="sr_approval">승인</button> &emsp;&emsp;&emsp;
                             <button class="btn btn-outline-secondary font-weight-bold" @click="sr_reject">반려</button>
                         </div>
                         <br/><br/>
@@ -139,9 +139,8 @@ export default {
         const sr_reject = async () => {
             try {
                 await stock_request_reject(stock_request_id.value, store.state.loginToken);
-                sr_detail.value.approval = '반려'; // 결재상태를 "반려"로 업데이트
+                sr_detail.value.approval = '반려'; // 결재상태 반려로 변경
                 alert('반려되었습니다.');
-                // 필요한 경우 추가 작업 수행
             } catch (error) {
                 console.error('Rejection failed:', error);
                 alert('반려에 실패했습니다.');
