@@ -97,9 +97,9 @@ export default {
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
 
 .gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+  font-family: "Gowun Dodum", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
 
 div{
