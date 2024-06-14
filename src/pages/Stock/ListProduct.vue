@@ -121,7 +121,8 @@
   
 <script>
   import { ref , watch } from 'vue';
-  import { all_product } from '@/stock_axios';
+  import { useStore } from 'vuex';
+  import { all_product, production_request } from '@/stock_axios';
   import ProductionRequest from '@/components/ProductionRequest.vue';
 
   export default {
@@ -328,6 +329,8 @@
       // 생산요청서 작성
       const is_modal_open = ref(false);
       const sel_pd = ref([]);
+      const request_amount = ref();
+
       const open_modal = (product_id) => {
           sel_pd.value = item_detail.value.filter((item) => {        
             return item.product_id === product_id
@@ -349,6 +352,28 @@
         console.log("is_modal_true로 변경!", newValue);
       })
 
+      const store = useStore();
+      const handleInput = async (input) => {
+        console.log("생산요청서 등록 시작!");
+        request_amount.value = input;
+        console.log(input);
+        console.log("생산요청수량 :", request_amount.value);
+        const data = {
+          "product_id": sel_pd.value[0].product_id,
+          "amount": input
+        }
+        console.log("product_id :",sel_pd.value[0].product_id)
+        try {
+          await production_request(data, store.state.loginToken)
+          .then (() => {
+            location.reload();
+          })
+        } catch(e) {
+          console.error(e.message);
+        }
+
+      }
+
       return {
         get_all_product,
         unique_items,
@@ -369,7 +394,9 @@
         open_modal,
         close_modal,
         is_modal_open,
-        sel_pd
+        sel_pd,
+        store,
+        handleInput
       }
 
     }

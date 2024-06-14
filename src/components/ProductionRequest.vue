@@ -50,7 +50,7 @@ export default defineComponent({
         };
 
         const submit = () => {
-          emit('submit', request_amount);
+          emit('submit', request_amount.value);
           close();
         };
 
@@ -65,7 +65,7 @@ export default defineComponent({
         return {
             close,
             submit,
-
+            request_amount
         };
     },
 });
