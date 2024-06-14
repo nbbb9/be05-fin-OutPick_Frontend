@@ -40,3 +40,12 @@ export function company_stock() {
 export function all_product() {
     return user_axios.get(`/product/list`)
 }
+
+// 생산 요청서 등록
+export function production_request(data, token) {
+    return user_axios.post(`/productionrequest/write`, data, {
+        headers: {
+            login_token: token
+        }
+    })
+}
