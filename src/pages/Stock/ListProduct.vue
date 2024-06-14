@@ -2,6 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
+      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
 
       <!-- 검색창, 제목 -->
       <div>
@@ -20,9 +21,11 @@
                 <option @click="searchFamous" value="인기순">인기순</option>
                 <option @click="searchNotFamous" value="비인기순">비인기순</option>
                 <option @click="searchABC" value="가나다순">가나다순</option>
-                <option @click="searchSeason" value="계절별">계절</option>
               </select>
             </div>
+            <div class="block-1">
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+        </div>
           <div class="block-3"></div>
           <div class="block-3"></div>
         </form>
@@ -42,7 +45,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(i) in unique_items" :key="i.product_id"  @click="show_detail(i.product_name)">
+              <tr v-for="(i) in copy_product" :key="i.product_id"  @click="show_detail(i.product_name)">
                 <td>{{ i.product_name }}</td>
                 <td>{{ i.category }}</td>
                 <td>{{ i.fit }}</td>
@@ -61,22 +64,20 @@
         </div>
         <div class="block-1"></div>
         <div class="block-2">
-              <select class="form-select" v-model="category" >
-                <option @click="searchItemList" value="기본" selected>기본</option>
-                <option @click="searchFamous" value="인기순">인기순</option>
-                <option @click="searchNotFamous" value="비인기순">비인기순</option>
-                <option @click="searchABC" value="가나다순">가나다순</option>
-                <option @click="searchSeason" value="계절별">계절</option>
+              <select class="form-select" id="size_select" v-model="size_select" @change="sizeSelect" >
+                <option value="기본" selected>기본</option>
+                <option v-for="op in sel_size_list" :key="op">
+                  {{ op }}
+                </option>
               </select>
             </div>
             <div class="block-1"></div>
             <div class="block-2">
-              <select class="form-select" v-model="category" >
+              <select class="form-select" id="color_select" v-model="color_select" @change="colorSelect" >
                 <option @click="searchItemList" value="기본" selected>기본</option>
-                <option @click="searchFamous" value="인기순">인기순</option>
-                <option @click="searchNotFamous" value="비인기순">비인기순</option>
-                <option @click="searchABC" value="가나다순">가나다순</option>
-                <option @click="searchSeason" value="계절별">계절</option>
+                <option v-for="op in sel_color_list" :key="op">
+                  {{ op }}
+                </option>
               </select>
             </div>
             <div class="block-3"></div>
@@ -96,7 +97,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(p) in copy_product" :key="p.product_id">
+              <tr v-for="(p) in copy_item_detail" :key="p.product_id">
                 <th>{{ p.product_id }}</th>
                 <th>{{ p.product_name }}</th>
                 <th>{{ p.size }}</th>
@@ -104,7 +105,12 @@
                 <th>{{ p.stock }}</th>
                 <th>{{ p.fit }}</th>
                 <th>
-                  <button @click="open_modal" class="btn btn-outline-light text-black">작성</button>
+                  <button @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
+                  <ProductionRequest 
+                    :is_visible="is_modal_open" 
+                     :prod="sel_pd" 
+                    @close="close_modal" 
+                    @submit="handleInput"/>
                 </th>
               </tr>
             </tbody>
@@ -115,12 +121,20 @@
 </template>
   
 <script>
-  import { ref, computed } from 'vue';
-  import { all_product } from '@/stock_axios';
+  import { ref , watch } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
+  import { all_product, production_request } from '@/stock_axios';
+  import ProductionRequest from '@/components/ProductionRequest.vue';
+  import StockSidebar from "@/components/StockSidebar.vue";
 
   export default {
+    components: {
+      StockSidebar,
+      ProductionRequest
+    },
     setup() {
-
+      const router = useRouter();
       // const category = ref('');
       
       // 상품 불러오기
@@ -130,6 +144,8 @@
         await all_product()
          .then((response) => {
             product.value = response.data;
+            console.log(product.value);
+            console.log("상품 불러오기");
          })
          .catch(e => {
           console.error(e.message);
@@ -139,29 +155,277 @@
       get_all_product();
 
       // 중복된 상품 제거
-      const unique_items = computed(() => {
+      const delete_duplicated = () => {
         const seen = new Set();
-        return product.value.filter(product => {
-          const duplicate = seen.has(product.product_name);
-          seen.add(product.product_name);
+        return product.value.filter(item => {
+          const duplicate = seen.has(item.product_name);
+          seen.add(item.product_name);
           return !duplicate;
         });
-      });
+      };
+
+      const unique_items = ref([]);
+      watch(product, (newVal) => {
+        console.log("와치구문");
+        unique_items.value = delete_duplicated(newVal);
+        copy_product.value = [...unique_items.value];
+      }, {immediate: true});
+      
 
       // 상품 디테일
+      const item_detail = ref([]);
+      const copy_item_detail = ref([]);
       const show_detail = (product_name) => {
-        const products = product.value.filter(product => product.product_name === product_name);
-        if (products.length) {
-          copy_product.value = products;
-         
+        const items = product.value.filter(item => {
+          return item.product_name === product_name
+        })
+        console.log("items =", items);
+        if (items.length) {
+          sel_color_list.value = [];
+          sel_size_list.value = [];
+          item_detail.value = items;
+          copy_item_detail.value = [...item_detail.value];
+          console.log(product.value);
+          console.log(product_name);
+          console.log("이것도 실행완료!");
+          get_sel_list();
+        } 
+      };
+
+      // 검색
+      const searchText = ref();
+      const category = ref();
+
+      const filtereditems = () => {
+        if (searchText.value) {
+          console.log("검색 단어 :", searchText.value);
+          copy_product.value = unique_items.value.filter(item => {
+            console.log(item);
+            return item.product_name.includes(searchText.value)
+          })
+        }
+        if (category.value) {
+          if (category.value === '가나다순') {
+            copy_product.value.sort((a,b) => {
+              console.log("작동중");
+              return a.product_name.localeCompare(b.product_name);
+            })
+          } else if (category.value === '기본') {
+            console.log("작동중");
+            copy_product.value = [...unique_items.value]; 
+          } else if (category.value === '인기순') {
+            console.log("작동중");
+            copy_product.value.sort((a,b) => {
+              return b.quantity - a.quantity;
+            })
+          } else if (category.value === '비인기순') {
+            console.log("작동중");
+            copy_product.value.sort((a,b) => {
+              return a.quantity - b.quantity;
+            })  
+          }
+        }
+      }  
+
+      // 선택상품 검색
+      const size_select = ref('');
+      const color_select = ref('');
+
+      const sel_size_list = ref([]);
+      const sel_color_list = ref([]);
+
+      const get_sel_list = () => {
+        item_detail.value.filter((item) => {
+          console.log("item: ", item)
+
+          if(!sel_size_list.value.includes(item.size)){
+            sel_size_list.value.push(item.size);
+          }
+          if(!sel_color_list.value.includes(item.color)){
+            sel_color_list.value.push(item.color);
+          }
+      
+        })
+
+        console.log("sel_size_list : ", sel_size_list.value);
+        console.log("sel_color_list : ", sel_color_list);
+
+      }
+
+      const sizeSelect = (event) => {
+
+        console.log("size : ", size_select.value);
+        console.log("color : ", color_select.value);
+
+        console.log("color_select_value : ", color_select.value === '기본')
+
+        if(color_select.value && color_select.value !== '기본'){
+
+          if(size_select.value === '기본'){
+            console.log("사이즈만 필터링합니다.");
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.color === color_select.value
+            })]
+          } else{
+            console.log("동시에 필터링합니다.");
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.size === size_select.value && item.color === color_select.value
+            })]
+          } 
+          
+        }else{
+
+          if(size_select.value === '기본'){
+            console.log("아무것도 필터링 하지 않습니다.");
+            copy_item_detail.value = [...item_detail.value];
+          }else{
+            console.log("사이즈만 필터링합니다.");
+            size_select.value = parseInt(event.target.value, 10);
+
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.size === size_select.value
+            })]
+            
+          }
+        }
+
+        event.target.value = "";
+      }
+
+      const colorSelect = (event) => {
+
+        console.log("size : ", size_select.value);
+        console.log("color : ", color_select.value);
+
+        console.log("size_select_value : ", size_select.value === '기본')
+
+        if(size_select.value  && size_select.value !== '기본'){
+          if(color_select.value === '기본'){
+            console.log("사이즈만 필터링합니다.");
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.size === size_select.value
+            })]
+          }else{
+            console.log("동시에 필터링합니다.");
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.size === size_select.value && item.color === color_select.value
+            })]
+          }
+          
+        }else{
+
+          if(color_select.value === '기본'){
+            console.log("아무것도 필터링 하지 않습니다.");
+            copy_item_detail.value = [...item_detail.value];
+          }else{
+            console.log("색깔만 필터링합니다.");
+            color_select.value = event.target.value
+
+            copy_item_detail.value = [...item_detail.value.filter((item) => {
+              return item.color === color_select.value
+            })]
+          }
+        }
+        event.target.value = "";
+      }
+
+
+      // 생산요청서 작성
+      const is_modal_open = ref(false);
+      const sel_pd = ref([]);
+      const request_amount = ref();
+
+      const open_modal = (product_id) => {
+          sel_pd.value = item_detail.value.filter((item) => {        
+            return item.product_id === product_id
+          })
+          console.log("sel_pd : ",sel_pd);
+          is_modal_open.value = true;
+          console.log("모달 열림!", is_modal_open.value);   
+      };
+
+      const close_modal = () => {
+        is_modal_open.value = false;
+      }
+
+      watch(sel_pd, (newValue) => {
+        console.log("true로 변경!", newValue);
+      })
+
+      watch(is_modal_open, (newValue) => {
+        console.log("is_modal_true로 변경!", newValue);
+      })
+
+      const store = useStore();
+      const handleInput = async (input) => {
+        console.log("생산요청서 등록 시작!");
+        request_amount.value = input;
+        console.log(input);
+        console.log("생산요청수량 :", request_amount.value);
+        const data = {
+          "product_id": sel_pd.value[0].product_id,
+          "amount": input
+        }
+        console.log("product_id :",sel_pd.value[0].product_id)
+        try {
+          await production_request(data, store.state.loginToken)
+          .then (() => {
+            location.reload();
+          })
+        } catch(e) {
+          console.error(e.message);
+        }
+
+      }
+
+      const selectMenu = (selectId) => {
+        console.log("select Id:", selectId);
+        switch (selectId) {
+          case 1:
+            router.push({name: "ListShopStock"});
+            break;
+          case 2:
+            router.push({name: "ListCompanyStock"});
+            break;
+          case 3:
+            router.push({name: "ListAllStockRequest"});
+            break;
+          case 4:
+            router.push({name: "ListProduct"});
+            break;
+          case 5:
+            router.push({name: "ListWarehouse"});
+            break;
+          default:
+            break;
         }
       };
+
 
       return {
         get_all_product,
         unique_items,
         show_detail,
-        copy_product
+        copy_product,
+        filtereditems,
+        delete_duplicated,
+        item_detail,
+        searchText,
+        category,
+        size_select,
+        color_select,
+        sel_size_list,
+        sel_color_list,
+        sizeSelect,
+        copy_item_detail,
+        colorSelect,
+        open_modal,
+        close_modal,
+        is_modal_open,
+        sel_pd,
+        store,
+        handleInput,
+        selectMenu
       }
 
     }

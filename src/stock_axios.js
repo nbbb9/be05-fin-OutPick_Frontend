@@ -26,8 +26,8 @@ export function shop_item_list(shopId, token) {
 }
 
 // 할인율 수정
-export function update_discount(productId, discount) {
-    return user_axios.put(`/discount`, productId,  discount)
+export function update_discount(product_id, discount) {
+    return user_axios.put(`/product/discount?discount=${discount}`, {"product_id" : product_id})
 }
 
 
@@ -39,4 +39,42 @@ export function company_stock() {
 // 전체 상품 불러오기
 export function all_product() {
     return user_axios.get(`/product/list`)
+}
+
+// 생산 요청서 등록
+export function production_request(data, token) {
+    return user_axios.post(`/productionrequest/write`, data, {
+        headers: {
+            login_token: token
+        }
+    })
+}
+
+export function warehouse_list() {
+    return user_axios.get(`/warehouse`)
+}
+
+export function production_request_list(token) {
+    return user_axios.get(`/productionrequest/list`, {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function production_request_detail(prId, token) {
+    return user_axios.get(`/productionrequest/${prId}`, {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function update_pr_detail(data, token) {
+    return user_axios.put(`/productionrequest/update`, data , {
+        headers: {
+            'login_token': token
+        }
+    })
+}
+export function product_list() {
+    return user_axios.get('/product/list')
 }

@@ -2,6 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
+      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
 
       <!-- 제목, 검색창 -->
       <div>
@@ -11,7 +12,7 @@
         <form v-on:submit.prevent="search" class="flex top-space-4">
           <div class="block-1">
             <h6>매장 선택</h6>
-            <select v-model="shop_name" class="form-control">
+            <select v-model="shop_name" class="form-control" @change="get_shop_id">
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
@@ -20,15 +21,12 @@
               <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
             </div>
             <div class="block-1 row-right">
-              <button @click="searchItemList" class="btn btn-outline-light text-black">검색</button>
+              <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
             </div>
             <div class="block-1">
               <select class="form-select" v-model="category" >
-                <option @click="searchItemList" value="기본" selected>기본</option>
-                <option @click="searchFamous" value="인기순">인기순</option>
-                <option @click="searchNotFamous" value="비인기순">비인기순</option>
-                <option @click="searchABC" value="가나다순">가나다순</option>
-                <option @click="searchSeason" value="계절별">계절</option>
+                <option value="기본" selected>기본</option>
+                <option value="가나다순">가나다순</option>
               </select>
             </div>
             <div class="block-2">
@@ -51,7 +49,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(i) in unique_items" :key="i.product_id" @click="show_detail(i.product_name)">
+            <tr v-for="(i) in copy_item_list" :key="i.product_id" @click="show_detail(i.product_name)">
               <td>{{ i.product_name }}</td>
               <td>{{ i.stock_date }}</td>
               <td>{{ i.discount }}
@@ -118,27 +116,31 @@
 
 </template>
   
-  <script>
-  import { ref, watchEffect, computed } from 'vue';
+<script>
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
   import { user_shop_list, shop_item_list, update_discount } from '@/stock_axios';
   import StockModal from '@/components/StockModal.vue';
+  import StockSidebar from "@/components/StockSidebar.vue";
 
   export default {
     components : {
+      StockSidebar,
       StockModal
     },
     setup() {
 
       // 매장 선택
       const shop_list = ref([]); // 매장 리스트를 담는 변수
+      const copy_shop_list = ref([]); // 매장 카피본
 
       const store = useStore();
       const get_user_shop_list = async () => {
         await user_shop_list(store.state.loginToken)
           .then((response) => {
             shop_list.value = response.data;
-            console.log(shop_list);
+            copy_shop_list.value = [...shop_list.value];
           })
           .catch(e => {
             console.log(e.message);
@@ -151,46 +153,95 @@
       const shop_name = ref();
       const shop_id = ref();
       const item_list = ref([]);
-
-      // 중복된 상품 제거
-      const unique_items = computed(() => {
-        const seen = new Set();
-        return item_list.value.filter(item => {
-          const duplicate = seen.has(item.product_name);
-          seen.add(item.product_name);
-          return !duplicate;
-        });
-      });
-
-      // shop_id 찾기
-      watchEffect(() => {
-        const shop = shop_list.value.find(s => s.name === shop_name.value);
-        if (shop) {
-          shop_id.value = shop.shop_id;
-        }
-      });
+      const copy_item_list = ref([]);
 
       // 아이템 리스트 불러오기
-      watchEffect(async () => {
+      const get_item_list = async () => {
         if (shop_id.value) {
           try {
             const response = await shop_item_list(shop_id.value, store.state.loginToken);
             item_list.value = response.data;
+            console.log("item list : ", item_list.value);
+            unique_items()
           } catch (e) {
             console.error(e.message);
           }
         }
-      })
+      }
+
+      // 중복된 상품 제거
+      const unique_items = () => {
+        const seen = new Set();
+        copy_item_list.value = [...item_list.value.filter(item => {
+          const duplicate = seen.has(item.product_name);
+          seen.add(item.product_name);
+          return !duplicate;
+        })]
+      };
+
+      // shop_id 찾기
+      const get_shop_id = () => {
+        const shop = shop_list.value.find(s => {
+          return s.name.includes(shop_name.value)});
+        console.log("shop : ", shop);
+        if (shop) {
+          shop_id.value = shop.shop_id;
+          console.log(shop_id.value);
+          get_item_list()
+        }
+      };
 
       // 상세정보 불러오기
       const item_detail = ref([]);
       const item_names = ref([]);
       const show_detail = (product_name) => {
+        console.log("show_detail method 실행");
         const items = item_list.value.filter(item => item.product_name === product_name);
+        console.log(items);
         if (items.length) {
           item_detail.value = items;
           item_names.value.push(product_name);
         }
+      }
+
+      // 검색
+      const searchText = ref();
+      const category = ref();
+
+      const filtereditems = () => {
+        if (searchText.value) {
+          console.log("검색 단어 :", searchText.value);
+          copy_item_list.value = copy_item_list.value.filter(item => {
+            console.log(item);
+            return item.product_name.includes(searchText.value)
+          })
+        }
+        if (category.value) {
+          if (category.value === '가나다순') {
+            copy_item_list.value.sort((a,b) => {
+              return a.product_name.localeCompare(b.product_name);
+            })
+          } else if (category.value === '기본') {
+            copy_item_list.value = [...item_list.value]; 
+          } 
+          // else if (category.value === '인기순') {
+          //   copy_item_list.value.sort((a,b) => {
+          //     return b.quantity - a.quantity;
+          //   })
+          // } else if (category.value === '비인기순') {
+          //   copy_item_list.value.sort((a,b) => {
+          //     return a.quantity - b.quantity;
+          //   })  
+          // }
+        }
+      }  
+
+      // 재고요청서 페이지 할 수 있어
+      const router = useRouter()
+      const stockRequestList = () => {
+        router.push({
+          name : "ListStockRequest"
+        })
       }
 
       // 할인율 수정
@@ -213,31 +264,28 @@
       }
 
       const product_name = ref();
-      const product_ids = ref([]);
       const product_id = ref();
       const send_name = (p_name) => {
         product_name.value = p_name;
         console.log(product_name.value);
-        const p_id = item_list.value.find(item => product_name.value === item.name);
-        if(p_id) {
-          product_ids.value.push(p_id.product_id);
-          console.log(p_id.name);
-          console.log(product_ids.value);
-        }
-        
+        const p_id = item_list.value.find(item => {
+          return product_name.value.includes(item.product_name)});
+        console.log("p_id : ", p_id.product_id); 
+        product_id.value =  p_id.product_id
       };
       
       const handleInput = async (input) => {
+        console.log("수정 메서드 컴인!")
         discount_rate.value = input;
+        console.log("할인률 : ",discount_rate.value);
+        console.log("상품 ID : ",product_id.value);
+
         try {
-          await update_discount(product_id.value, discount_rate.value);
-          product_ids.value.forEach(id => {
-            const item = item_list.value.find(item => item.product_id === id);
-            if(item) {
-              item.discount = discount_rate.value;
-            }
-          console.log("디스카운트!");
-        });
+          await update_discount(product_id.value, discount_rate.value)
+            .then(() => {
+              location.reload();
+            })
+
         } catch(e) {
           console.error(e.message);
         }
@@ -262,12 +310,35 @@
       //       console.log(e.message)
       //     })
       // }
-      
+
+      const selectMenu = (selectId) => {
+        console.log("select Id:", selectId);
+        switch (selectId) {
+          case 1:
+            router.push({name: "ListShopStock"});
+            break;
+          case 2:
+            router.push({name: "ListCompanyStock"});
+            break;
+          case 3:
+            router.push({name: "ListAllStockRequest"});
+            break;
+          case 4:
+            router.push({name: "ListProduct"});
+            break;
+          case 5:
+            router.push({name: "ListWarehouse"});
+            break;
+          default:
+            break;
+        }
+      };
 
       return{
       shop_list,
       shop_name,
       unique_items,
+      item_list,
       item_detail,
       show_detail,
       is_modal_visible,
@@ -275,7 +346,15 @@
       show_modal,
       update_discount,
       handleInput,
-      send_name
+      send_name,
+      searchText,
+      copy_shop_list,
+      get_shop_id,
+      copy_item_list,
+      filtereditems,
+      category,
+      stockRequestList,
+      selectMenu
       }
         
     
