@@ -20,7 +20,6 @@ import ListStoreSales from "@/pages/Store/ListStoreSales.vue"
 import AddStoreProposal from "@/pages/Store/StoreProposal/AddStoreProposal.vue"
 import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue"
 import ListProposal from "@/pages/Shop/ListProposal/ListProposal.vue";
-import DetailProposal from "@/pages/Shop/ListProposal/DetailProposal.vue";
 import ListStockRequest from "@/pages/Shop/ListStockRequest/ListStockRequest.vue";
 import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest.vue";
 import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
@@ -117,19 +116,13 @@ const router = createRouter({
         },
 
         {
-            path : "/proposal_detail",
-            name : "DetailProposal",
-            component : DetailProposal
-        },
-
-        {
             path : "/stock_request_list",
             name : "ListStockRequest",
             component : ListStockRequest
         },
 
         {
-            path : "/stock_request_detail",
+            path : "/stock_request_detail/:stock_request_id",
             name : "DetailStockRequest",
             component : DetailStockRequest
         },
