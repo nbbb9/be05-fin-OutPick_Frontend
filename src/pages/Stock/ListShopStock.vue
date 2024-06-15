@@ -9,14 +9,9 @@
             <h3>매장별 재고 조회</h3>
         </div>
         <form v-on:submit.prevent="search" class="flex top-space-4">
-          <div class="block-1">
-            <h6>매장 선택</h6>
+          <div class="block-1 top-space-4">
             <select v-model="shop_name" class="form-control" @change="get_shop_id">
-        <form v-on:submit.prevent="search" class="flex top-space-2">
-          <div class="block-1">
-            <h6>매장 선택</h6>
-            <select v-model="shop_name" class="form-control">
-
+              <option disabled value="">옵션을 선택하세요</option>
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
@@ -24,10 +19,10 @@
             <div class="block-3">
               <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
             </div>
-            <div class="block-1 row-right">
+            <div class="block-1">
               <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
             </div>
-            <div class="block-1">
+            <div class="block-2">
               <select class="form-select" v-model="category" >
                 <option value="기본" selected>기본</option>
                 <option value="가나다순">가나다순</option>
@@ -42,6 +37,10 @@
                 <option @click="searchSeason" value="계절별">계절</option>
               </select>
             </div>
+            <div class="block-1">
+              <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+            </div>
+            <div class="block-1"></div>
             <div class="block-2">
               <button @click="stockRequestList" class="btn btn-outline-light text-black">재고요청서</button>
             </div>
@@ -396,17 +395,15 @@
   
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
-
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: 'LINESeedKR-Bd';
 }
 
 /* 검색 div 정렬 */

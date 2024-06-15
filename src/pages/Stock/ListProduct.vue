@@ -10,8 +10,11 @@
         </div>
         <form v-on:submit.prevent="search" class="flex top-space-4">
           <div class="block-3">
-            <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
+            <input type="text" @click="initial" v-model="searchText" placeholder="검색하세요" class="form-control">
           </div>
+          <div class="block-1">
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+        </div>
           <div class="block-1"></div>
           <div class="block-2">
               <select class="form-select" v-model="category">
@@ -191,6 +194,11 @@
       const searchText = ref();
       const category = ref();
 
+      // 검색 초기화
+      const initial = () => {
+    copy_product.value = [...unique_items.value];
+    }
+
       const filtereditems = () => {
         if (searchText.value) {
           console.log("검색 단어 :", searchText.value);
@@ -369,7 +377,11 @@
         open_modal,
         close_modal,
         is_modal_open,
-        sel_pd
+        sel_pd,
+        store,
+        handleInput,
+        selectMenu,
+        initial
       }
 
     }
@@ -379,17 +391,15 @@
   
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Bd';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
-
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: 'LINESeedKR-Bd';
 }
 
 /* 검색 div 정렬 */
