@@ -707,7 +707,8 @@ td {
 }
 
 /* list scroll, list 그림자 */
-.listDiv{
+.listDiv {
+  height: 60vh;
   max-height : 60vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
