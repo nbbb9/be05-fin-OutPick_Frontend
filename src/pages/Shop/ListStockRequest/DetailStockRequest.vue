@@ -1,9 +1,9 @@
 <template>
-    <div class="container">
+    <div class="container fixed-height">
         <ShopSidebar @ShopSidebar="selectMenu" />
-        <div class="row mt-5">
-            <div class="col-6">
-                <div class="detail">
+        <div class="row mt-5 full-height">
+            <div class="col-6 full-height">
+                <div class="detail full-height">
                     <div class="mt-3">
                         <h5>재고 요청서 상세</h5>
                     </div>
@@ -56,8 +56,8 @@
                     </div>
                 </div>
             </div> <!-- 왼쪽 영역 끝 -->
-            <div class="col-6">
-                <div class="empty-content">
+            <div class="col-6 full-height">
+                <div class="empty-content full-height">
                     <!-- 여기에 다른 내용을 추가할 수 있습니다 -->
                     <div class="placeholder">까꿍</div>
                 </div>
@@ -233,6 +233,7 @@ export default {
     .detail {
         box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
         padding: 1%;
+        height: 100%; /* Ensure the detail section takes full height */
     }
     
     /* 상세 옵션들 */
@@ -262,7 +263,7 @@ export default {
     .empty-content {
         box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
         padding: 1%;
-        height: 100%;
+        height: 100%; /* Ensure the empty-content section takes full height */
         display: flex;
         justify-content: center;
         align-items: center;
@@ -275,5 +276,14 @@ export default {
 
     .font-weight-bold {
         font-weight: bold;
+    }
+
+    /* New CSS */
+    .fixed-height {
+        height: 75vh; /* Set a fixed height for the container */
+    }
+
+    .full-height {
+        height: 100%; /* Make children take full height */
     }
 </style>
