@@ -194,7 +194,12 @@
                   직책
                 </div>
                 <div class="col-9 item-vertical">
-                  <input type="text" v-model="emPosition" class="form-control" >
+                  <!-- <input type="text" v-model="emPosition" class="form-control" > -->
+                  <select v-model="emPosition" class="form-select" >
+                    <option value="사원">사원</option>
+                    <option value="대리">대리</option>
+                    <option value="부장">부장</option>
+                  </select>
                   <!-- <button v-if="rq_view.approval === '반려'" @click="toFeedback" class="btn btn-dark" style="margin-left: 10%;" >피드백</button> -->
                 </div>
               </div>
@@ -240,7 +245,17 @@
                 연락처
               </div>
               <div class="col-8">
-                <input type="text" v-model="emContact" class="form-control" >
+                <div class="row" >
+                  <div class="col-4">
+                    <input type="text" v-model="emCon1" class="form-control" >
+                  </div>
+                  <div class="col-4">
+                    <input type="text" v-model="emCon2" class="form-control col-4" >
+                  </div>
+                  <div class="col-4">
+                    <input type="text" v-model="emCon3" class="form-control col-4" >
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -313,7 +328,12 @@
                 현재 상태
               </div>
               <div class="col-8">
-                <input type="text" v-model="emState" class="form-control" >
+                <!-- <input type="text" v-model="emState" class="form-control" > -->
+                <select v-model="emState" class="form-select" >
+                    <option value="근무중">근무중</option>
+                    <option value="출장중">출장중</option>
+                    <option value="휴가">휴가</option>
+                  </select>
               </div>
             </div>
           </div>
@@ -391,7 +411,10 @@ export default {
     }
 
     // 영업 사원 정보 수정
-    let emContact = ref();
+    // let emContact = ref();
+    let emCon1 = ref();
+    let emCon2 = ref();
+    let emCon3 = ref();
     let emPosition = ref();
     let emAddress = ref();
     let emState = ref();
@@ -403,7 +426,13 @@ export default {
     // 영업 사원 정보 수정 틀로 변경
     const toModifyEm = () => {
       isMidify.value = true;
-      emContact.value = em_detail.value.contact
+      // emContact.value = em_detail.value.contact
+
+      const parts = em_detail.value.contact.split('-');
+      emCon1.value = parts[0];
+      emCon2.value = parts[1];
+      emCon3.value = parts[2];
+
       emPosition.value = em_detail.value.position
       emAddress.value = em_detail.value.address
       emState.value = em_detail.value.state
@@ -500,8 +529,9 @@ export default {
       const data = {
         "employee_id": em_detail.value.employee_id,
         "position": emPosition.value,
+        "state" : emState.value,
         "address": emAddress.value,
-        "contact" : emContact.value,
+        "contact" : emCon1.value + "-" + emCon2.value + "-" + emCon3.value,
         "add_shop" : select_add_shop.value,
         "delete_shop" : select_del_shop.value
       }
@@ -587,7 +617,10 @@ export default {
     toAnalysis,
     cancleMo,
     modifyEm,
-    emContact,
+    // emContact,
+    emCon1,
+    emCon2,
+    emCon3,
     emPosition,
     emAddress,
     emState,
@@ -618,7 +651,7 @@ export default {
 }
 
 div{
-font-family: "LINESeedKR-Rg";
+  font-family: "LINESeedKR-Rg";
 }
 
 /* 검색 div 정렬 */
@@ -638,13 +671,13 @@ form > .col-2{
 }
 
 /* 왼쪽 정렬 */
-.row-left{
+.row-left {
   text-align: left;
   padding-left: 5%;
 } 
 
 /* 오른쪽 정렬 */
-.row-right{
+.row-right {
   text-align: right;
   padding-left: 5%;
 } 
@@ -705,7 +738,7 @@ td {
 }
 
 /* 글자 굵기 */
-h5{
+h5 {
   font-weight: bold;
 }
 
