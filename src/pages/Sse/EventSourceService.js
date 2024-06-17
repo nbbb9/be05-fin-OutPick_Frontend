@@ -5,7 +5,7 @@ class EventSourceService {
     constructor(id, store) {
 
         if (!this.#eventSource) {
-            this.#eventSource = new EventSource(`http://localhost:8081/connect?shop_id=${id}`);
+            this.#eventSource = new EventSource(`http://localhost:8080/connect?shop_id=${id}`);
             this.#store = store
             EventSourceService.instance = this;
             console.log("새로 생성된 EventSoource" ,EventSourceService.instance.#eventSource )
