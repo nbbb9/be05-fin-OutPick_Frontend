@@ -91,10 +91,14 @@ export default defineComponent({
 .modal-content {
     background-color: white;
     width: 30%;
-    height: 20%;
+    height: 30%;
     padding: 5px;
     border-radius: 5px;
     text-align: center;
+}
+
+.btn {
+  margin-top: 3%;
 }
 
 .close {

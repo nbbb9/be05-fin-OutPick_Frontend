@@ -2,7 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
-      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
+      <StockSidebar style="z-index: 2;" @stock-sidebar="selectMenu" :showMenu_p="show"/>
 
       <!-- 제목, 검색창 -->
       <div>
@@ -10,13 +10,12 @@
             <h3>매장별 재고 조회</h3>
         </div>
         <form v-on:submit.prevent="search" class="flex top-space-4">
-          <div class="block-1">
-            <h6>매장 선택</h6>
+          <div class="block-1 top-space-2">
             <select v-model="shop_name" class="form-control" @change="get_shop_id">
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
-          <div class="flex block-3 row-right top-space-4">
+          <div class="flex block-3 row-right top-space-2">
             <div class="block-3">
               <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
             </div>
@@ -41,7 +40,7 @@
       <div>
       <div class="listDiv">
         <table class="table table-hover border-gray top-space-4 ">
-          <thead>
+          <thead style="position: sticky; top:0; z-index: 1;">
             <tr>
               <th>상품명</th>
               <th>입고일</th>
@@ -55,6 +54,7 @@
               <td>{{ i.discount }}
                 <button @click="show_modal(), send_name(i.product_name)" class="btn btn-outline-light text-black">수정</button>
                 <StockModal
+                style="z-index: 3;"
                   v-if="is_modal_visible"
                   :is_visible="is_modal_visible"
                   modal_message="할인율 입력"
@@ -80,7 +80,7 @@
     </div>
       <div class="listDiv">
         <table class="table table-hover border-gray top-space-2">
-          <thead>
+          <thead style="position: sticky; top:0; z-index: 1;">
             <tr>
               <th>상품ID</th>
               <th>상품명</th>

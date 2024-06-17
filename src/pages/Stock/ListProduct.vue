@@ -2,7 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
-      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
+      <StockSidebar  @StockSidebar="selectMenu" style="z-index: 2;" :showMenu_p="show"/>
 
       <!-- 검색창, 제목 -->
       <div>
@@ -35,7 +35,7 @@
       <div>
         <div class="listDiv">
           <table class="table table-hover border-gray top-space-4">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>상품명</th>
                 <th>카테고리</th>
@@ -85,7 +85,7 @@
       </div>
         <div class="listDiv">
           <table class="table table-hover border-gray top-space-2">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>상품ID</th>
                 <th>상품명</th>
@@ -107,6 +107,7 @@
                 <th>
                   <button @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
                   <ProductionRequest 
+                  style="z-index: 3;"
                     :is_visible="is_modal_open" 
                      :prod="sel_pd" 
                     @close="close_modal" 
