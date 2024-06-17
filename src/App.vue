@@ -1,6 +1,6 @@
 <template>
   <!-- 네비게이션 바 -->
-  <nav v-if="showNav" class="navbar navbar-expand-lg">
+  <nav v-if="showNav" class="navbar navbar-expand-lg" style="position: sticky; top:0; z-index: 3;" >
     <div class="container-fluid">
       <!-- 로고 -->
       <router-link class="navbar-brand text-white" :to="{ name: 'ListShop' }">
@@ -125,7 +125,12 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center; /* 항목을 중앙에 배치 */
-  gap: 200px; /* 항목 간 간격 */
+}
+
+@media (min-width: 991px) {
+  .navbar-nav {
+    gap: 200px; /* 항목 간 간격 */
+  }
 }
 
 /* 로고 이미지 크기 */
@@ -143,7 +148,8 @@ img {
 
 /* 드롭다운 메뉴 아이템 스타일 */
 .dropdown-item {
-  padding: 10px 20px; /* 드롭다운 메뉴 아이템의 패딩 조정 */
+  padding: 3% 6%; 
+  /* 드롭다운 메뉴 아이템의 패딩 조정 */
 }
 
 /* 드롭다운 메뉴 아이템 텍스트 색상 변경 */
@@ -162,7 +168,6 @@ img {
 /* 네비게이션 링크 스타일 */
 .nav-link.active {
   color: white !important;
-  margin-right: 20px;
   font-size: 24px; /* 폰트 크기 크게 조정 */
 }
 
