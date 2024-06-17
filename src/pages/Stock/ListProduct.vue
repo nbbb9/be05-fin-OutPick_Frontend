@@ -48,7 +48,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(i) in copy_product" :key="i.product_id"  @click="show_detail(i.product_name)">
+              <tr v-for="(i) in copy_product" :key="i.product_id"  @click="show_detail(i.name)">
                 <td>{{ i.name }}</td>
                 <td>{{ i.category }}</td>
                 <td>{{ i.fit }}</td>
@@ -181,9 +181,9 @@
       // 상품 디테일
       const item_detail = ref([]);
       const copy_item_detail = ref([]);
-      const show_detail = (product_name) => {
+      const show_detail = (name) => {
         const items = product.value.filter(item => {
-          return item.product_name === product_name
+          return item.name === name
         })
         console.log("items =", items);
         if (items.length) {
@@ -192,7 +192,7 @@
           item_detail.value = items;
           copy_item_detail.value = [...item_detail.value];
           console.log(product.value);
-          console.log(product_name);
+          console.log(name);
           console.log("이것도 실행완료!");
           get_sel_list();
         } 
@@ -207,14 +207,14 @@
           console.log("검색 단어 :", searchText.value);
           copy_product.value = unique_items.value.filter(item => {
             console.log(item);
-            return item.product_name.includes(searchText.value)
+            return item.name.includes(searchText.value)
           })
         }
         if (category.value) {
           if (category.value === '가나다순') {
             copy_product.value.sort((a,b) => {
               console.log("작동중");
-              return a.product_name.localeCompare(b.product_name);
+              return a.name.localeCompare(b.name);
             })
           } else if (category.value === '기본') {
             console.log("작동중");
