@@ -5,12 +5,12 @@
 
     <div class="set-content-row mt-5">
       <!-- 매장이름 & 사진 -->
-      <div class="title-image">
+      <div class="title-image" style="text-align: center;">
         <div>
-          <h1 class="shop-name">{{ name }}</h1>
+          <h1 class="shop-name" style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ name }}</h1>
         </div>
-        <div class="image-container">
-          <img src="@/assets/로고_슬로건.png" alt="" class="shop-image mt-3" />
+        <div class="image-container" style="display: flex; justify-content: center;">
+          <img src="@/assets/로고_슬로건.png" alt="" class="shop-image mt-3" style="max-width: 100%; height: auto; display: block;" />
         </div>
       </div>
       <!-- 매장이름 & 사진 끝 -->
@@ -33,7 +33,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-6">
               <div class="form-group">
@@ -48,7 +48,7 @@
               </div>
             </div>
           </div>
-          
+
           <div class="row">
             <div class="form-group-content">
               <label for="content">매장 설명</label>
@@ -105,8 +105,8 @@
             <tbody>
             <tr v-for="(sr) in shop_stock_request_list" :key="sr.stock_request_id">
               <td>{{ sr.request_date }}</td>
-              <td :class="{ approved: sr.approval === '승인', denied: sr.approval === '대기' }">{{ sr.approval }}</td>
-              <td :class="{ approved: sr.admin_approval === '승인', denied: sr.admin_approval === '대기' }">{{ sr.admin_approval }}</td>
+              <td>{{ sr.approval }}</td>
+              <td>{{ sr.admin_approval }}</td>
             </tr>
             </tbody>
           </table>
@@ -130,7 +130,7 @@
             <tr v-for="(sp) in proposal_list" :key="sp.proposal_id">
               <td>{{ sp.content }}</td>
               <td>{{ sp.category }}</td>
-              <td :class="{ completed: sp.completed === 'Y', notCompleted: sp.completed === 'N' }">{{ sp.completed }}</td>
+              <td>{{ sp.completed }}</td>
             </tr>
             </tbody>
           </table>
@@ -140,166 +140,137 @@
     </div>
   </div>
 </template>
-  
+
+
 <script>
-  import ShopSidebar from '@/components/ShopSidebar.vue';
-  import { useStore } from 'vuex';
-  import { ref, onMounted } from 'vue';
-  import { useRouter } from 'vue-router';
-  import {shop_stock, shop_my_detail, shop_stockrequest_list, shop_proposal_list} from '@/shop_axios';
-  
-  export default {
-    components :{
-      ShopSidebar
-    },
-    setup() {
-      const store = useStore();   // store Vuex 변수
-      const router = useRouter();
+import ShopSidebar from '@/components/ShopSidebar.vue';
+import { useStore } from 'vuex';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { shop_stock, shop_my_detail, shop_stockrequest_list, shop_proposal_list } from '@/shop_axios';
 
-      const shopID = ref(null);// 초기값을 설정하고, 후에 route.params를 이용하여 업데이트합니다.
+export default {
+  components: {
+    ShopSidebar,
+  },
+  setup() {
+    const store = useStore();
+    const router = useRouter();
 
-      const name = ref('');//매장이름
-      const manager = ref('');//매장 관리자
-      const employee_name = ref('');//영업 사원
-      const contact = ref('');//전화번호
-      const address = ref('');//매장 위치
-      const content = ref('');//매장 설명
+    const shopID = ref(null);
+    const name = ref('');
+    const manager = ref('');
+    const employee_name = ref('');
+    const contact = ref('');
+    const address = ref('');
+    const content = ref('');
+    let shop_stock_list = ref([]);
+    let shop_stock_request_list = ref([]);
+    let proposal_list = ref([]);
 
-      let shop_stock_list = ref([]);//매장 재고를 위한 배열
-
-      let shop_stock_request_list = ref([]);//매장 재고요청서를 위한 배열
-
-      let proposal_list = ref([]);//매장 건의사항을 위한 배열
-
-      //매장 상세 정보 가져오기
-      const get_shop_detail = async (shopId) => {
-        try {
-          console.log(`Fetching shop details for shop ID: ${shopId}`);
-          const response = await shop_my_detail(shopId, store.state.loginToken);
-          console.log('Detail Response:', response);
-
-          name.value = response.data.name;
-          manager.value = response.data.manager;
-          employee_name.value = response.data.employee_name;
-          contact.value = response.data.contact;
-          address.value = response.data.address;
-          content.value = response.data.content;
-        } catch (error) {
-          console.error('Error fetching shop details:', error);
-        }
-      };
-
-      // 매장 재고 리스트 가져오기
-      const get_shop_stock = async (shopId) => {
-        try {
-          console.log(`Fetching shop stock for shop ID: ${shopId}`);
-          const response = await shop_stock(shopId, store.state.loginToken);
-          console.log('Response:', response);
-          // DTO에서 product_name과 stock 데이터를 추출하여 shop_stock_list에 할당
-          shop_stock_list.value = response.data.map(item => ({
-            product_name: item.product_name,
-            stock: item.stock
-          }));
-        } catch (error) {
-          console.error('Error fetching shop stock:', error);
-        }
-      };
-
-      // 매장 재고요청서 리스트 가져오기
-      const get_shop_stock_request = async (shopId) => {
-        try {
-          console.log(`Fetching shop stock for shop ID: ${shopId}`);
-          const response = await shop_stockrequest_list(shopId);
-          console.log('Response:', response);
-          shop_stock_request_list.value = response.data.map(item => ({
-            request_date: item.request_date,
-            approval: item.approval,
-            admin_approval: item.admin_approval
-          }));
-        } catch (error) {
-          console.error('Error fetching shop stock:', error);
-        }
-      };
-
-      //매장 건의사항 리스트 가져오기
-      const get_shop_proposal = async (shopId) => {
-        try {
-          console.log(`Fetching shop stock for shop ID: ${shopId}`);
-          const response = await shop_proposal_list(shopId);
-          console.log('Response:', response);
-          proposal_list.value = response.data.map(item => ({
-            content: item.content,
-            category: item.category,
-            completed: item.completed
-          }));
-        } catch (error) {
-          console.error('Error fetching shop stock:', error);
-        }
+    const get_shop_detail = async (shopId) => {
+      try {
+        const response = await shop_my_detail(shopId, store.state.loginToken);
+        name.value = response.data.name;
+        manager.value = response.data.manager;
+        employee_name.value = response.data.employee_name;
+        contact.value = response.data.contact;
+        address.value = response.data.address;
+        content.value = response.data.content;
+      } catch (error) {
+        console.error('Error fetching shop details:', error);
       }
+    };
 
-      onMounted(() => {
-        console.log('Route object:', router);
-        const currentRoute = router.currentRoute.value;
-        if (currentRoute && currentRoute.params && currentRoute.params.shopId) {
-          shopID.value = currentRoute.params.shopId; // 컴포넌트가 마운트되었을 때 route.params를 설정합니다.
-          if (shopID.value) {
-            get_shop_detail(shopID.value);
-            get_shop_stock(shopID.value);
-            get_shop_stock_request(shopID.value);
-            get_shop_proposal(shopID.value);
-          } else {
-            console.error('shopID is null');
-          }
+    const get_shop_stock = async (shopId) => {
+      try {
+        const response = await shop_stock(shopId, store.state.loginToken);
+        shop_stock_list.value = response.data.map(item => ({
+          product_name: item.product_name,
+          stock: item.stock
+        }));
+      } catch (error) {
+        console.error('Error fetching shop stock:', error);
+      }
+    };
+
+    const get_shop_stock_request = async (shopId) => {
+      try {
+        const response = await shop_stockrequest_list(shopId);
+        shop_stock_request_list.value = response.data.map(item => ({
+          request_date: item.request_date,
+          approval: item.approval,
+          admin_approval: item.admin_approval
+        }));
+      } catch (error) {
+        console.error('Error fetching shop stock:', error);
+      }
+    };
+
+    const get_shop_proposal = async (shopId) => {
+      try {
+        const response = await shop_proposal_list(shopId);
+        proposal_list.value = response.data.map(item => ({
+          content: item.content,
+          category: item.category,
+          completed: item.completed
+        }));
+      } catch (error) {
+        console.error('Error fetching shop stock:', error);
+      }
+    };
+
+    onMounted(() => {
+      const currentRoute = router.currentRoute.value;
+      if (currentRoute && currentRoute.params && currentRoute.params.shopId) {
+        shopID.value = currentRoute.params.shopId;
+        if (shopID.value) {
+          get_shop_detail(shopID.value);
+          get_shop_stock(shopID.value);
+          get_shop_stock_request(shopID.value);
+          get_shop_proposal(shopID.value);
         } else {
-          console.error('route params shopId is undefined');
+          console.error('shopID is null');
         }
-      });
-      // 메뉴 이동
-      const selectMenu = (selectMenu) => {
-        console.log(selectMenu);
-
-        switch (selectMenu) {
-          case 1:
-            router.push({
-              name : "ListShop"//매장 리스트
-            })
-            break;
-          case 2:
-            router.push({
-              name : "ListStockRequest"//재고요청서
-            })
-            break;
-          case 3 :
-            router.push({
-              name : "ListProposal"//건의사항
-            })
-            break;
-          default:
-            break;
-        }
-
+      } else {
+        console.error('route params shopId is undefined');
       }
+    });
 
+    const selectMenu = (selectMenu) => {
+      switch (selectMenu) {
+        case 1:
+          router.push({ name: 'ListShop' });
+          break;
+        case 2:
+          router.push({ name: 'ListStockRequest' });
+          break;
+        case 3:
+          router.push({ name: 'ListProposal' });
+          break;
+        default:
+          break;
+      }
+    };
 
-      return {
-        shop_stock_list,
-        shop_stock_request_list,
-        proposal_list,
-        get_shop_stock,
-        get_shop_detail,
-        get_shop_stock_request,
-        get_shop_proposal,
-        name,
-        manager,
-        employee_name,
-        contact,
-        address,
-        content,
-        selectMenu
-      }//return end
-    }//setup end
-  
-  }
+    return {
+      shop_stock_list,
+      shop_stock_request_list,
+      proposal_list,
+      get_shop_stock,
+      get_shop_detail,
+      get_shop_stock_request,
+      get_shop_proposal,
+      name,
+      manager,
+      employee_name,
+      contact,
+      address,
+      content,
+      selectMenu,
+    };
+  },
+};
 </script>
 
 <style scoped>
@@ -311,9 +282,8 @@
   font-style: normal;
 }
 
-
-div{
-  font-family: "LINESeedKR-Rg";
+div {
+  font-family: 'LINESeedKR-Rg';
 }
 
 /* 요소들 우측 나열 */
@@ -335,22 +305,21 @@ div{
   justify-content: center; /* 세로 중앙 정렬 */
   text-align: left;
   width: 30%;
-  height: 80%;
+  height: 100%;
   max-height: fit-content;
 }
 
 /* 매장 이름 */
 .shop-name {
   text-align: left;
-  padding-left: 5%;
   font-weight: bold; /* 글씨를 볼드체로 설정 */
 }
 
 /* 매장 사진 Container */
 .image-container {
-  width: auto;
-  height: auto; /* 부모 요소에 맞게 설정, 필요시 고정 높이 추가 */
-  /* overflow: hidden; 이미지가 부모 요소를 벗어나지 않도록 함 */
+  width: 85%;
+  height: 85%; /* 부모 요소에 맞게 설정, 필요시 고정 높이 추가 */
+  overflow: auto; /*이미지가 부모 요소를 벗어나지 않도록 함 */
 }
 
 /* 매장 사진 */
@@ -377,7 +346,7 @@ div{
   /* gap: 10px; 요소들 간의 간격을 설정합니다 */
   /* justify-content: space-between; 요소 간의 공간을 균등하게 배치 */
   max-height: 75vh;
-  width: 70%; /* 전체 영역의 60%를 차지 */
+  width: 65%; /* 전체 영역의 60%를 차지 */
   vertical-align: middle;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   border: 1px solid #a5a5a5; /* 이미지 테두리 설정 */
@@ -389,11 +358,11 @@ div{
   /* margin-bottom: 1rem; 입력 그룹 간의 간격 설정 */
 }
 
-.form-group-content{
+.form-group-content {
   width: 99%; /* 각 입력 그룹의 너비를 90%로 설정하여 중앙에 배치되도록 함 */
-  /* margin-bottom: 1rem; 입력 그룹 간의 간격 설정 */
+  margin-bottom: 1rem; /*입력 그룹 간의 간격 설정 */
   margin-left: auto;  /*왼쪽 여백을 자동으로 설정*/
-  /* margin-right: auto; 오른쪽 여백을 자동으로 설정 */
+  margin-right: auto; /*오른쪽 여백을 자동으로 설정 */
 }
 
 .form-group label {
@@ -411,7 +380,7 @@ div{
   border-radius: 4px; /* 입력 필드의 테두리 모서리 둥글게 설정 */
 }
 
-.form-control-content{
+.form-control-content {
   width: 100%; /* 입력 필드의 너비를 100%로 설정 */
   padding: 0.5rem; /* 입력 필드의 패딩 설정 */
   border: 1px solid #ccc; /* 입력 필드의 테두리 설정 */
@@ -421,7 +390,7 @@ div{
 /* 매장 재고 조회 */
 .shop-stock {
   max-height: 75vh;
-  width: 30%; /* 전체 영역의 35%를 차지 */
+  width: 35%; /* 전체 영역의 35%를 차지 */
   overflow-y: hidden; /* 내부 요소 스크롤을 위해 숨김 */
   vertical-align: middle;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
@@ -431,7 +400,7 @@ div{
 }
 
 .table-container {
-  max-height: 100vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 
@@ -483,13 +452,19 @@ div{
 
 /* 재고요청서와 건의사항 */
 .shop-detail-stock {
-  max-height: 100%;
+  max-height: 50vh;
+  overflow: auto;
   width: 50%; /* 전체 영역의 50%를 차지 */
   vertical-align: middle;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin-bottom: 1rem; /* 하단 여백 추가 */
   border: 1px solid #a5a5a5; /* 테두리 설정 */
   border-radius: 5px; /* 테두리 모서리 둥글게 설정 (선택 사항) */
+}
+
+.shop-detail-stock .table-container {
+  max-height: calc(50vh - 40px); /* 헤더 높이를 뺀 나머지 높이를 설정 */
+  overflow-y: auto;
 }
 
 .approved {
@@ -508,5 +483,3 @@ div{
   color: blue; /* 미해결된 항목의 텍스트 색상 설정 */
 }
 </style>
-
-
