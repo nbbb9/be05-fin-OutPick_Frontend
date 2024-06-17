@@ -2,17 +2,18 @@
   <div class="container">
     <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
 
-    <div class="row mt-5">
-      <div class="col-6">
-        <h2>생산 요청서</h2>
-
-        <div class="filterDiv mt-2">
-          <label for="approvalFilter">결재 상태:</label>
-          <select id="approvalFilter" v-model="selectedFilter" @change="filterPrList">
-            <option value="all">전체</option>
-            <option value="approved">승인</option>
-            <option value="notApproved">미승인</option>
-          </select>
+    <div class="row mt-5 flex-container">
+      <div class="col-6 flex-item">
+        <div class="headerDiv">
+          <h2 class="headerTitle">생산 요청서</h2>
+          <div class="filterDiv">
+            <label for="approvalFilter">결재 상태:</label>
+            <select id="approvalFilter" v-model="selectedFilter" @change="filterPrList">
+              <option value="all">전체</option>
+              <option value="approved">승인</option>
+              <option value="notApproved">미승인</option>
+            </select>
+          </div>
         </div>
 
         <div class="listDiv mt-4">
@@ -37,8 +38,10 @@
         </div>
       </div>
 
-      <div class="col-6 detail">
-        <div class="mt-3">생산 요청서 상세</div>
+      <div class="col-6 flex-item detail">
+        <div class="mt-3">
+          <h5>생산 요청서 상세</h5>
+        </div>
 
         <div v-if="pr_detail">
           <div class="atr row pt-3">
@@ -88,7 +91,7 @@
             </div>
           </div>
 
-          <div v-if="showModal" class="modal" tabindex="-1" role="dialog" style="display: block;">
+          <div v-if="showModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -101,27 +104,29 @@
                   <div class="form-group">
                     <input type="text" class="form-control" v-model="searchQuery" @input="filterProducts" placeholder="상품명 검색">
                   </div>
-                  <table class="table table-hover border-gray">
-                    <thead>
-                    <tr>
-                      <th>상품 ID</th>
-                      <th>상품명</th>
-                      <th>사이즈</th>
-                      <th>성별</th>
-                      <th>색상</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="product in filteredProducts" :key="product.product_id">
-                      <td>{{ product.product_id }}</td>
-                      <td>{{ product.product_name }}</td>
-                      <td>{{ product.size }}</td>
-                      <td>{{ product.gender }}</td>
-                      <td>{{ product.color }}</td>
-                      <td><button @click="selectProduct(product)" class="btn btn-primary">선택</button></td>
-                    </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-wrapper">
+                    <table class="table table-hover border-gray">
+                      <thead>
+                      <tr>
+                        <th>상품 ID</th>
+                        <th>상품명</th>
+                        <th>사이즈</th>
+                        <th>성별</th>
+                        <th>색상</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="product in filteredProducts" :key="product.product_id">
+                        <td>{{ product.product_id }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.size }}</td>
+                        <td>{{ product.gender }}</td>
+                        <td>{{ product.color }}</td>
+                        <td><button @click="selectProduct(product)" class="btn btn-primary">선택</button></td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" @click="closeModal">닫기</button>
@@ -129,6 +134,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -336,9 +342,14 @@ export default {
 </script>
 
 <style scoped>
-/* styles */
-.filterDiv {
-  margin-bottom: 1rem;
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-item {
+  flex: 1;
+  min-width: 300px;
 }
 
 td {
@@ -360,18 +371,39 @@ td {
   padding-left: 5%;
 }
 
+.headerDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.headerTitle {
+  margin: 0;
+}
+
+.filterDiv {
+  display: flex;
+  align-items: center;
+}
+
+.filterDiv label {
+  margin-right: 0.5rem;
+}
+
 .listDiv {
-  max-height: 60vh;
+  height: 70vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 900px; /* 고정 높이 */
+  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .detail {
+  height: 78vh;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 500px; /* 고정 높이 */
+  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .atr {
@@ -398,18 +430,18 @@ td {
 .modal {
   display: block;
   position: fixed;
-  top: 55%; /* 모달 창을 조금 아래로 내림 */
+  top: 50%; /* 모달 창을 중앙에 위치 */
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1050;
-  width: 50%; /* 너비를 넓힘 */
-  height: auto; /* 높이를 자동으로 설정 */
+  width: 50%;
+  height: auto;
   background-color: white;
   box-shadow: 0 6px 7px rgba(0, 0, 0, 0.2);
-  max-height: 80%; /* 최대 높이 설정 (필요 시 조정) */
-  overflow-y: auto; /* 콘텐츠가 넘칠 경우 스크롤 */
-  border-radius: 10px; /* 모서리를 둥글게 */
-  padding: 1rem; /* 내부 패딩 추가 */
+  max-height: 80%;
+  overflow-y: hidden; /* 바깥쪽 스크롤 숨김 */
+  border-radius: 10px;
+  padding: 1rem;
 }
 
 .modal-header {
@@ -443,6 +475,11 @@ td {
 
 .table {
   margin-bottom: 0;
+}
+
+.table-wrapper {
+  max-height: 50vh; /* 원하는 높이로 설정 */
+  overflow-y: auto; /* 안쪽 스크롤 */
 }
 
 .btn-primary {
