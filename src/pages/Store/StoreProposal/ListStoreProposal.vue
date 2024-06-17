@@ -11,7 +11,7 @@
           <h5>건의사항</h5>
         </div>
         <div class="col-7" >
-          <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control" >
+          <input type="text" v-model="searchText" placeholder="제목을 검색하세요" class="form-control" >
         </div>
         <div class="col-2" >
           <button class="btn btn-outline-light text-black" >검색</button>
@@ -24,7 +24,7 @@
     <!-- 재고 조회 -->
     <div class="row row-right mt-4" >
       <div class="col">
-        <h5 class="seeList" @click="initial" >건의사항 조회</h5>
+        <h5 class="seeList" @click="initial" >건의사항 관리</h5>
       </div>
     </div>
 
@@ -80,6 +80,7 @@
 
 <script>
 import {useStore} from "vuex"
+import { onMounted } from 'vue';
 import { ref } from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
@@ -95,7 +96,7 @@ export default {
     const searchText = ref(''); // search text
     let search_result = ref(false); // search 결과
 
-    const proposal_list = ref([]); // 최초 list정보만을 담을 배ㅕㅇㄹ
+    const proposal_list = ref([]); // 최초 list정보만을 담을 배열
     const copy_p_list = ref([{}]); // search를 위한 배열
 
     const p_view = ref(); // 상세 정보를 위한 변수
@@ -139,9 +140,21 @@ export default {
       })
     }
 
-    // 복구 테스트
-    let sse = new EventSourceService(store.state.loginStoreId, store);
-    sse.restoreEventListeners();
+    onMounted(()=> {
+      // SSE 복구
+      let sse = new EventSourceService(store.state.loginStoreId, store);
+      sse.restoreEventListeners();
+
+      // SSE 이벤트 리스너 추가
+      sse.addESEventListener('proposal_solution', handleProposalSolution);
+    });
+
+    function handleProposalSolution(event) {
+      const data = JSON.parse(event.data);
+      console.log('Proposal Solution Received:', data);
+      // 여기서 데이터를 StoreSidebar로 옮기는 로직을 추가합니다.
+      store.commit('setSidebarData', data); // Vuex store에 mutation을 통해 데이터 업데이트를 요청합니다.
+    }
 
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
