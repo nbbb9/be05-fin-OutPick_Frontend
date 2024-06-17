@@ -2,7 +2,7 @@
   <div class="container">
     <!-- sidebar -->
     <ShopSidebar @ShopSidebar="selectMenu"/>
-    
+
     <!-- 검색창 -->
     <div class="search_div">
       <form v-on:submit.prevent="search" class="row mt-4" >

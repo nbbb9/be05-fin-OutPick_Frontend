@@ -7,6 +7,7 @@ import StoreLogin from "@/pages/Store/StoreLoginPage.vue"
 import ListShop from "@/pages/Shop/ListShop/ListShop.vue"
 import DetailShop from "@/pages/Shop/ListShop/DetailShop.vue";
 import ListEmployee from "@/pages/Admin/Employee/ListEmployee.vue";
+import AnalysisPage from "@/pages/Analysis/AnalysisPage.vue"
 import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
 import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
 import ListProductionRequest from "@/pages/Admin/ListProductionRequest.vue";
@@ -51,6 +52,11 @@ const router = createRouter({
             path : "/employee_list",
             name : "ListEmployee",
             component : ListEmployee
+        },
+        {
+          path : "/analysis",
+          name : "AnalysisPage",
+          component : AnalysisPage
         },
         {
             path : "/employee_analysis",

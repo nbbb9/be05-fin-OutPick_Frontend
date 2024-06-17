@@ -22,7 +22,7 @@
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShopStock'}">재고</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'Login'}">통계/분석</router-link>
+            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'AnalysisPage'}">통계/분석</router-link>
           </li>
           <li class="nav-item" v-if="loginUserRole === '관리자'">
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListEmployee'}">관리자</router-link>
