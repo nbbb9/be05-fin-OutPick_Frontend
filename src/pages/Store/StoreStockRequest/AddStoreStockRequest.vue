@@ -56,8 +56,8 @@
         </thead>
         <tbody>
           <tr v-for="(pd) in copy_pd_list" :key="pd.product_id" :class="{'table-primary' : selectedIndex === pd.product_id }">
-            <td>{{ pd.product_id }}</td>
             <td>{{ pd.name }}</td>
+            <td>{{ pd.season }}</td>
             <td>{{ pd.color }}</td>
             <td>{{ pd.gender }}</td>
             <td>{{ pd.size }}</td>
@@ -273,7 +273,7 @@ text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403);
 
 /* list scroll, list 그림자 */
 .listDiv{
-  max-height : 30vh;
+  max-height : 60vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
 }
