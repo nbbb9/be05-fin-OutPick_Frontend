@@ -13,6 +13,9 @@
           <div class="block-3">
             <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
           </div>
+          <div class="block-1">
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+        </div>
           <div class="block-1"></div>
           <div class="block-2">
               <select class="form-select" v-model="category">
@@ -24,7 +27,7 @@
               </select>
             </div>
             <div class="block-1">
-          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+          <button @click="filtereditems" class="btn btn-outline-light text-black">정렬</button>
         </div>
           <div class="block-3"></div>
           <div class="block-3"></div>

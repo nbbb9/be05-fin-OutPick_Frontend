@@ -5,21 +5,21 @@
 
     <!-- 검색창 -->
     <div class="search_div">
-      <form v-on:submit.prevent="search" class="row mt-4" >
-        <div class="col-3" >
+      <form v-on:submit.prevent="search" class="row mt-4">
+        <div class="col-3">
           <h4>매장리스트</h4>
         </div>
-        <div class="col-2" >
-          <input type="text" v-model="searchText" placeholder="매장 검색" class="form-control" >
-        </div>
-        <div class="col-1" >
-          <button class="btn btn-outline-light text-black" >검색</button>
-        </div>
         <div class="col-2">
-          <h5 class="seeList" @click="showMyChargeShop" >담당매장만 보기</h5>
+          <input type="text" v-model="searchText" placeholder="매장 검색" class="form-control">
         </div>
-        <div class="col-2">
-          <h5 class="seeList" @click="showAllShop" >전체매장 보기</h5>
+        <div class="col-1">
+          <button class="btn btn-outline-light text-black">검색</button>
+        </div>
+        <div v-if="store.state.loginUserRole !== '관리자'" class="col-2">
+          <h5 class="seeList" @click="showMyChargeShop">담당매장만 보기</h5>
+        </div>
+        <div v-if="store.state.loginUserRole !== '관리자'" class="col-2">
+          <h5 class="seeList" @click="showAllShop">전체매장 보기</h5>
         </div>
       </form>
     </div>
@@ -27,33 +27,32 @@
     <hr>
 
     <!-- 매장 리스트 조회 -->
-    <div class="row mt-1 listDiv" >
-        <table class="table table-hover border-gray">
-          <thead>
-            <tr>
-              <th>매장ID</th>
-              <th>매장 이름</th>
-              <th>위치</th>
-              <th>상세보기</th>
-            </tr>
-          </thead>
-          <tbody  >
-            <!-- -->
-            <tr v-for="(s) in copy_shop_list" :key="s.shop_id">
-              <td>{{ s.shop_id }}</td>
-              <td>{{ s.name }}</td>
-              <td>{{ s.address }}</td>
-              <td>
-                <button class="btn btn-primary btn-sm" @click="showMyShopDetails(s)">
-                  상세보기
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="row mt-1 listDiv">
+      <table class="table table-hover border-gray">
+        <thead>
+        <tr>
+          <th>매장ID</th>
+          <th>매장 이름</th>
+          <th>위치</th>
+          <th>상세보기</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(s) in copy_shop_list" :key="s.shop_id">
+          <td>{{ s.shop_id }}</td>
+          <td>{{ s.name }}</td>
+          <td>{{ s.address }}</td>
+          <td>
+            <button class="btn btn-primary btn-sm" @click="showMyShopDetails(s)">
+              상세보기
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
 
-    <div v-if="search_result" class="alert alert-info mt-3" >
+    <div v-if="search_result" class="alert alert-info mt-3">
       검색 결과가 존재하지 않습니다.
     </div>
 
@@ -86,11 +85,10 @@ import { useRouter } from 'vue-router';
 import { shop_my_list, shop_all_list } from '@/shop_axios';
 
 export default {
-  components :{
+  components: {
     ShopSidebar
   },
-  setup(){
-
+  setup() {
     const store = useStore();   // store Vuex 변수
     const router = useRouter(); //router 변수
 
@@ -116,7 +114,7 @@ export default {
     triggerShow();
 
     //전체 매장 리스트를 얻기 위한 메서드
-    const get_shop_all_list = async() => {
+    const get_shop_all_list = async () => {
       const response = await shop_all_list();
       all_shop_list.value = response.data;
 
@@ -126,13 +124,13 @@ export default {
 
     //검색
     const search = () => {
-      copy_shop_list.value = all_shop_list.value.filter( (shop_name) => {
+      copy_shop_list.value = all_shop_list.value.filter((shop_name) => {
         return shop_name.name.includes(searchText.value);
       });
     }
 
     //내 담당 매장 보기
-    const showMyChargeShop = async() => {
+    const showMyChargeShop = async () => {
       const response = await shop_my_list(store.state.loginToken);
       copy_shop_list.value = response.data;
     }
@@ -147,8 +145,8 @@ export default {
       console.log('LoggedInEmployeeId:', loggedInEmployeeId.value);
       console.log('Shop EmployeeId:', shop.employee_id);
       if (shop.employee_id === loggedInEmployeeId.value || store.state.loginUserRole === "관리자") {
-        router.push({name: 'DetailShop', params: { shopId: shop.shop_id} });
-      } else{
+        router.push({ name: 'DetailShop', params: { shopId: shop.shop_id } });
+      } else {
         modalMessage.value = '담당 매장이 아닙니다.';
         showModal.value = true;
       }
@@ -165,26 +163,25 @@ export default {
       switch (selectMenu) {
         case 1:
           router.push({
-            name : "ListShop"//매장 리스트
+            name: "ListShop"//매장 리스트
           })
           break;
         case 2:
           router.push({
-            name : "ListStockRequest"//재고요청서
+            name: "ListStockRequest"//재고요청서
           })
           break;
-        case 3 :
+        case 3:
           router.push({
-            name : "ListProposal"//건의사항
+            name: "ListProposal"//건의사항
           })
           break;
         default:
           break;
       }
-      
     }
 
-    return{
+    return {
       all_shop_list,
       copy_shop_list,
       searchText,
@@ -196,10 +193,10 @@ export default {
       showMyShopDetails,
       showModal,
       modalMessage,
-      closeModal
+      closeModal,
+      store
     }
   }
-
 }
 </script>
 
@@ -213,54 +210,53 @@ export default {
   font-style: normal;
 }
 
-
-div{
+div {
   font-family: "LINESeedKR-Rg";
 }
 
 /* 검색 div 정렬 */
-form > .col-3{
+form > .col-3 {
   text-align: right;
 }
 
-form > .col-2{
+form > .col-2 {
   display: flex;
   align-items: flex-start;
 }
 
 /* 아이템 가운데 정렬 */
-.row{
+.row {
   display: flex;
   align-items: center;
 }
 
 /* 왼쪽 정렬 */
-.row-right{
+.row-right {
   text-align: left;
   padding-left: 5%;
-} 
+}
 
 /* hover시 그림자 효과 */
-.seeList:hover{
-  text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403); 
+.seeList:hover {
+  text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403);
 }
 
 /* 세로 방향 가운데 정렬 */
 td {
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 
 /* list scroll, list 그림자 */
-.listDiv{
-  max-height : 75vh;
+.listDiv {
+  max-height: 75vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
 }
 
 /* alert 설정 */
-.alert{
+.alert {
   font-weight: bold;
-  box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403); 
+  box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403);
 }
 
 /* 모달 스타일 */

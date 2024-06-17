@@ -30,7 +30,7 @@
             </div>
 
             <div class="block-1">
-          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+          <button @click="filtereditems" class="btn btn-outline-light text-black">정렬</button>
         </div>
             <div class="block-2">
               <button @click="stockRequestList" class="btn btn-light text-black">재고요청서</button>
