@@ -146,9 +146,9 @@ export default {
     const showMyShopDetails = (shop) => {
       console.log('LoggedInEmployeeId:', loggedInEmployeeId.value);
       console.log('Shop EmployeeId:', shop.employee_id);
-      if (shop.employee_id === loggedInEmployeeId.value) {
+      if (shop.employee_id === loggedInEmployeeId.value || store.state.loginUserRole === "관리자") {
         router.push({name: 'DetailShop', params: { shopId: shop.shop_id} });
-      } else {
+      } else{
         modalMessage.value = '담당 매장이 아닙니다.';
         showModal.value = true;
       }

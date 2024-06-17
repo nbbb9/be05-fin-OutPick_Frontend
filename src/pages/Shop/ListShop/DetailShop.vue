@@ -184,7 +184,7 @@ export default {
 
     const get_shop_stock = async (shopId) => {
       try {
-        const response = await shop_stock(shopId, store.state.loginToken);
+        const response = await shop_stock(shopId);
         shop_stock_list.value = response.data.map(item => ({
           product_name: item.product_name,
           stock: item.stock
