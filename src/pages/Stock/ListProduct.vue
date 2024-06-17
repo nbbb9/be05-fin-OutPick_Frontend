@@ -105,7 +105,7 @@
                 <th>{{ p.stock }}</th>
                 <th>{{ p.fit }}</th>
                 <th>
-                  <button @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
+                  <button v-if="admin_ban" @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
                   <ProductionRequest 
                   style="z-index: 3;"
                     :is_visible="is_modal_open" 
@@ -379,6 +379,13 @@
 
       }
 
+      // 관리자 막음
+      const admin_ban = ref(false);
+      if (store.state.loginUserRole === "사원") {
+        admin_ban.value - true;
+      }
+
+      // 사이드바
       const selectMenu = (selectId) => {
         console.log("select Id:", selectId);
         switch (selectId) {
@@ -426,7 +433,8 @@
         sel_pd,
         store,
         handleInput,
-        selectMenu
+        selectMenu,
+        admin_ban
       }
 
     }
