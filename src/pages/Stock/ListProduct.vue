@@ -20,10 +20,10 @@
           <div class="block-2">
               <select class="form-select" v-model="category">
                 <option value="" disabled selected hidden>정렬</option>
-                <option @click="searchItemList" value="기본">기본</option>
-                <option @click="searchFamous" value="인기순">인기순</option>
-                <option @click="searchNotFamous" value="비인기순">비인기순</option>
-                <option @click="searchABC" value="가나다순">가나다순</option>
+                <option value="기본">기본</option>
+                <option value="인기순">인기순</option>
+                <option value="비인기순">비인기순</option>
+                <option value="가나다순">가나다순</option>
               </select>
             </div>
             <div class="block-1">
