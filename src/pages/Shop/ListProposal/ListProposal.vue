@@ -98,8 +98,10 @@
             </div>
           </div>
           <div class="button-container text-center mt-auto">
-            <button class="btn btn-secondary" @click="openSolutionModal">해결방안 작성</button>
-            <button class="btn btn-primary" @click="checkComplete">해결 완료</button>
+            <button class="btn btn-secondary" @click="openSolutionModal">
+              {{ p_view.completed === 'y' ? '해결방안 수정' : '해결방안 작성' }}
+            </button>
+            <button v-if="p_view.completed !== 'y'" class="btn btn-primary" @click="checkComplete">해결 완료</button>
           </div>
         </div>
         <div v-else class="detail-view-content p-3">

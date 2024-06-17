@@ -21,12 +21,15 @@
                         </div> <!-- 날짜 끝 -->
                         <div class="row center">
                             <div class="atr pt-3 col-5 row align-items-center">
-                                <strong class="col-6 text-left">매장 담당자</strong>
-                                <div class="col-6 text-right">{{ sr_detail.manager }}</div>
+                                <strong class="col-6 text-left" v-if="loginUserRole === '사원'">매장 매니저</strong>
+                                <strong class="col-6 text-left" v-if="loginUserRole === '관리자'">매장 담당자</strong>
+                                <div class="col-6 text-right" v-if="loginUserRole === '사원'">{{ sr_detail.manager }}</div>
+                                <div class="col-6 text-right" v-if="loginUserRole === '관리자'">{{ sr_detail.employee_name }}</div>
                             </div> <!-- 담당자 끝 -->
                             <div class="atr pt-3 col-5 row align-items-center">
                                 <strong class="col-6 text-left"> 결재 상태</strong>
-                                <div class="col-6 text-right">{{ sr_detail.approval }}</div>
+                                <div class="col-6 text-right" v-if="loginUserRole === '사원'">{{ sr_detail.approval }}</div>
+                                <div class="col-6 text-right" v-if="loginUserRole === '관리자'">{{ sr_detail.admin_approval }}</div>
                             </div> <!-- 결재 상태 끝 -->
                         </div> <!-- 담당자/결재 상태 끝 -->
                         <div class="mt-5">
@@ -48,8 +51,9 @@
                             </table>
                         </div> <!-- 요청 상품 상세 끝 -->
                         <br/><br/><br/>
-                        <div v-if="sr_detail.approval !== '승인' && sr_detail.approval !== '반려'">
-                            <button class="btn btn-success font-weight-bold" @click="sr_approval">승인</button> &emsp;&emsp;&emsp;
+                        <div v-if="sr_detail.approval !== '승인' && sr_detail.approval !== '반려' && loginUserRole === '사원'">
+                            <button class="btn btn-success font-weight-bold" @click="sr_approval">승인</button> 
+                            &emsp;&emsp;&emsp;
                             <button class="btn btn-outline-secondary font-weight-bold" @click="sr_reject">반려</button>
                         </div>
                         <br/><br/>
@@ -69,7 +73,7 @@
 <script>
 import ShopSidebar from '@/components/ShopSidebar.vue';
 import { useStore } from 'vuex';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { stock_request_detail, stock_request_approval, stock_request_reject } from '@/shop_axios';
 
@@ -85,15 +89,12 @@ export default {
         const stock_request_id = ref(null);
         const sr_detail = ref({});
         const loading = ref(true);
+        let loginUserRole = computed(() => store.state.loginUserRole);
 
         const get_sr_detail = async (stock_request_id) => {
             try {
-                console.log(`Fetching sr details for sr ID: ${stock_request_id}`);
-                console.log(`Using token: ${store.state.loginToken}`);
                 const response = await stock_request_detail(stock_request_id, store.state.loginToken);
-                console.log('Detail Response:', response);
                 sr_detail.value = response.data;
-                
             } catch (error) {
                 console.error('Error fetching shop details:', error);
                 alert('Failed to load stock request details.');
@@ -110,18 +111,11 @@ export default {
         };
 
         onMounted(() => {
-            console.log('Route object:', route);
-            console.log('Route params:', route.params);
-
             if (route.params && route.params.stock_request_id) {
                 stock_request_id.value = route.params.stock_request_id;
                 if (stock_request_id.value) {
                     get_sr_detail(stock_request_id.value);
-                } else {
-                    console.error('stock_request_id is null');
                 }
-            } else {
-                console.error('route params stock_request_id is undefined');
             }
         });
 
@@ -149,7 +143,6 @@ export default {
 
         // 메뉴 이동
         const selectMenu = (selectMenu) => {
-            console.log(selectMenu);
             switch (selectMenu) {
                 case 1:
                     router.push({
@@ -179,111 +172,111 @@ export default {
             loading,
             formattedDate,
             sr_approval,
-            sr_reject
+            sr_reject,
+            loginUserRole
         };
     }
 };
 </script>
 
 <style scoped>
-    /* 폰트 */
-    @font-face {
+/* 폰트 */
+@font-face {
     font-family: 'LINESeedKR-Rg';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
 
-
-    div{
+div {
     font-family: "LINESeedKR-Rg";
-    }
-    
-    /* 세로 방향 가운데 정렬 */
-    td {
-        vertical-align: middle;
-    }
-    
-    /* 아이템 가운데 정렬 */
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    /* 왼쪽 정렬 */
-    .text-left {
-        text-align: left;
-    }
-    
-    /* 오른쪽 정렬 */
-    .text-right {
-        text-align: right;
-    }
-    
-    /* list scroll, 그림자 */
-    .listDiv {
-        max-height: 58vh;
-        overflow-y: auto;
-        box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-        margin: 1%;
-    }
-    
-    /* 상세 */
-    .detail {
-        box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-        padding: 1%;
-        height: 100%; /* Ensure the detail section takes full height */
-    }
-    
-    /* 상세 옵션들 */
-    .atr {
-        height: 7vh;
-        max-width: 40vw;
-        box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-        margin: 2%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    /* 색깔 변경 */
-    .red-text {
-        color: red;
-    }
-    .blue-text {
-        color: blue;
-    }
-    
-    /* 글자 굵기 */
-    h5 {
-        font-weight: bold;
-    }
-    
-    .empty-content {
-        box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
-        padding: 1%;
-        height: 100%; /* Ensure the empty-content section takes full height */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    
-    .placeholder {
-        font-size: 1.5rem;
-        color: gray;
-    }
+}
 
-    .font-weight-bold {
-        font-weight: bold;
-    }
+/* 세로 방향 가운데 정렬 */
+td {
+    vertical-align: middle;
+}
 
-    /* New CSS */
-    .fixed-height {
-        height: 75vh; /* Set a fixed height for the container */
-    }
+/* 아이템 가운데 정렬 */
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    .full-height {
-        height: 100%; /* Make children take full height */
-    }
+/* 왼쪽 정렬 */
+.text-left {
+    text-align: left;
+}
+
+/* 오른쪽 정렬 */
+.text-right {
+    text-align: right;
+}
+
+/* list scroll, 그림자 */
+.listDiv {
+    max-height: 58vh;
+    overflow-y: auto;
+    box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+    margin: 1%;
+}
+
+/* 상세 */
+.detail {
+    box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+    padding: 1%;
+    height: 100%; /* Ensure the detail section takes full height */
+}
+
+/* 상세 옵션들 */
+.atr {
+    height: 7vh;
+    max-width: 40vw;
+    box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+    margin: 2%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 색깔 변경 */
+.red-text {
+    color: red;
+}
+.blue-text {
+    color: blue;
+}
+
+/* 글자 굵기 */
+h5 {
+    font-weight: bold;
+}
+
+.empty-content {
+    box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
+    padding: 1%;
+    height: 100%; /* Ensure the empty-content section takes full height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.placeholder {
+    font-size: 1.5rem;
+    color: gray;
+}
+
+.font-weight-bold {
+    font-weight: bold;
+}
+
+/* New CSS */
+.fixed-height {
+    height: 75vh; /* Set a fixed height for the container */
+}
+
+.full-height {
+    height: 100%; /* Make children take full height */
+}
 </style>
