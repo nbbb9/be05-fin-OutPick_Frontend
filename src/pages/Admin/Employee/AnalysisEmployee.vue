@@ -70,6 +70,14 @@ export default {
 
     // chart를 담을 변수
     let barChart;
+    let elementIndex; // 사용자가 chart에서 선택한 x축 index
+    let datasetIndex; // 사용자가 chart에서 선택한 y축 index
+    const selLabel = ref();        // 사용자가 chart에서 선택한 x축 값
+    const selValue = ref();        // 사용자가 chart에서 선택한 y축 값
+
+    watch(selLabel, () => {
+      console.log("label의 값이 달라졌습니다!");
+    })
 
     const selectGet = async () => {
 
@@ -83,6 +91,7 @@ export default {
 
       if (barChart) {
         barChart.destroy();
+        // 재활용을 위한 삭제
       }
 
       const chart = document.getElementById('chart-container').getContext('2d');
@@ -118,7 +127,16 @@ export default {
           }]
         },
         options: {
-          maintainAspectRatio: false // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+          maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+          onClick: function(evt, elements) {
+            if (elements.length > 0) {
+              elementIndex = elements[0].index;
+              datasetIndex = elements[0].datasetIndex;
+              selLabel.value = this.data.labels[elementIndex];
+              selValue.value = this.data.datasets[datasetIndex].data[elementIndex];
+              console.log(`Clicked on index: ${elementIndex}, label: ${selLabel.value}, value: ${selValue.value}`);
+            }
+          },
         }
       })
       barChart
@@ -191,16 +209,16 @@ export default {
 
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
+
 div{
-font-family: "Gowun Dodum", sans-serif;
+font-family: "LINESeedKR-Rg";
 }
 
 /* select칸 가운데 정렬 */

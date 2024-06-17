@@ -19,25 +19,41 @@
       <div class="shop-detail-and-stock">
         <!-- 매장 상세정보 -->
         <div class="shop-detail-form mb-3">
-          <div class="form-group">
-            <label for="manager">매장 관리자</label>
-            <input type="text" id="manager" v-model="manager" class="form-control" />
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="manager">매장 관리자</label>
+                <input type="text" id="manager" v-model="manager" class="form-control" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="employee_name">매장 영업사원</label>
+                <input type="text" id="employee_name" v-model="employee_name" class="form-control" />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="employee_name">매장 영업사원</label>
-            <input type="text" id="employee_name" v-model="employee_name" class="form-control" />
+          
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="contact">매장 전화번호</label>
+                <input type="text" id="contact" v-model="contact" class="form-control" />
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="form-group">
+                <label for="address">매장 위치</label>
+                <input type="text" id="address" v-model="address" class="form-control" />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="contact">매장 전화번호</label>
-            <input type="text" id="contact" v-model="contact" class="form-control" />
-          </div>
-          <div class="form-group">
-            <label for="address">매장 위치</label>
-            <input type="text" id="address" v-model="address" class="form-control" />
-          </div>
-          <div class="form-group-content">
-            <label for="content">매장 설명</label>
-            <input type="text" id="content" v-model="content" class="form-control-content" />
+          
+          <div class="row">
+            <div class="form-group-content">
+              <label for="content">매장 설명</label>
+              <input type="text" id="content" v-model="content" class="form-control-content" />
+            </div>
           </div>
         </div>
         <!-- 매장 상세정보 끝 -->
@@ -310,7 +326,7 @@ div{
 
 /* 요소들 사이 간격 추가 */
 .vertical-space {
-  padding-top: 30px; /* 요소들 사이 간격 설정 */
+  padding-top: 2%; /* 요소들 사이 간격 설정 */
 }
 
 .title-image {
@@ -319,6 +335,8 @@ div{
   justify-content: center; /* 세로 중앙 정렬 */
   text-align: left;
   width: 30%;
+  height: 80%;
+  max-height: fit-content;
 }
 
 /* 매장 이름 */
@@ -332,7 +350,7 @@ div{
 .image-container {
   width: auto;
   height: auto; /* 부모 요소에 맞게 설정, 필요시 고정 높이 추가 */
-  overflow: hidden; /* 이미지가 부모 요소를 벗어나지 않도록 함 */
+  /* overflow: hidden; 이미지가 부모 요소를 벗어나지 않도록 함 */
 }
 
 /* 매장 사진 */
@@ -348,16 +366,16 @@ div{
 .shop-detail-and-stock {
   display: flex;
   flex-direction: row;
-  gap: 10px;
-  width: 100%; /* 부모 요소에 맞게 설정 */
+  /* gap: 10px; */
+  /* width: 100%; 부모 요소에 맞게 설정 */
 }
 
 /* 매장 상세정보 영역 */
 .shop-detail-form {
-  display: flex;
-  flex-wrap: wrap; /* 요소를 줄 바꿈하여 배치 */
-  gap: 10px; /* 요소들 간의 간격을 설정합니다 */
-  justify-content: space-between; /* 요소 간의 공간을 균등하게 배치 */
+  /* display: flex; */
+  /* flex-wrap: wrap; 요소를 줄 바꿈하여 배치 */
+  /* gap: 10px; 요소들 간의 간격을 설정합니다 */
+  /* justify-content: space-between; 요소 간의 공간을 균등하게 배치 */
   max-height: 75vh;
   width: 70%; /* 전체 영역의 60%를 차지 */
   vertical-align: middle;
@@ -367,15 +385,15 @@ div{
 }
 
 .form-group {
-  width: 48%; /* 각 입력 그룹의 너비를 48%로 설정하여 두 개의 그룹이 한 줄에 배치되도록 함 */
-  margin-bottom: 1rem; /* 입력 그룹 간의 간격 설정 */
+  /* width: 48%; 각 입력 그룹의 너비를 48%로 설정하여 두 개의 그룹이 한 줄에 배치되도록 함 */
+  /* margin-bottom: 1rem; 입력 그룹 간의 간격 설정 */
 }
 
 .form-group-content{
   width: 99%; /* 각 입력 그룹의 너비를 90%로 설정하여 중앙에 배치되도록 함 */
-  margin-bottom: 1rem; /* 입력 그룹 간의 간격 설정 */
-  margin-left: auto; /* 왼쪽 여백을 자동으로 설정 */
-  margin-right: auto; /* 오른쪽 여백을 자동으로 설정 */
+  /* margin-bottom: 1rem; 입력 그룹 간의 간격 설정 */
+  margin-left: auto;  /*왼쪽 여백을 자동으로 설정*/
+  /* margin-right: auto; 오른쪽 여백을 자동으로 설정 */
 }
 
 .form-group label {
@@ -413,8 +431,8 @@ div{
 }
 
 .table-container {
-  max-height: 100%;
-  overflow: auto;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .stock-header {
