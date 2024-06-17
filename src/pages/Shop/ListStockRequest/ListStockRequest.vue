@@ -10,7 +10,7 @@
     <div class="search_div row mt-4">
       <div class="col-md-2">
         <select v-model="selectedApproval" @change="filterByApproval" class="form-select">
-          <option value="">내 결제상태 선택</option>
+          <option value="">내 결재상태 선택</option>
           <option value="승인">승인</option>
           <option value="반려">반려</option>
           <option value="대기">대기</option>
@@ -38,7 +38,7 @@
               <th>매장 이름</th>
               <th>요청일</th>
               <th>나의 결재상태</th>
-              <th>관리자 결제상태</th>
+              <th>관리자 결재상태</th>
               <th>상세보기</th>
             </tr>
           </thead>
@@ -195,17 +195,17 @@ const showSrDetails = (sr) => {
 </script>
 
 <style scoped>
-/* 스타일 부분 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-  font-family: "Gowun Dodum", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+/* 폰트 */
+@font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
-div {
-  font-family: "Gowun Dodum", sans-serif;
+
+div{
+font-family: "LINESeedKR-Rg";
 }
 
 .title {
