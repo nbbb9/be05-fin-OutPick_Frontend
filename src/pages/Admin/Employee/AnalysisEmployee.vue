@@ -30,6 +30,13 @@
       </div>
     </div>  <!-- 년, 월 선택 끝 -->
 
+    <div style="display: flex; justify-content: center;" >
+      <div v-if="isSuccess" class="alert alert-danger mt-3"
+        style="width: 50%;" >
+        올바른 값을 넣어주세요
+      </div>
+    </div>
+
     <div class="row" >
       <div class="col-md-12" >
         <canvas id="chart-container" width="400" height="400" ></canvas>
@@ -67,6 +74,7 @@ export default {
     const select_year = ref();
     const select_month = ref();
     const data = ref();
+    const isSuccess = ref(false);
 
     // chart를 담을 변수
     let barChart;
@@ -81,66 +89,71 @@ export default {
 
     const selectGet = async () => {
 
-      // axios - get : 데이터 받아오기
-      await admin_employee_analyze(em_id.value, select_month.value, select_year.value, store.state.loginToken)
-        .then((response) => {
-          console.log(response.data);
-          data.value = response.data
-        })
-      // chart.js 부분
+        if (em_id.value && select_month.value && select_year.value) {
+            // axios - get : 데이터 받아오기
+            await admin_employee_analyze(em_id.value, select_month.value, select_year.value, store.state.loginToken)
+                .then((response) => {
+                    console.log(response.data);
+                    data.value = response.data;
+                });
 
-      if (barChart) {
-        barChart.destroy();
-        // 재활용을 위한 삭제
-      }
-
-      const chart = document.getElementById('chart-container').getContext('2d');
-
-      Chart.register(...registerables);
-
-      barChart = new Chart(chart, {
-        type : 'bar',
-        data : {
-          labels : data.value.shop_list,
-          datasets : [{
-            label : '판매량',
-            borderWidth : 3,
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)',
-              'rgba(255, 159, 64, 0.2)',
-              'rgba(199, 199, 199, 0.2)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)',
-              'rgba(199, 199, 199, 1)'
-            ],
-            data : data.value.sales_list
-          }]
-        },
-        options: {
-          maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
-          onClick: function(evt, elements) {
-            if (elements.length > 0) {
-              elementIndex = elements[0].index;
-              datasetIndex = elements[0].datasetIndex;
-              selLabel.value = this.data.labels[elementIndex];
-              selValue.value = this.data.datasets[datasetIndex].data[elementIndex];
-              console.log(`Clicked on index: ${elementIndex}, label: ${selLabel.value}, value: ${selValue.value}`);
+            // chart.js 부분
+            if (barChart) {
+                barChart.destroy();
+                // 재활용을 위한 삭제
             }
-          },
+
+            const chart = document.getElementById('chart-container').getContext('2d');
+
+            Chart.register(...registerables);
+
+            barChart = new Chart(chart, {
+                type: 'bar',
+                data: {
+                    labels: data.value.shop_list,
+                    datasets: [{
+                        label: '판매량',
+                        borderWidth: 3,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)',
+                            'rgba(199, 199, 199, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)'
+                        ],
+                        data: data.value.sales_list
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+                    onClick: function (evt, elements) {
+                        if (elements.length > 0) {
+                            elementIndex = elements[0].index;
+                            datasetIndex = elements[0].datasetIndex;
+                            selLabel.value = this.data.labels[elementIndex];
+                            selValue.value = this.data.datasets[datasetIndex].data[elementIndex];
+                            console.log(`Clicked on index: ${elementIndex}, label: ${selLabel.value}, value: ${selValue.value}`);
+                        }
+                    },
+                }
+            });
+        } else {
+            console.log("tq");
+            isSuccess.value = true;
         }
-      })
-      barChart
     }
+
 
     // 뒤로가기
     const back = () => {
@@ -199,7 +212,8 @@ export default {
       select_month,
       select_year,
       selectGet,
-      back
+      back,
+      isSuccess
     }
 
   }
