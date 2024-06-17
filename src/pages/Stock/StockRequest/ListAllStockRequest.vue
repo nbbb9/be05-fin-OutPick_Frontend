@@ -91,7 +91,7 @@
             </div>
           </div>
 
-          <div v-if="showModal" class="modal" tabindex="-1" role="dialog" style="display: block;">
+          <div v-if="showModal" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -104,27 +104,29 @@
                   <div class="form-group">
                     <input type="text" class="form-control" v-model="searchQuery" @input="filterProducts" placeholder="상품명 검색">
                   </div>
-                  <table class="table table-hover border-gray">
-                    <thead>
-                    <tr>
-                      <th>상품 ID</th>
-                      <th>상품명</th>
-                      <th>사이즈</th>
-                      <th>성별</th>
-                      <th>색상</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="product in filteredProducts" :key="product.product_id">
-                      <td>{{ product.product_id }}</td>
-                      <td>{{ product.product_name }}</td>
-                      <td>{{ product.size }}</td>
-                      <td>{{ product.gender }}</td>
-                      <td>{{ product.color }}</td>
-                      <td><button @click="selectProduct(product)" class="btn btn-primary">선택</button></td>
-                    </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-wrapper">
+                    <table class="table table-hover border-gray">
+                      <thead>
+                      <tr>
+                        <th>상품 ID</th>
+                        <th>상품명</th>
+                        <th>사이즈</th>
+                        <th>성별</th>
+                        <th>색상</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="product in filteredProducts" :key="product.product_id">
+                        <td>{{ product.product_id }}</td>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.size }}</td>
+                        <td>{{ product.gender }}</td>
+                        <td>{{ product.color }}</td>
+                        <td><button @click="selectProduct(product)" class="btn btn-primary">선택</button></td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" @click="closeModal">닫기</button>
@@ -132,6 +134,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -389,17 +392,18 @@ td {
 }
 
 .listDiv {
-  max-height: 70vh;
+  height: 70vh;
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
+  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .detail {
+  height: 78vh;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
+  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .atr {
@@ -435,7 +439,7 @@ td {
   background-color: white;
   box-shadow: 0 6px 7px rgba(0, 0, 0, 0.2);
   max-height: 80%;
-  overflow-y: auto;
+  overflow-y: hidden; /* 바깥쪽 스크롤 숨김 */
   border-radius: 10px;
   padding: 1rem;
 }
@@ -471,6 +475,11 @@ td {
 
 .table {
   margin-bottom: 0;
+}
+
+.table-wrapper {
+  max-height: 50vh; /* 원하는 높이로 설정 */
+  overflow-y: auto; /* 안쪽 스크롤 */
 }
 
 .btn-primary {
