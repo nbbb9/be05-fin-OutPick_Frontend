@@ -49,7 +49,7 @@
             </thead>
             <tbody>
               <tr v-for="(i) in copy_product" :key="i.product_id"  @click="show_detail(i.product_name)">
-                <td>{{ i.product_name }}</td>
+                <td>{{ i.name }}</td>
                 <td>{{ i.category }}</td>
                 <td>{{ i.fit }}</td>
                 <td>{{ i.gender }}</td>
@@ -102,7 +102,7 @@
             <tbody>
               <tr v-for="(p) in copy_item_detail" :key="p.product_id">
                 <th>{{ p.product_id }}</th>
-                <th>{{ p.product_name }}</th>
+                <th>{{ p.name }}</th>
                 <th>{{ p.size }}</th>
                 <th>{{ p.color }}</th>
                 <th>{{ p.stock }}</th>
@@ -162,8 +162,8 @@
       const delete_duplicated = () => {
         const seen = new Set();
         return product.value.filter(item => {
-          const duplicate = seen.has(item.product_name);
-          seen.add(item.product_name);
+          const duplicate = seen.has(item.name);
+          seen.add(item.name);
           return !duplicate;
         });
       };
@@ -173,6 +173,7 @@
         console.log("와치구문");
         unique_items.value = delete_duplicated(newVal);
         copy_product.value = [...unique_items.value];
+        console.log("copyproduct");
       }, {immediate: true});
       
 
@@ -385,7 +386,7 @@
       // 관리자 막음
       const admin_ban = ref(false);
       if (store.state.loginUserRole === "사원") {
-        admin_ban.value - true;
+        admin_ban.value = true;
       }
 
       // 사이드바
