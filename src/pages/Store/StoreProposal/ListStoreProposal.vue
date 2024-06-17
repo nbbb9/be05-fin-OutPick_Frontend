@@ -271,11 +271,11 @@ td {
 }
 
 .margin{
-  margin-top: 10%;
+  margin-top: 5%;
 }
 
 .content{
-  height: 20vh;
+  height: 15vh;
   text-align: left;
   padding-left: 1%;
 }
