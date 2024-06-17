@@ -288,7 +288,17 @@
 
 <style scoped>
 /* 폰트 */
-@import url("https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap");
+@font-face {
+  font-family: 'LINESeedKR-Rg';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+div{
+  font-family: "LINESeedKR-Rg";
+}
 
 /* 요소들 우측 나열 */
 .set-content-row {
@@ -404,7 +414,7 @@
 
 .table-container {
   max-height: 100%;
-  overflow-y: auto; /* 테이블 바디 스크롤 설정 */
+  overflow: auto;
 }
 
 .stock-header {
