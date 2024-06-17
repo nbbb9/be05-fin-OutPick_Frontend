@@ -14,7 +14,7 @@
           </thead>
           <tbody>
             <tr>
-              <td>{{ prod[0].product_name }}</td>
+              <td>{{ prod[0].name }}</td>
               <td>{{ prod[0].color }}</td>
               <td>{{ prod[0].size }}</td>
             </tr>
