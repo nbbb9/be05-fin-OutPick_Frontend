@@ -125,6 +125,7 @@
   import { useRouter } from 'vue-router';
   import { useStore } from 'vuex';
   import { user_shop_list, shop_item_list, update_discount } from '@/stock_axios';
+  import { shop_all_list, shop_stock } from '@/shop_axios';
   import StockModal from '@/components/StockModal.vue';
   import StockSidebar from "@/components/StockSidebar.vue";
 
@@ -141,14 +142,25 @@
 
       const store = useStore();
       const get_user_shop_list = async () => {
+        if (store.state.loginUserRole === "사원") {
         await user_shop_list(store.state.loginToken)
           .then((response) => {
             shop_list.value = response.data;
             copy_shop_list.value = [...shop_list.value];
           })
           .catch(e => {
-            console.log(e.message);
+            console.error(e.message);
           })
+        } else {
+          await shop_all_list(store.state.loginToken)
+            .then((response) => {
+              shop_list.value = response.data;
+              copy_shop_list.value = [...shop_list.value];
+            })
+            .catch(e => {
+              console.error(e.message);
+            })
+        }
       }
 
       get_user_shop_list();
@@ -161,16 +173,30 @@
 
       // 아이템 리스트 불러오기
       const get_item_list = async () => {
-        if (shop_id.value) {
-          try {
-            const response = await shop_item_list(shop_id.value, store.state.loginToken);
-            item_list.value = response.data;
-            console.log("item list : ", item_list.value);
-            unique_items()
-          } catch (e) {
-            console.error(e.message);
+        if (store.state.loginUserRole === "사원") {
+          if (shop_id.value) {
+            try {
+              const response = await shop_item_list(shop_id.value, store.state.loginToken);
+              item_list.value = response.data;
+              console.log("item list : ", item_list.value);
+              unique_items()
+            } catch (e) {
+              console.error(e.message);
+            }
+          }
+        } else {
+          if (shop_id.value) {
+            try {
+              const response = await shop_stock(shop_id.value, store.state.loginToken);
+              item_list.value = response.data;
+              console.log("item list :", item_list.value);
+              unique_items()
+            } catch (e) {
+              console.error(e.message);
+            }
           }
         }
+
       }
 
       // 중복된 상품 제거
@@ -358,7 +384,9 @@
       filtereditems,
       category,
       stockRequestList,
-      selectMenu
+      selectMenu,
+      shop_all_list,
+      shop_stock
       }
         
     
