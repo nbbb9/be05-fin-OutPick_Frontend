@@ -59,7 +59,7 @@
             <div class="col-6">
                 <div class="empty-content">
                     <!-- 여기에 다른 내용을 추가할 수 있습니다 -->
-                    <div class="placeholder">오른쪽 빈 내용</div>
+                    <div class="placeholder">까꿍</div>
                 </div>
             </div> <!-- 오른쪽 영역 끝 -->
         </div>
@@ -187,16 +187,16 @@ export default {
 
 <style scoped>
     /* 폰트 */
-    @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-    
-    .gowun-dodum-regular {
-        font-family: "Gowun Dodum", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-    }
-    
-    div {
-        font-family: "Gowun Dodum", sans-serif;
+    @font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+    div{
+    font-family: "LINESeedKR-Rg";
     }
     
     /* 세로 방향 가운데 정렬 */
