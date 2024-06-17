@@ -3,7 +3,7 @@
   <div class="container">
 
     <!-- sidebar -->
-    <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
+    <StockSidebar style="z-index: 2;" @StockSidebar="selectMenu" :showMenu_p="show"/>
 
     <!-- 제목, 검색창 -->
     <div>
@@ -37,7 +37,7 @@
     <div>
       <div class="listDiv">
         <table class="table table-hover border-gray top-space-4">
-          <thead>
+          <thead style="position: sticky; top:0; z-index: 1;">
             <tr>
               <th>상품명</th>
               <th>입고일</th>
@@ -68,7 +68,7 @@
         <div>
           <div class="listDiv">
             <table class="table table-hover border-gray top-space-2">
-              <thead>
+              <thead style="position: sticky; top:0; z-index: 1;">
                 <tr>
                   <th>상품명</th>
                   <th>사이즈</th>

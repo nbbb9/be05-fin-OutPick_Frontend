@@ -23,7 +23,7 @@
         <p><input v-model="request_amount" @input="validateInput" placeholder="수량 입력"/></p>
         <p v-if="error_message" class="error_message">{{ error_message }}</p>
         <P v-if="success_message" class="success_message">{{ success_message }}</P>
-        <button @click="submit" class="btn btn-dark">확인</button> 
+        <button @click="submit" class="button btn btn-dark">확인</button> 
     </div>
   </div>
 </template>
@@ -118,9 +118,13 @@ export default defineComponent({
   background: white;
   padding: 20px;
   width: 30%;
-  height: 50%;
+  height: 60%;
   border-radius: 5px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.button {
+  margin-top:5%
 }
 
 .close {
