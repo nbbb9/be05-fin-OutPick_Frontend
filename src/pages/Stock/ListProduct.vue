@@ -172,6 +172,7 @@
       watch(product, (newVal) => {
         console.log("와치구문");
         unique_items.value = delete_duplicated(newVal);
+        console.log(unique_items.value)
         copy_product.value = [...unique_items.value];
         console.log("copyproduct");
       }, {immediate: true});
