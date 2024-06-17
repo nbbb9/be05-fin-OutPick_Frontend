@@ -9,7 +9,7 @@
         <div class="top-space-2">
             <h3>매장별 재고 조회</h3>
         </div>
-        <form v-on:submit.prevent="search" class="flex top-space-4">
+        <form v-on:submit.prevent="search" class="flex top-space-2">
           <div class="block-1 top-space-2">
             <select v-model="shop_name" class="form-control" @change="get_shop_id">
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
@@ -19,7 +19,7 @@
             <div class="block-3">
               <input type="text" v-model="searchText" placeholder="검색하세요" class="form-control">
             </div>
-            <div class="block-1 row-right">
+            <div class="block-1">
               <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
             </div>
             <div class="block-1">
@@ -28,8 +28,12 @@
                 <option value="가나다순">가나다순</option>
               </select>
             </div>
+
+            <div class="block-1">
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+        </div>
             <div class="block-2">
-              <button @click="stockRequestList" class="btn btn-outline-light text-black">재고요청서</button>
+              <button @click="stockRequestList" class="btn btn-light text-black">재고요청서</button>
             </div>
           </div>
           
