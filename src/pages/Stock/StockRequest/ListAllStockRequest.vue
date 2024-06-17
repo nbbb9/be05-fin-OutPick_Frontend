@@ -118,7 +118,7 @@
                       <tbody>
                       <tr v-for="product in filteredProducts" :key="product.product_id">
                         <td>{{ product.product_id }}</td>
-                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.name }}</td>
                         <td>{{ product.size }}</td>
                         <td>{{ product.gender }}</td>
                         <td>{{ product.color }}</td>
@@ -142,10 +142,10 @@
 </template>
 
 <script>
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-import { ref, watch, computed } from 'vue';
-import { production_request_list, production_request_detail, update_pr_detail, product_list } from "@/stock_axios";
+import {useStore} from 'vuex';
+import {useRouter} from 'vue-router';
+import {ref, watch, computed} from 'vue';
+import {production_request_list, production_request_detail, update_pr_detail, product_list} from "@/stock_axios";
 import StockSidebar from "@/components/StockSidebar.vue";
 
 export default {
@@ -218,6 +218,8 @@ export default {
       };
       await update_pr_detail(updateData, store.state.loginToken);
       pr_detail.value.amount = pr_update.value.amount;
+      pr_detail.value.product_name = pr_update.value.product_name;
+      pr_detail.value.product_id = pr_update.value.product_id;
       editMode.value = false;
       prList();
       alert(`요청서 ID : ${pr_update.value.production_request_id}가 수정되었습니다.`);
@@ -242,21 +244,22 @@ export default {
       const response = await product_list();
       productList.value = response.data;
       filteredProducts.value = productList.value;
+
     };
 
     const selectProduct = (product) => {
       pr_update.value.product_id = product.product_id;
-      pr_update.value.product_name = product.product_name;
+      pr_update.value.product_name = product.name;
 
       pr_detail.value.product_id = product.product_id;
-      pr_detail.value.product_name = product.product_name;
+      pr_detail.value.product_name = product.name;
 
       showModal.value = false;
     };
 
     const filterProducts = () => {
       const query = searchQuery.value.toLowerCase();
-      filteredProducts.value = productList.value.filter(product => product.product_name.toLowerCase().includes(query));
+      filteredProducts.value = productList.value.filter(product => product.name && product.name.toLowerCase().includes(query));
     };
 
     const closeModal = () => {
