@@ -153,7 +153,7 @@ export default {
       const data = JSON.parse(event.data);
       console.log('Proposal Solution Received:', data);
       // 여기서 데이터를 StoreSidebar로 옮기는 로직을 추가합니다.
-      store.commit('setSidebarData', data); // Vuex store에 mutation을 통해 데이터 업데이트를 요청합니다.
+      // store.commit('setSidebarData', data); // Vuex store에 mutation을 통해 데이터 업데이트를 요청합니다.
     }
 
 
