@@ -3,33 +3,34 @@
     <!-- 사이드바 -->
     <ShopSidebar @ShopSidebar="selectMenu" />
 
-    <!-- 제목 -->
-    <div class="row mt-4">
-      <h4 class="text-left">건의사항</h4>
+    <!-- 헤더 (제목 및 검색창) -->
+    <div class="header">
+      <div class="row mt-3">
+        <h4 class="text-left">건의사항</h4>
+      </div>
+      <div class="row mt-3 search_div">
+        <div class="col-2">
+          <select v-model="selectedCategory" @change="filterByCategory" class="form-select">
+            <option value="">카테고리 선택</option>
+            <option value="상품">상품</option>
+            <option value="운영방식">운영방식</option>
+            <option value="인력">인력</option>
+          </select>
+        </div>
+        <div class="col-3">
+          <input type="text" v-model="searchText" @keyup.enter="search" placeholder="제목 검색" class="form-control">
+        </div>
+        <div class="col-1 pl-2">
+          <button class="btn btn-dark" @click="search">검색</button>
+        </div>
+        <div class="col-1">
+          <button class="btn btn-secondary" @click="resetSearch">초기화</button>
+        </div>
+      </div>
     </div>
 
-    <!-- 검색창 -->
-    <div class="row mt-4 search_div">
-      <div class="col-2">
-        <select v-model="selectedCategory" @change="filterByCategory" class="form-select">
-          <option value="">카테고리 선택</option>
-          <option value="상품">상품</option>
-          <option value="운영방식">운영방식</option>
-          <option value="인력">인력</option>
-        </select>
-      </div>
-      <div class="col-3">
-        <input type="text" v-model="searchText" @keyup.enter="search" placeholder="제목 검색" class="form-control">
-      </div>
-      <div class="col-1 pl-2">
-        <button class="btn btn-dark" @click="search">검색</button>
-      </div>
-      <div class="col-1">
-        <button class="btn btn-secondary" @click="resetSearch">초기화</button>
-      </div>
-    </div>
-
-    <div class="row mt-3">
+    <!-- 콘텐츠 (리스트 및 상세 내용) -->
+    <div class="content">
       <!-- 리스트 -->
       <div class="listDiv">
         <table class="table table-hover border-gray">
@@ -129,6 +130,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { useStore } from "vuex";
@@ -308,23 +310,31 @@ export default {
 <style scoped>
 
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-  font-family: "Gowun Dodum", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
-div {
-  font-family: "Gowun Dodum", sans-serif;
+
+div{
+font-family: "LINESeedKR-Rg";
 }
 
 .container {
   display: flex;
   flex-direction: column;
-  max-width: 150vh; /* 화면 너비의 90%로 설정 */
-  margin: 0 auto; /* 중앙 정렬 */
+  max-width: 100%;
+  margin: 0 auto;
+  height: 90vh;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 1rem;
 }
 
 .search_div {
@@ -332,6 +342,14 @@ div {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  margin-bottom: 1rem;
+}
+
+.content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  flex-grow: 1;
 }
 
 .listDiv {
@@ -339,7 +357,8 @@ div {
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin: 1%;
-  width : 80vh;
+  flex: 1.2; /* 리스트 부분이 가변적으로 공간을 차지하게 함 */
+  height: 600px;
 }
 
 .listDiv-content {
@@ -349,9 +368,9 @@ div {
 .detail {
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 650px;
+  height: 615px;
   overflow-y: auto;
-  width : 60vh;
+  flex: 0.8; /* 상세 내용 부분이 가변적으로 공간을 차지하게 함 */
 }
 
 .atr {
@@ -364,6 +383,7 @@ div {
   padding: 10px;
   word-wrap: break-word;
 }
+
 .atr2 {
   width: 100%;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
@@ -410,7 +430,7 @@ div {
 }
 
 .half {
-  width : 30vh;
+  width: 30vh;
 }
 
 .modal {
@@ -456,4 +476,22 @@ div {
 .detail-view h6 {
   font-size: 1.25rem; /* 글씨 크기 조정 */
 }
+
+/* 미디어 쿼리 */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .listDiv,
+  .detail {
+    width: 100%;
+  }
+
+  .content {
+    flex-direction: column;
+  }
+}
+
+
 </style>

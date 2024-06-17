@@ -2,7 +2,7 @@
     <div class="container">
 
       <!-- sidebar -->
-      <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
+      <StockSidebar  @StockSidebar="selectMenu" style="z-index: 2;" :showMenu_p="show"/>
 
       <!-- 검색창, 제목 -->
       <div>
@@ -35,7 +35,7 @@
       <div>
         <div class="listDiv">
           <table class="table table-hover border-gray top-space-4">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>상품명</th>
                 <th>카테고리</th>
@@ -85,7 +85,7 @@
       </div>
         <div class="listDiv">
           <table class="table table-hover border-gray top-space-2">
-            <thead>
+            <thead style="position: sticky; top:0; z-index: 1;">
               <tr>
                 <th>상품ID</th>
                 <th>상품명</th>
@@ -105,8 +105,9 @@
                 <th>{{ p.stock }}</th>
                 <th>{{ p.fit }}</th>
                 <th>
-                  <button @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
+                  <button v-if="admin_ban" @click="open_modal(p.product_id)" class="btn btn-outline-light text-black">작성</button>
                   <ProductionRequest 
+                  style="z-index: 3;"
                     :is_visible="is_modal_open" 
                      :prod="sel_pd" 
                     @close="close_modal" 
@@ -378,6 +379,13 @@
 
       }
 
+      // 관리자 막음
+      const admin_ban = ref(false);
+      if (store.state.loginUserRole === "사원") {
+        admin_ban.value - true;
+      }
+
+      // 사이드바
       const selectMenu = (selectId) => {
         console.log("select Id:", selectId);
         switch (selectId) {
@@ -425,7 +433,8 @@
         sel_pd,
         store,
         handleInput,
-        selectMenu
+        selectMenu,
+        admin_ban
       }
 
     }
@@ -435,17 +444,16 @@
   
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
 
 div{
-font-family: "Gowun Dodum", sans-serif;
+font-family: "LINESeedKR-Rg";
 }
 
 /* 검색 div 정렬 */

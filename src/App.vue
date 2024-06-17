@@ -1,6 +1,6 @@
 <template>
   <!-- 네비게이션 바 -->
-  <nav v-if="showNav" class="navbar navbar-expand-lg">
+  <nav v-if="showNav" class="navbar navbar-expand-lg" style="position: sticky; top:0; z-index: 3;" >
     <div class="container-fluid">
       <!-- 로고 -->
       <router-link class="navbar-brand text-white" :to="{ name: 'ListShop' }">
@@ -22,7 +22,7 @@
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShopStock'}">재고</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'Login'}">통계/분석</router-link>
+            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'AnalysisPage'}">통계/분석</router-link>
           </li>
           <li class="nav-item" v-if="loginUserRole === '관리자'">
             <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListEmployee'}">관리자</router-link>
@@ -94,16 +94,16 @@ export default {
 
 <style>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-  font-family: "Gowun Dodum", sans-serif;
+@font-face {
+  font-family: 'LINESeedKR-Rg';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
 }
 
+
 div{
-font-family: "Gowun Dodum", sans-serif;
+  font-family: "LINESeedKR-Rg";
 }
 
 #app {
@@ -125,7 +125,12 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center; /* 항목을 중앙에 배치 */
-  gap: 200px; /* 항목 간 간격 */
+}
+
+@media (min-width: 991px) {
+  .navbar-nav {
+    gap: 200px; /* 항목 간 간격 */
+  }
 }
 
 /* 로고 이미지 크기 */
@@ -143,7 +148,8 @@ img {
 
 /* 드롭다운 메뉴 아이템 스타일 */
 .dropdown-item {
-  padding: 10px 20px; /* 드롭다운 메뉴 아이템의 패딩 조정 */
+  padding: 3% 6%; 
+  /* 드롭다운 메뉴 아이템의 패딩 조정 */
 }
 
 /* 드롭다운 메뉴 아이템 텍스트 색상 변경 */
@@ -162,7 +168,6 @@ img {
 /* 네비게이션 링크 스타일 */
 .nav-link.active {
   color: white !important;
-  margin-right: 20px;
   font-size: 24px; /* 폰트 크기 크게 조정 */
 }
 
