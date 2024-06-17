@@ -1,9 +1,9 @@
 <template>
+
   <div class="container">
 
     <!-- sidebar -->
     <StockSidebar @StockSidebar="selectMenu" :showMenu_p="show"/>
-
 
     <!-- 제목, 검색창 -->
     <div>
@@ -12,20 +12,21 @@
       </div>
       <form v-on:submit.prevent="search" class="flex top-space-4">
         <div class="block-3">
-          <input type="text" v-model="searchText" placeholder="상품을 검색하세요" class="form-control">
+          <input type="text" @click="initial" v-model="searchText" placeholder="상품을 검색하세요" class="form-control">
         </div>
-        
+        <div class="block-1">
+          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+        </div>
         <div class="block-2">
           <select class="form-select" v-model="category">
             <option value="기본">기본</option>
             <option value="인기순">인기순</option>
             <option value="비인기순">비인기순</option>
             <option value="가나다순">가나다순</option>
-            <option value="창고">창고</option>
           </select>
         </div>
         <div class="block-1">
-          <button @click="filtereditems" class="btn btn-outline-light text-black">검색</button>
+          <button @click="filtereditems" class="btn btn-outline-light text-black">정렬</button>
         </div>
         <div class="block-3"></div>
         <div class="block-3"></div>
@@ -96,18 +97,17 @@
 
 <script>
 import { ref, watch } from 'vue';
-import { company_stock } from '@/stock_axios';
 import { useRouter } from 'vue-router';
+import { company_stock } from '@/stock_axios';
 import StockSidebar from "@/components/StockSidebar.vue";
 
 export default {
-  components: {StockSidebar},
+  components: {
+    StockSidebar
+  },
 
   setup() {
-
-    const router = useRouter();
-
-
+    
     // 회사 재고 리스트
     const company_stock_list = ref([]);
     const copy_st_list = ref([]);
@@ -117,6 +117,17 @@ export default {
           company_stock_list.value = response.data;
           console.log(company_stock_list.value);
           
+          company_stock_list.value.forEach((item) => {
+            const fullDate = item.date
+
+            const year = fullDate.slice(0, 4);
+            const month = fullDate.slice(5, 7);
+            const day = fullDate.slice(8, 10);
+
+            item.date = `${year}-${month}-${day}`;
+            
+          });
+
           copy_st_list.value = [...company_stock_list.value];
         })
         .catch (e => {
@@ -139,6 +150,7 @@ export default {
     const unique_items = ref([]);
     watch(company_stock_list, (newVal) => {
       unique_items.value = delete_duplicated(newVal);
+
       copy_st_list.value = [...unique_items.value];
     }, {immediate: true});
 
@@ -159,6 +171,11 @@ export default {
     // 검색
     const searchText = ref();
     const category = ref();
+
+    // 검색 초기화
+    const initial = () => {
+    copy_st_list.value = [...unique_items.value];
+    }
 
     const filtereditems = () => {
       if (searchText.value) {
@@ -185,30 +202,33 @@ export default {
           })  
         }
       }
-    }
+    }  
 
+    // 사이드바
+    const router = useRouter();
     const selectMenu = (selectId) => {
-      console.log("select Id:", selectId);
-      switch (selectId) {
-        case 1:
-          router.push({name: "ListShopStock"});
-          break;
-        case 2:
-          router.push({name: "ListCompanyStock"});
-          break;
-        case 3:
-          router.push({name: "ListAllStockRequest"});
-          break;
-        case 4:
-          router.push({name: "ListProduct"});
-          break;
-        case 5:
-          router.push({name: "ListWarehouse"});
-          break;
-        default:
-          break;
-      }
-    };
+        console.log("select Id:", selectId);
+        switch (selectId) {
+          case 1:
+            router.push({name: "ListShopStock"});
+            break;
+          case 2:
+            router.push({name: "ListCompanyStock"});
+            break;
+          case 3:
+            router.push({name: "ListAllStockRequest"});
+            break;
+          case 4:
+            router.push({name: "ListProduct"});
+            break;
+          case 5:
+            router.push({name: "ListWarehouse"});
+            break;
+          default:
+            break;
+        }
+      };
+
 
 
     return {
@@ -220,7 +240,9 @@ export default {
       delete_duplicated,
       category,
       copy_st_list,
-      selectMenu
+      selectMenu,
+      initial,
+      useRouter
     }
   }
 }
@@ -228,17 +250,16 @@ export default {
 
 <style scoped>
 /* 폰트 */
-@import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
-
-.gowun-dodum-regular {
-font-family: "Gowun Dodum", sans-serif;
-font-weight: 400;
-font-style: normal;
+@font-face {
+    font-family: 'LINESeedKR-Rg';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
 }
 
 
 div{
-font-family: "Gowun Dodum", sans-serif;
+font-family: "LINESeedKR-Rg";
 }
 
 /* 검색 div 정렬 */
