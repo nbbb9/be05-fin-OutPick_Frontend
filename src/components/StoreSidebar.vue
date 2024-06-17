@@ -2,10 +2,14 @@
 
     <div class="sidebar">
       <!-- 사이드바 내용 -->
-
-      <div class="loginStoreUser" >
-        {{ loginStoreName }} <br>
-        {{ loginStoreUser }} 님
+      <div class="logininfo-alert">
+        <div class="loginStoreUser" >
+          {{ loginStoreName }} <br>
+          {{ loginStoreUser }} 님
+        </div>
+        <div class="alert-icon">
+          <img src="@/assets/noalert.png" alt="alert">
+        </div>
       </div>
 
       <ul>
@@ -89,6 +93,27 @@ export default {
   
 }
 
+/*로그인 정보와 아이콘을 수평으로 유지*/
+.logininfo-alert{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.alert-icon{
+  flex-shrink: 0; /* 아이콘의 크기가 부모를 넘지 않도록 */
+  width: 50px; /* 원하는 너비 */
+  height: 50px; /* 원하는 높이 */
+}
+
+.alert-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 이미지 비율 유지 */
+  aspect-ratio: 1 / 1; /* 1:1 비율 */
+}
+
 /* list 형태 제거 */
 ul {
   margin: 0;
@@ -128,8 +153,6 @@ li {
 
 .loginStoreUser{
   margin: 10px;
-  margin-bottom: 20px;
-
   font-weight: bold;
   font-size: large;
   text-align: left;
