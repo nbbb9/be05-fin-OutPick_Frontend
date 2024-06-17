@@ -37,7 +37,7 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
           <li class="image-container">
-            <img src="@/assets/로고_슬로건.png" alt="" class="shop-image mt-3" />
+            <img src="@/assets/경원이형.png" alt="사원사진" class="shop-image mt-3" />
           </li>
           <li><hr class="dropdown-divider"></li>
           <li><a class="dropdown-item text-white" href="#">이름 : {{ loginUserName }}</a></li>
