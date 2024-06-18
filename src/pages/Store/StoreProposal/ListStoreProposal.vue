@@ -128,7 +128,7 @@ export default {
 
           copy_p_list.value = [...proposal_list.value];
         })
-      
+
     }
 
     getProposalList();
@@ -144,6 +144,7 @@ export default {
       // SSE 복구
       let sse = new EventSourceService(store.state.loginStoreId, store);
       sse.restoreEventListeners();
+
     });
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
@@ -191,7 +192,7 @@ export default {
           break;
         default:
           break;
-      } 
+      }
     }
 
     return{
@@ -220,7 +221,7 @@ export default {
 }
 
 div{
-  font-family: "Gowun Dodum", sans-serif; 
+  font-family: "Gowun Dodum", sans-serif;
 }
 
 /* 검색 div 정렬 */
@@ -243,16 +244,16 @@ form > .col-2{
 .row-right{
   text-align: left;
   padding-left: 5%;
-} 
+}
 
 /* hover시 그림자 효과 */
 .seeList:hover{
-  text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403); 
+  text-shadow: 0 3px 7px rgba(17, 17, 17, 0.403);
 }
 
 /* 세로 방향 가운데 정렬 */
 td {
-  vertical-align: middle; 
+  vertical-align: middle;
 }
 
 /* list scroll, list 그림자 */
@@ -269,7 +270,7 @@ td {
 /* alert 설정 */
 .alert{
   font-weight: bold;
-  box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403); 
+  box-shadow: 0 3px 7px rgba(139, 139, 139, 0.403);
 }
 
 .margin{

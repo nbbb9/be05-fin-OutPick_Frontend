@@ -2,14 +2,17 @@ class EventSourceService {
     static instance; // 싱글톤 인스턴스를 저장하기 위한 정적 필드
     #eventSource;
     #store;
-    #listeners = [];
+    #listener;
 
     constructor(id, store) {
         if (!EventSourceService.instance) {
             this.#eventSource = new EventSource(`http://localhost:8080/connect?shop_id=${id}`);
             this.#store = store;
+            this.#listener = [];
             EventSourceService.instance = this;
             console.log("새로 생성된 EventSource", EventSourceService.instance.#eventSource);
+        }else{
+            console.log("생성자 : 기존에 생성된 EventSource", EventSourceService.instance.#eventSource);
         }
     }
 
@@ -20,7 +23,7 @@ class EventSourceService {
 
     addESEventListener(event, callback) {
 
-        if(!EventSourceService.instance.#listeners.includes(event)){
+        if(!EventSourceService.instance.#listener.includes(event)){
             EventSourceService.instance.#eventSource.addEventListener(event, callback);
             console.log("event source에 add listener 완료");
 
@@ -29,15 +32,16 @@ class EventSourceService {
             console.log(EventSourceService.instance.#store.state.eventListener);
 
             // listener 배열에 추가
-            EventSourceService.instance.#listeners.push(event);
+            EventSourceService.instance.#listener.push(event);
         }
     }
 
     handleNotification(event) {
+        console.log("handleNoi~ 실행");
         const data = JSON.parse(event.data);
         const notificationMessage = `${data.proposal_id} 건의문의 해결방안이 작성되었습니다.`;
         EventSourceService.instance.#store.dispatch('addNotification', notificationMessage);
-        EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
+        // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
     }
 
     restoreEventListeners() {
@@ -45,9 +49,9 @@ class EventSourceService {
         if (EventSourceService.instance.#store && EventSourceService.instance.#store.state.eventListener.length > 0) {
             EventSourceService.instance.#store.state.eventListener.forEach(listener => {
 
-                console.log(EventSourceService.instance.#listeners)
+                console.log("복구 작업 전 : ",EventSourceService.instance.#listener)
 
-                if (!EventSourceService.instance.#listeners.includes("proposal_solution") && listener.event == "proposal_solution") {
+                if (!EventSourceService.instance.#listener.includes("proposal_solution") && listener.event == "proposal_solution") {
                     EventSourceService.instance.#eventSource.addEventListener('proposal_solution', (e) => {
                         const { data: receivedConnectData } = e;
                         const data = JSON.parse(receivedConnectData);

@@ -75,18 +75,16 @@ setup() {
 
         // sse에 listener 추가
         let sse = new EventSourceService(store.state.loginStoreId, store);
-        console.log("event source 받아옴 : ", sse);
+        console.log("event source service 받아옴 : ", sse);
 
         sse.addESEventListener('proposal_solution', (e) => {
           const { data: receivedConnectData } = e;
-
-          console.log("shop id 비교 전 데이터 검증 : ", receivedConnectData);
           const data = JSON.parse(receivedConnectData);
-          console.log("shop_id : ", data.shop_id);
 
           if (store.state.loginStoreId === data.shop_id) {
             console.log('connect proposal_solution:', receivedConnectData);
-            store.commit('setNotifications', true); // 알림 상태를 true로 설정
+            // store.commit('setNotifications', true); // 알림 상태를 true로 설정
+            sse.handleNotification(e);
           }
         });
 

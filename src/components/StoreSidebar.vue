@@ -52,16 +52,34 @@ export default {
       return hasNotifications.value ? require('@/assets/alert.png') : require('@/assets/noalert.png');
     });
 
+    // const showNotifications = () => {
+    //   if (hasNotifications.value) {
+    //     showModal.value = true;
+    //     store.dispatch('markNotificationsAsRead');
+    //   }
+    // };
+    //
+    // const closeModal = () => {
+    //   console.log("closeModal 호출됨");
+    //   store.commit('setShowModal', false);
+    //   store.dispatch('clearNotifications');
+    // };
+
     const showNotifications = () => {
+
+      console.log("모달 켜지려는 중")
+
       if (hasNotifications.value) {
-        showModal.value = true;
-        store.dispatch('markNotificationsAsRead');
+        // store.commit('SET_SHOW_MODAL', true);
+        console.log("모달 켜짐")
+        // store.dispatch('markNotificationsAsRead');  // 알림 확인
+        // store.dispatch('addNotification')
       }
     };
 
     const closeModal = () => {
       console.log("closeModal 호출됨");
-      store.commit('setShowModal', false);
+      // store.commit('SET_SHOW_MODAL', false);
       store.dispatch('clearNotifications');
     };
 

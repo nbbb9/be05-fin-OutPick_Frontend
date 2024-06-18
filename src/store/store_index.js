@@ -66,8 +66,19 @@ export default createStore({
     markNotificationsAsRead(state) {
       state.hasNotifications = false;
     },
-    setShowModal(state, payload) {
-      state.showModal = payload;
+    // setShowModal(state, payload) {
+    //   state.showModal = payload;
+    // },
+    // SET_SHOW_MODAL(state, value) {
+    //   state.showModal = value;
+    // },
+    SET_NOTIFICATIONS_AS_READ(state) {
+      state.hasNotifications = false;
+    },
+    CLEAR_NOTIFICATIONS(state) {
+      state.showModal = false;
+      state.hasNotifications = false;
+      state.notifications = [];
     }
   },
   actions: {
@@ -107,12 +118,12 @@ export default createStore({
     addNotification({ commit }, notification) {
       commit('addNotification', notification);
     },
-    clearNotifications({ commit }) {
-      console.log("clearNotifications 액션 호출됨");
-      commit('clearNotifications');
-    },
     markNotificationsAsRead({ commit }) {
-      commit('markNotificationsAsRead');
+      commit('SET_NOTIFICATIONS_AS_READ');
+    },
+    clearNotifications({ commit }) {
+      commit('CLEAR_NOTIFICATIONS');
     }
+
   }
 });

@@ -184,6 +184,8 @@ export default {
     }
     triggerShow();
 
+
+
     // 메뉴 이동
     const router = useRouter();
     const selectMenu = (selectMenu) => {
