@@ -99,6 +99,17 @@ setup() {
           }
         });
 
+        sse.addESEventListener('stock_request_approval', (e) => {
+          const { data: receivedConnectData } = e;
+          const data = JSON.parse(receivedConnectData);
+
+          if (store.state.loginStoreId === data.shop_id) {
+            console.log('connect stock_request_approval:', receivedConnectData);
+            // store.commit('setNotifications', true); // 알림 상태를 true로 설정
+            sse.handleStockRequestApprovalNotification(e);
+          }
+        });
+
         // 페이지 이동
         router.push({
           name: "ListStoreStock"

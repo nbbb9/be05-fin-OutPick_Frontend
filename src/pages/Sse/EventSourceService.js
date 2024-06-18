@@ -52,6 +52,14 @@ class EventSourceService {
         // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
     }
 
+    handleStockRequestApprovalNotification(event) {
+        console.log("handleStockRequestApprovalNotification 실행");
+        const data = JSON.parse(event.data);
+        const notificationMessage = `${data.stock_request_id}번 재고요청서가 승인되었습니다.`;
+        EventSourceService.instance.#store.dispatch('addNotification', notificationMessage);
+        // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
+    }
+
     restoreEventListeners() {
         console.log(EventSourceService.instance.#store);
         if (EventSourceService.instance.#store && EventSourceService.instance.#store.state.eventListener.length > 0) {
@@ -75,6 +83,15 @@ class EventSourceService {
                         if (EventSourceService.instance.#store.state.loginStoreId === data.shop_id) {
                             console.log('connect product_discount:', receivedConnectData);
                             EventSourceService.instance.handleProductDiscountNotification(e);
+                        }
+                    });
+                }else if(!EventSourceService.instance.#listener.includes("stock_request_approval") && listener.event == "stock_request_approval"){
+                    EventSourceService.instance.#eventSource.addEventListener('stock_request_approval', (e) => {
+                        const { data: receivedConnectData } = e;
+                        const data = JSON.parse(receivedConnectData);
+                        if (EventSourceService.instance.#store.state.loginStoreId === data.shop_id) {
+                            console.log('connect stock_request_approval:', receivedConnectData);
+                            EventSourceService.instance.handleStockRequestApprovalNotification(e);
                         }
                     });
                 }
