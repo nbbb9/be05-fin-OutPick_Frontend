@@ -16,7 +16,8 @@ export default createStore({
     loginStoreName: "신대방삼거리역",
     eventListener: [],
     hasNotifications: false, // 알림 상태
-    notifications: [] // 알림 데이터 배열 추가
+    notifications: [], // 알림 데이터 배열 추가
+    showModal: false
   },
   mutations: {
     SHOW(state, payload) {
@@ -55,13 +56,18 @@ export default createStore({
     addNotification(state, notification) {
       state.notifications.push(notification);
       state.hasNotifications = true;
+      state.showModal = true; // 모달 표시
     },
     clearNotifications(state) {
+      console.log("clearNotifications 뮤테이션 호출됨");
       state.hasNotifications = false;
       state.notifications = [];
     },
     markNotificationsAsRead(state) {
       state.hasNotifications = false;
+    },
+    setShowModal(state, payload) {
+      state.showModal = payload;
     }
   },
   actions: {
@@ -102,6 +108,7 @@ export default createStore({
       commit('addNotification', notification);
     },
     clearNotifications({ commit }) {
+      console.log("clearNotifications 액션 호출됨");
       commit('clearNotifications');
     },
     markNotificationsAsRead({ commit }) {

@@ -27,7 +27,7 @@
 
 <script>
 import { useStore } from 'vuex';
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import NotificationModal from '@/components/NotificationModal.vue';
 
 export default {
@@ -41,7 +41,7 @@ export default {
     const loginStoreName = computed(() => store.state.loginStoreName);
     const hasNotifications = computed(() => store.state.hasNotifications);
     const notifications = computed(() => store.state.notifications);
-    const showModal = ref(false);
+    const showModal = computed(() => store.state.showModal);
 
     const select = (id) => {
       console.log(id);
@@ -60,7 +60,9 @@ export default {
     };
 
     const closeModal = () => {
-      showModal.value = false;
+      console.log("closeModal 호출됨");
+      store.commit('setShowModal', false);
+      store.dispatch('clearNotifications');
     };
 
     return {
