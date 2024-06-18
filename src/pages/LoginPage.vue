@@ -35,6 +35,7 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import { login, login_info_get } from "@/axios.js"
+import EventSourceServiceOffice from "@/pages/Sse/EventSourceServiceOffice.js";
 
 export default {
 
@@ -42,6 +43,8 @@ setup(){
 
   const store = useStore();   // store 변수
   const router = useRouter(); //router
+
+  store.dispatch('triggerClearEL');
 
   if(store.state.loginToken.length > 0 && store.state.loginUserName.length > 0
       && store.state.loginUserId !== 0
@@ -83,6 +86,10 @@ setup(){
           .catch((e) => {
             console.log("error : ", e.message);
           })
+
+        // sse에 listener 추가
+        let sse = new EventSourceServiceOffice(store.state.loginUserId, store);
+        console.log("event source service office 받아옴 : ", sse);
         
         // 페이지 이동
         router.push({
