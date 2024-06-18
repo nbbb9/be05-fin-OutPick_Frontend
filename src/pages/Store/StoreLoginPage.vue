@@ -84,7 +84,18 @@ setup() {
           if (store.state.loginStoreId === data.shop_id) {
             console.log('connect proposal_solution:', receivedConnectData);
             // store.commit('setNotifications', true); // 알림 상태를 true로 설정
-            sse.handleNotification(e);
+            sse.handleProposalNotification(e);
+          }
+        });
+
+        sse.addESEventListener('product_discount', (e) => {
+          const { data: receivedConnectData } = e;
+          const data = JSON.parse(receivedConnectData);
+
+          if (store.state.loginStoreId === data.shop_id) {
+            console.log('connect product_discount:', receivedConnectData);
+            // store.commit('setNotifications', true); // 알림 상태를 true로 설정
+            sse.handleProductDiscountNotification(e);
           }
         });
 

@@ -36,10 +36,18 @@ class EventSourceService {
         }
     }
 
-    handleNotification(event) {
-        console.log("handleNoi~ 실행");
+    handleProposalNotification(event) {
+        console.log("handleProposalNotification 실행");
         const data = JSON.parse(event.data);
         const notificationMessage = `${data.proposal_id} 건의문의 해결방안이 작성되었습니다.`;
+        EventSourceService.instance.#store.dispatch('addNotification', notificationMessage);
+        // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
+    }
+
+    handleProductDiscountNotification(event) {
+        console.log("handleProductDiscountNotification 실행");
+        const data = JSON.parse(event.data);
+        const notificationMessage = `상품 ${data.product_id}번의 할인율이 수정되었습니다.`;
         EventSourceService.instance.#store.dispatch('addNotification', notificationMessage);
         // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
     }
@@ -57,7 +65,16 @@ class EventSourceService {
                         const data = JSON.parse(receivedConnectData);
                         if (EventSourceService.instance.#store.state.loginStoreId === data.shop_id) {
                             console.log('connect proposal_solution:', receivedConnectData);
-                            EventSourceService.instance.handleNotification(e);
+                            EventSourceService.instance.handleProposalNotification(e);
+                        }
+                    });
+                }else if(!EventSourceService.instance.#listener.includes("product_discount") && listener.event == "product_discount"){
+                    EventSourceService.instance.#eventSource.addEventListener('product_discount', (e) => {
+                        const { data: receivedConnectData } = e;
+                        const data = JSON.parse(receivedConnectData);
+                        if (EventSourceService.instance.#store.state.loginStoreId === data.shop_id) {
+                            console.log('connect product_discount:', receivedConnectData);
+                            EventSourceService.instance.handleProductDiscountNotification(e);
                         }
                     });
                 }
@@ -66,13 +83,13 @@ class EventSourceService {
         console.log(`복구 완료했습니다^^ : ${EventSourceService.instance.#eventSource}`);
     }
 
-    removeESEventListener(event, callback) {
-        EventSourceService.instance.#eventSource.removeEventListener(event, callback);
-    }
-
-    closeES() {
-        EventSourceService.instance.#eventSource.close();
-    }
+    // removeESEventListener(event, callback) {
+    //     EventSourceService.instance.#eventSource.removeEventListener(event, callback);
+    // }
+    //
+    // closeES() {
+    //     EventSourceService.instance.#eventSource.close();
+    // }
 }
 
 export default EventSourceService;
