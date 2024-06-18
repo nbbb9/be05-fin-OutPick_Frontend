@@ -20,8 +20,13 @@
       <li @click="select(6)">건의사항 관리</li>
     </ul>
 
-    <!-- Notification Modal -->
-    <NotificationModal v-if="showModal" :notifications="notifications" @close="closeModal" />
+    <!-- Notification Modals -->
+    <NotificationModal
+      v-for="(notification, index) in notifications"
+      :key="index"
+      :notification="notification"
+      @close="closeModal(index)"
+    />
   </div>
 </template>
 
@@ -41,7 +46,6 @@ export default {
     const loginStoreName = computed(() => store.state.loginStoreName);
     const hasNotifications = computed(() => store.state.hasNotifications);
     const notifications = computed(() => store.state.notifications);
-    const showModal = computed(() => store.state.showModal);
 
     const select = (id) => {
       console.log(id);
@@ -54,15 +58,18 @@ export default {
 
     const showNotifications = () => {
       if (hasNotifications.value) {
-        showModal.value = true;
+        store.commit('setShowModal', true);
         store.dispatch('markNotificationsAsRead');
       }
     };
 
-    const closeModal = () => {
+    const closeModal = (index) => {
       console.log("closeModal 호출됨");
-      store.commit('setShowModal', false);
-      store.dispatch('clearNotifications');
+      store.commit('removeNotification', index);
+      if (store.state.notifications.length === 0) {
+        store.commit('setShowModal', false);
+        store.dispatch('clearNotifications');
+      }
     };
 
     return {
@@ -71,7 +78,6 @@ export default {
       loginStoreName,
       notificationImage,
       showNotifications,
-      showModal,
       notifications,
       closeModal
     };

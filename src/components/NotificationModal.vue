@@ -1,34 +1,42 @@
 <template>
-  <div class="modal">
+  <div v-if="showModal" class="modal">
     <div class="modal-content">
-      <span class="close" @click="$emit('close')">&times;</span>
-      <h2>알림 내용</h2>
-      <ul>
-        <li v-for="(notification, index) in notifications" :key="index">
-          {{ notification }}
-        </li>
-      </ul>
+      <span class="close" @click="closeModal">&times;</span>
+      <p>{{ notificationMessage }}</p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 export default {
-  props: {
-    notifications: {
-      type: Array,
-      required: true
+  computed: {
+    ...mapState(['showModal', 'notifications']),
+    notificationMessage() {
+      return this.notifications.length > 0 ? this.notifications[this.notifications.length - 1] : '';
+    }
+  },
+  watch: {
+    showModal(val) {
+      console.log('showModal 상태 변경:', val);
+    }
+  },
+  methods: {
+    ...mapMutations(['setShowModal', 'markNotificationsAsRead']),
+    closeModal() {
+      this.setShowModal(false);
+      this.markNotificationsAsRead(); // 알림 읽음 처리
     }
   }
-};
+}
 </script>
 
-<style scoped>
+<style>
 .modal {
   display: block; /* Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -40,10 +48,10 @@ export default {
 
 .modal-content {
   background-color: #fefefe;
-  margin: auto;
+  margin: 15% auto; /* 15% from the top and centered */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
+  width: 80%; /* Could be more or less, depending on screen size */
 }
 
 .close {

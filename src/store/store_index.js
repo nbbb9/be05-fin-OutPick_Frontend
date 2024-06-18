@@ -54,6 +54,7 @@ export default createStore({
       state.hasNotifications = status;
     },
     addNotification(state, notification) {
+      console.log('addNotification 호출됨:', notification);
       state.notifications.push(notification);
       state.hasNotifications = true;
       state.showModal = true; // 모달 표시
@@ -67,6 +68,7 @@ export default createStore({
       state.hasNotifications = false;
     },
     setShowModal(state, payload) {
+      console.log('setShowModal 호출됨:', payload);
       state.showModal = payload;
     }
   },

@@ -19,7 +19,6 @@ class EventSourceService {
     }
 
     addESEventListener(event, callback) {
-
         if(!EventSourceService.instance.#listeners.includes(event)){
             EventSourceService.instance.#eventSource.addEventListener(event, callback);
             console.log("event source에 add listener 완료");
@@ -44,8 +43,7 @@ class EventSourceService {
         console.log(EventSourceService.instance.#store);
         if (EventSourceService.instance.#store && EventSourceService.instance.#store.state.eventListener.length > 0) {
             EventSourceService.instance.#store.state.eventListener.forEach(listener => {
-
-                console.log(EventSourceService.instance.#listeners)
+                console.log(EventSourceService.instance.#listeners);
 
                 if (!EventSourceService.instance.#listeners.includes("proposal_solution") && listener.event == "proposal_solution") {
                     EventSourceService.instance.#eventSource.addEventListener('proposal_solution', (e) => {
