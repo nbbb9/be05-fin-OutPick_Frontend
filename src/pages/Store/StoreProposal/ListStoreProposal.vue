@@ -144,18 +144,7 @@ export default {
       // SSE 복구
       let sse = new EventSourceService(store.state.loginStoreId, store);
       sse.restoreEventListeners();
-
-      // SSE 이벤트 리스너 추가
-      sse.addESEventListener('proposal_solution', handleProposalSolution);
     });
-
-    function handleProposalSolution(event) {
-      const data = JSON.parse(event.data);
-      console.log('Proposal Solution Received:', data);
-      // 여기서 데이터를 StoreSidebar로 옮기는 로직을 추가합니다.
-      // store.commit('setSidebarData', data); // Vuex store에 mutation을 통해 데이터 업데이트를 요청합니다.
-    }
-
 
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const triggerShow = () => {
