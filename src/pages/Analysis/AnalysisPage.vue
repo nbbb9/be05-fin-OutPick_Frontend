@@ -15,6 +15,12 @@
             <option value="2024">2024년</option>
           </select>
 
+          <div v-if="isChart1" class="text-center">
+            <div class="spinner-grow text-primary" role="status">
+              <!-- <span class="visually-hidden">Loading...</span> -->
+            </div>
+          </div>
+
           <!-- chart 1부분 -->
           <div class="row m-2" >
             <div class="col-md-12" >
@@ -25,12 +31,21 @@
 
         <!-- 매장 판매량 -->
         <div>
+
+          <div v-if="isChart2" class="text-center" >
+            <div class="spinner-grow text-primary" role="status">
+              <!-- <span class="visually-hidden">Loading...</span> -->
+            </div>
+          </div>
+
           <div class="row m-2" >
             <div class="col-md-12" >
               <canvas id="chart_2" width="200" height="250" ></canvas>
             </div>
           </div> <!-- 차트 부분 끝 -->
+
         </div>
+
 
       </div> <!-- 회사, 매장별 판매량 끝 -->
 
@@ -70,6 +85,12 @@
           </div>
           <div class="col-md-4">
             <button class="btn btn-outline-light text-black" @click="set_3">적용</button>
+          </div>
+        </div>
+
+        <div v-if="isChart3" class="text-center" >
+          <div class="spinner-grow text-primary" role="status">
+            <!-- <span class="visually-hidden">Loading...</span> -->
           </div>
         </div>
         
@@ -126,15 +147,18 @@ export default {
     const data_1 = ref();       // 회사 판매량과 금액을 담을 변수
 
     // chart 1
+    const isChart1 = ref(false);
     const sel_1_month = ref();     // 사용자가 chart_1에서 선택한 x축 값 
     const set_1 =  async () => {
       if(select_year.value){
 
+        isChart1.value = true;
         // axios - get : 회사 판매량 불러오기
         await analyze_sales_list(select_year.value)
           .then((response) => {
             data_1.value = response.data;
             console.log(data_1.value);
+            isChart1.value = false;
           })
 
         const chart = document.getElementById('chart_1').getContext('2d');
@@ -197,15 +221,19 @@ export default {
     }
 
     // chart 2
+    const isChart2 = ref(false);
     const data_2 = ref();
     const sel_2_shop_id = ref();
     const sel_2_shop_name = ref();
 
     const set_2 = async () => {
+
+      isChart2.value = true;
       // axios - get 매장별 판매량
       await analyze_sales_shop_list(select_year.value, sel_1_month.value)
         .then((response) => {
           data_2.value = response.data;
+          isChart2.value = false;
         })
 
       const chart = document.getElementById('chart_2').getContext('2d');
@@ -320,6 +348,7 @@ export default {
 
 
     // chart3
+    const isChart3 = ref(false);
     const data_3 = ref();
     const sel_3_first = ref();
     const sel_3_second= ref();
@@ -334,6 +363,9 @@ export default {
     })
 
     const set_3 = async() => {
+
+      isChart3.value = true;
+
       if(sel_3_first.value === "계절" ) {
         // 1차분류 api 호출
         await analyze_first_list(select_year.value, sel_3_second.value)
@@ -350,6 +382,7 @@ export default {
         })
       }
       
+      isChart3.value = false;
 
       // chart 부분
       const chart_1 = document.getElementById('chart_3_1').getContext('2d');
@@ -467,8 +500,11 @@ export default {
     
     return{
       select_year,
+      isChart1,
       set_1,
+      isChart2,
       sel_2_shop_name,
+      isChart3,
       sel_3_first,
       set_3,
       sel_3_second,
@@ -479,6 +515,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
-</style>     
+.text-center{
+  margin-top: 22%;
+}
+
+</style> >
+   
