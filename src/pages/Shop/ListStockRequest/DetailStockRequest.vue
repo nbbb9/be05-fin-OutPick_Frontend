@@ -125,7 +125,7 @@ export default {
 
         const sr_approval = async () => {
             try {
-                await stock_request_approval(stock_request_id.value, store.state.loginToken);
+                await stock_request_approval(stock_request_id.value, store.state.loginToken, shop_id.value);
                 sr_detail.value.approval = '승인'; // 결재상태 승인으로 변경
                 alert('승인되었습니다.');
             } catch (error) {
@@ -136,7 +136,7 @@ export default {
 
         const sr_reject = async () => {
             try {
-                await stock_request_reject(stock_request_id.value, store.state.loginToken);
+                await stock_request_reject(stock_request_id.value, store.state.loginToken, shop_id.value);
                 sr_detail.value.approval = '반려'; // 결재상태 반려로 변경
                 alert('반려되었습니다.');
             } catch (error) {
