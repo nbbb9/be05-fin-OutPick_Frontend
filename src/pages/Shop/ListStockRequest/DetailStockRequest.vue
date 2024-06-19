@@ -63,7 +63,7 @@
             <div class="col-6 full-height">
                 <div class="empty-content full-height">
                     <!-- 여기에 다른 내용을 추가할 수 있습니다 -->
-                    <div class="placeholder">까꿍</div>
+                    <canvas id="chart_1" width="200" height="250" ></canvas>
                 </div>
             </div> <!-- 오른쪽 영역 끝 -->
         </div>
@@ -75,7 +75,8 @@ import ShopSidebar from '@/components/ShopSidebar.vue';
 import { useStore } from 'vuex';
 import { ref, onMounted, computed } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { stock_request_detail, stock_request_approval, stock_request_reject } from '@/shop_axios';
+import { Chart , registerables} from 'chart.js';
+import { stock_request_detail, stock_request_approval, stock_request_reject, stock_request_chart } from '@/shop_axios';
 
 export default {
     components: {
@@ -95,6 +96,7 @@ export default {
             try {
                 const response = await stock_request_detail(stock_request_id, store.state.loginToken);
                 sr_detail.value = response.data;
+                chart();
             } catch (error) {
                 console.error('Error fetching shop details:', error);
                 alert('Failed to load stock request details.');
@@ -140,6 +142,42 @@ export default {
                 alert('반려에 실패했습니다.');
             }
         };
+
+        // 차트 부분
+        let barChart1;
+        const chart_data = ref();
+        const chart = async () => {
+            await stock_request_chart(sr_detail.value.shop_id, sr_detail.value.product_id)
+                .then((response) => {
+                    chart_data.value = response.data;
+                })
+
+                const chart = document.getElementById('chart_1').getContext('2d');
+
+                Chart.register(...registerables);
+
+                if(barChart1){
+                    barChart1.destroy();
+                }
+
+                barChart1 = new Chart(chart, {
+                    type: 'bar',
+                    data: {
+                        labels: chart_data.value.year_list ,
+                        datasets: [
+                        {
+                            label: '판매량',
+                            borderWidth: 3,
+                            data: chart_data.value.quantity_list
+                        }
+                    ]
+                    },
+                    options: {
+                        maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+                    }
+                });
+                barChart1
+        }           
 
         // 메뉴 이동
         const selectMenu = (selectMenu) => {
