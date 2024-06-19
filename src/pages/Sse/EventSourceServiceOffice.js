@@ -36,6 +36,22 @@ class EventSourceServiceOffice {
         }
     }
 
+    handleStockRequestNotification(event) {
+        console.log("handleStockRequestNotification 실행");
+        const data = JSON.parse(event.data);
+        const notificationMessage = `매장 ${data.shop_id}에서 재고요청서를 작성했습니다.`;
+        EventSourceServiceOffice.instance.#store.dispatch('addNotification', notificationMessage);
+        // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
+    }
+
+    handleAddProposalNotification(event) {
+        console.log("handleAddProposalNotification 실행");
+        const data = JSON.parse(event.data);
+        const notificationMessage = `매장 ${data.shop_id}에서 건의문을 작성했습니다.`;
+        EventSourceServiceOffice.instance.#store.dispatch('addNotification', notificationMessage);
+        // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
+    }
+
     restoreEventListeners() {
         console.log(EventSourceServiceOffice.instance.#store);
         if (EventSourceServiceOffice.instance.#store && EventSourceServiceOffice.instance.#store.state.eventListener.length > 0) {
@@ -43,22 +59,22 @@ class EventSourceServiceOffice {
 
                 console.log("복구 작업 전 : ",EventSourceServiceOffice.instance.#listener)
 
-                if (!EventSourceServiceOffice.instance.#listener.includes("proposal_solution") && listener.event == "proposal_solution") {
-                    EventSourceServiceOffice.instance.#eventSource.addEventListener('proposal_solution', (e) => {
+                if (!EventSourceServiceOffice.instance.#listener.includes("add_stock_request") && listener.event == "add_stock_request") {
+                    EventSourceServiceOffice.instance.#eventSource.addEventListener('add_stock_request', (e) => {
                         const { data: receivedConnectData } = e;
                         const data = JSON.parse(receivedConnectData);
-                        if (EventSourceServiceOffice.instance.#store.state.loginStoreId === data.shop_id) {
-                            console.log('connect proposal_solution:', receivedConnectData);
-                            EventSourceServiceOffice.instance.handleProposalNotification(e);
+                        if (EventSourceServiceOffice.instance.#store.state.loginUserId === data.employee_id) {
+                            console.log('connect add_stock_request:', receivedConnectData);
+                            EventSourceServiceOffice.instance.handleStockRequestNotification(e);
                         }
                     });
-                }else if(!EventSourceServiceOffice.instance.#listener.includes("product_discount") && listener.event == "product_discount"){
-                    EventSourceServiceOffice.instance.#eventSource.addEventListener('product_discount', (e) => {
+                }else if (!EventSourceServiceOffice.instance.#listener.includes("add_proposal") && listener.event == "add_proposal") {
+                    EventSourceServiceOffice.instance.#eventSource.addEventListener('add_proposal', (e) => {
                         const { data: receivedConnectData } = e;
                         const data = JSON.parse(receivedConnectData);
-                        if (EventSourceServiceOffice.instance.#store.state.loginStoreId === data.shop_id) {
-                            console.log('connect product_discount:', receivedConnectData);
-                            EventSourceServiceOffice.instance.handleProductDiscountNotification(e);
+                        if (EventSourceServiceOffice.instance.#store.state.loginUserId === data.employee_id) {
+                            console.log('connect add_proposal:', receivedConnectData);
+                            EventSourceServiceOffice.instance.handleAddProposalNotification(e);
                         }
                     });
                 }

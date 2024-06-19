@@ -81,20 +81,43 @@ setup(){
           .then( (response) => {
             store.dispatch('triggerLoginUserName', response.data.name);
             store.dispatch('triggerLoginUserId', response.data.id);
-            store.dispatch('triggerLoginUserRole',response.data.role); 
+            store.dispatch('triggerLoginUserRole',response.data.role);
+
+            // sse에 listener 추가
+            console.log( "야호!" ,store.state.loginUserId);
+            let sse = new EventSourceServiceOffice(store.state.loginUserId, store);
+            console.log("event source service office 받아옴 : ", sse);
+
+            sse.addESEventListener('add_stock_request', (e) => {
+              const { data: receivedConnectData } = e;
+              const data = JSON.parse(receivedConnectData);
+
+              if (store.state.loginUserId === data.employee_id) {
+                console.log('connect add_stock_request:', receivedConnectData);
+                // store.commit('setNotifications', true); // 알림 상태를 true로 설정
+                sse.handleStockRequestNotification(e);
+              }
+            });
+
+            sse.addESEventListener('add_proposal', (e) => {
+              const { data: receivedConnectData } = e;
+              const data = JSON.parse(receivedConnectData);
+
+              if (store.state.loginUserId === data.employee_id) {
+                console.log('connect add_proposal:', receivedConnectData);
+                // store.commit('setNotifications', true); // 알림 상태를 true로 설정
+                sse.handleAddProposalNotification(e);
+              }
+            });
+
+            // 페이지 이동
+            router.push({
+              name : "ListShop"
+            })
           })
           .catch((e) => {
             console.log("error : ", e.message);
           })
-
-        // sse에 listener 추가
-        let sse = new EventSourceServiceOffice(store.state.loginUserId, store);
-        console.log("event source service office 받아옴 : ", sse);
-        
-        // 페이지 이동
-        router.push({
-          name : "ListShop"
-        })
       })
       .catch( () => {
         // 로그인 실패시 실패했다는 팝업

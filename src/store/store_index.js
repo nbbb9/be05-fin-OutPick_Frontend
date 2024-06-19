@@ -66,12 +66,6 @@ export default createStore({
     markNotificationsAsRead(state) {
       state.hasNotifications = false;
     },
-    // setShowModal(state, payload) {
-    //   state.showModal = payload;
-    // },
-    // SET_SHOW_MODAL(state, value) {
-    //   state.showModal = value;
-    // },
     SET_NOTIFICATIONS_AS_READ(state) {
       state.hasNotifications = false;
     },

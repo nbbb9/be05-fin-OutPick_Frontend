@@ -84,10 +84,11 @@
 
 <script>
 import {useStore} from "vuex"
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
 import { useRouter } from 'vue-router';
 import { store_stock_request_add, product_list } from "@/axios.js"
+import EventSourceService from "@/pages/Sse/EventSourceService";
 
 export default {
   components : {
@@ -184,7 +185,11 @@ export default {
     }
     triggerShow();
 
-
+    onMounted(()=> {
+      // SSE 복구
+      let sse = new EventSourceService(store.state.loginStoreId, store);
+      sse.restoreEventListeners();
+    });
 
     // 메뉴 이동
     const router = useRouter();

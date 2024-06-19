@@ -94,7 +94,7 @@ export default {
         })
     }
 
-    // sse test
+    
     const store = useStore();   // store 변수
     let sse = new EventSourceService(store.state.loginStoreId, store)
     sse.restoreEventListeners();
