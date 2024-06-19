@@ -94,10 +94,10 @@ export default {
         })
     }
 
-    // sse test
+    
     const store = useStore();   // store 변수
     let sse = new EventSourceService(store.state.loginStoreId, store)
-    sse.getEventSource();
+    sse.restoreEventListeners();
   
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const triggerShow = () => {

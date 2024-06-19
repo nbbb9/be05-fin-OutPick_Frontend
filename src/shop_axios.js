@@ -86,7 +86,7 @@ export function stock_request_list(token) {
     return user_axios.get('/stockrequest/list', {
         headers: {
             login_token : token
-        } 
+        }
     })
 }
 
@@ -108,8 +108,10 @@ export function stock_request_chart(shop_id, product_id) {
 }
 
 // 재고요청서 승인(사원)
-export function stock_request_approval(stock_request_id, token){
-    return user_axios.put(`/stockrequest/confirm/${stock_request_id}`, {}, {
+export function stock_request_approval(stock_request_id, token, shop_id){
+    return user_axios.put(`/stockrequest/confirm/${stock_request_id}`, {
+        "shop_id" : shop_id
+    }, {
         headers : {
             login_token : token
         }
@@ -117,12 +119,13 @@ export function stock_request_approval(stock_request_id, token){
 }
 
 // 재고요청서 반려(사원)
-export function stock_request_reject(stock_request_id, token){
-    return user_axios.put(`/stockrequest/refuse/${stock_request_id}`, {}, {
+export function stock_request_reject(stock_request_id, token, shop_id){
+    return user_axios.put(`/stockrequest/refuse/${stock_request_id}`, {
+        "shop_id" : shop_id
+
+    }, {
         headers : {
             login_token : token
         }
     })
 }
-
-

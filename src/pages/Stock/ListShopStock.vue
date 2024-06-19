@@ -297,6 +297,7 @@
       const product_id = ref();
       const send_name = (p_name) => {
         product_name.value = p_name;
+
         console.log(product_name.value);
         const p_id = item_list.value.find(item => {
           return product_name.value.includes(item.product_name)});
@@ -311,7 +312,7 @@
         console.log("상품 ID : ",product_id.value);
 
         try {
-          await update_discount(product_id.value, discount_rate.value)
+          await update_discount(product_id.value, shop_id.value, discount_rate.value)
             .then(() => {
               location.reload();
             })

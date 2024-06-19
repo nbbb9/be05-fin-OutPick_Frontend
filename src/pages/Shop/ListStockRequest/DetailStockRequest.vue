@@ -87,16 +87,18 @@ export default {
         const router = useRouter();
         const route = useRoute();
 
-        const stock_request_id = ref(null);
-        const sr_detail = ref({});
-        const loading = ref(true);
-        let loginUserRole = computed(() => store.state.loginUserRole);
+    const stock_request_id = ref(null);
+    const sr_detail = ref({});
+    const loading = ref(true);
+    const shop_id = ref();
+    let loginUserRole = computed(() => store.state.loginUserRole);
 
         const get_sr_detail = async (stock_request_id) => {
             try {
                 const response = await stock_request_detail(stock_request_id, store.state.loginToken);
                 sr_detail.value = response.data;
                 chart();
+                shop_id.value = response.data.shop_id; // shop_id를 상태에 저장
             } catch (error) {
                 console.error('Error fetching shop details:', error);
                 alert('Failed to load stock request details.');
@@ -123,7 +125,7 @@ export default {
 
         const sr_approval = async () => {
             try {
-                await stock_request_approval(stock_request_id.value, store.state.loginToken);
+                await stock_request_approval(stock_request_id.value, store.state.loginToken, shop_id.value);
                 sr_detail.value.approval = '승인'; // 결재상태 승인으로 변경
                 alert('승인되었습니다.');
             } catch (error) {
@@ -134,7 +136,7 @@ export default {
 
         const sr_reject = async () => {
             try {
-                await stock_request_reject(stock_request_id.value, store.state.loginToken);
+                await stock_request_reject(stock_request_id.value, store.state.loginToken, shop_id.value);
                 sr_detail.value.approval = '반려'; // 결재상태 반려로 변경
                 alert('반려되었습니다.');
             } catch (error) {
@@ -177,7 +179,7 @@ export default {
                     }
                 });
                 barChart1
-        }           
+        }
 
         // 메뉴 이동
         const selectMenu = (selectMenu) => {
@@ -202,18 +204,19 @@ export default {
             }
         };
 
-        return {
-            get_sr_detail,
-            selectMenu,
-            sr_detail,
-            stock_request_id,
-            loading,
-            formattedDate,
-            sr_approval,
-            sr_reject,
-            loginUserRole
-        };
-    }
+    return {
+      get_sr_detail,
+      selectMenu,
+      sr_detail,
+      stock_request_id,
+      loading,
+      formattedDate,
+      sr_approval,
+      sr_reject,
+      loginUserRole,
+      shop_id
+    };
+  }
 };
 </script>
 

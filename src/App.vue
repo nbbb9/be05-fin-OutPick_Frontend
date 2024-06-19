@@ -30,22 +30,30 @@
         </ul>
       </div>
 
-      <!-- 사용자 정보 드롭다운 -->
-      <div class="dropdown ms-auto">
-        <button class="btn btn-link dropdown-toggle text-white dropdown-large" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ loginUserName }} 님
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-          <li class="image-container">
-            <img src="@/assets/경원이형.png" alt="사원사진" class="shop-image mt-3" />
-          </li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-white" href="#">이름 : {{ loginUserName }}</a></li>
-          <li><a class="dropdown-item text-white" href="#">직급 : {{ loginUserRole }}</a></li>
-          <li><hr class="dropdown-divider"></li>
-          <li><a class="dropdown-item text-white" @click="logout">Logout</a></li>
-        </ul>
-      </div><!-- 사용자 정보 드롭다운 -->
+      <div class="logininfo-alert">
+        <div class="alert-icon" @click="showNotifications">
+          <img :src="notificationImage" alt="Notification Image" />
+        </div>
+        <!-- 사용자 정보 드롭다운 -->
+        <div class="dropdown ms-auto">
+          <button class="btn btn-link dropdown-toggle text-white dropdown-large" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ loginUserName }} 님
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+            <li class="image-container">
+              <img src="@/assets/경원이형.png" alt="사원사진" class="shop-image mt-3" />
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-white" href="#">이름 : {{ loginUserName }}</a></li>
+            <li><a class="dropdown-item text-white" href="#">직급 : {{ loginUserRole }}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item text-white" @click="logout">Logout</a></li>
+          </ul>
+        </div><!-- 사용자 정보 드롭다운 -->
+      </div>
+
+      <!-- NotificationOffice Modal -->
+      <NotificationOfficeModal v-if="showModal" :notifications="notifications" @close="closeModal" />
 
     </div>
   </nav>
@@ -59,9 +67,12 @@
 import { useStore } from 'vuex';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import NotificationOfficeModal from "@/components/NotificationOfficeModal.vue";
+
 
 export default {
   name: 'App',
+  components: {NotificationOfficeModal},
   setup() {
     const store = useStore();
     const router = useRouter()
@@ -69,6 +80,9 @@ export default {
     let isAdmin = computed(() => store.state.isAdmin);
     let loginUserName = computed(() => store.state.loginUserName);
     let loginUserRole = computed(() => store.state.loginUserRole);
+    const hasNotifications = computed(() => store.state.hasNotifications);
+    const notifications = computed(() => store.state.notifications);
+    const showModal = computed(() => store.state.showModal);
 
     const logout = () => {
       store.dispatch('triggerLoginUserName', ""); // 로그인 이름 초기화
@@ -81,12 +95,35 @@ export default {
       })
     }
 
+    const notificationImage = computed(() => {
+      return hasNotifications.value ? require('@/assets/alert.png') : require('@/assets/noalert.png');
+    });
+
+    const showNotifications = () => {
+
+      console.log("모달 켜지려는 중")
+
+      if (hasNotifications.value) {
+        console.log("모달 켜짐")
+      }
+    };
+
+    const closeModal = () => {
+      console.log("closeModal 호출됨");
+      store.dispatch('clearNotifications');
+    };
+
     return {
       showNav,
       isAdmin,
       loginUserName,
       loginUserRole,
-      logout
+      logout,
+      showModal,
+      notificationImage,
+      notifications,
+      showNotifications,
+      closeModal
     };
   }
 };
@@ -101,9 +138,30 @@ export default {
   font-style: normal;
 }
 
-
 div{
   font-family: "LINESeedKR-Rg";
+}
+
+/* 로그인 정보와 아이콘을 수평으로 유지 */
+.logininfo-alert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.alert-icon {
+  flex-shrink: 0; /* 아이콘의 크기가 부모를 넘지 않도록 */
+  width: 50px; /* 원하는 너비 */
+  height: 50px; /* 원하는 높이 */
+  cursor: pointer; /* 클릭 가능한 커서 */
+}
+
+.alert-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 이미지 비율 유지 */
+  aspect-ratio: 1 / 1; /* 1:1 비율 */
 }
 
 #app {
