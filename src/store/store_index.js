@@ -73,6 +73,16 @@ export default createStore({
       state.showModal = false;
       state.hasNotifications = false;
       state.notifications = [];
+    },
+    SET_SHOW_MODAL(state, payload) {
+      state.showModal = payload;
+    },
+    REMOVE_NOTIFICATION(state, notificationMessage) {
+      const index = state.notifications.findIndex(n => n === notificationMessage);
+      if (index !== -1) {
+        state.notifications.splice(index, 1);
+        state.hasNotifications = state.notifications.length > 0;
+      }
     }
   },
   actions: {
@@ -117,7 +127,12 @@ export default createStore({
     },
     clearNotifications({ commit }) {
       commit('CLEAR_NOTIFICATIONS');
+    },
+    triggerShowModal({ commit }, payload) {
+      commit('SET_SHOW_MODAL', payload);
+    },
+    removeNotification({ commit }, notification) {
+      commit('REMOVE_NOTIFICATION', notification);
     }
-
   }
 });

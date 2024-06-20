@@ -69,13 +69,12 @@ import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import NotificationOfficeModal from "@/components/NotificationOfficeModal.vue";
 
-
 export default {
   name: 'App',
-  components: {NotificationOfficeModal},
+  components: { NotificationOfficeModal },
   setup() {
     const store = useStore();
-    const router = useRouter()
+    const router = useRouter();
     let showNav = computed(() => store.state.showNav);
     let isAdmin = computed(() => store.state.isAdmin);
     let loginUserName = computed(() => store.state.loginUserName);
@@ -86,12 +85,12 @@ export default {
 
     const logout = () => {
       store.dispatch('triggerLoginUserName', ""); // 로그인 이름 초기화
-      store.dispatch('triggerLoginUserId',0);     // 로그인 아이디 초기화
+      store.dispatch('triggerLoginUserId', 0);     // 로그인 아이디 초기화
       store.dispatch('triggerLoginToken', "");    // 로그인 토큰 초기화
-      store.dispatch('triggerLoginUserRole',"")   // 로그인 직급 초기화
+      store.dispatch('triggerLoginUserRole', "")   // 로그인 직급 초기화
 
       router.push({
-        name : "Login"
+        name: "Login"
       })
     }
 
@@ -100,17 +99,11 @@ export default {
     });
 
     const showNotifications = () => {
-
-      console.log("모달 켜지려는 중")
-
-      if (hasNotifications.value) {
-        console.log("모달 켜짐")
-      }
+      store.dispatch('triggerShowModal', true); // 모달 표시
     };
 
     const closeModal = () => {
-      console.log("closeModal 호출됨");
-      store.dispatch('clearNotifications');
+      store.dispatch('triggerShowModal', false); // 모달만 닫기
     };
 
     return {
@@ -138,7 +131,7 @@ export default {
   font-style: normal;
 }
 
-div{
+div {
   font-family: "LINESeedKR-Rg";
 }
 
@@ -238,7 +231,6 @@ img {
 /* 드롭다운 토글 스타일 */
 .dropdown-toggle::after {
   display: none;
-
 }
 
 /* 사원 사진 Container */
