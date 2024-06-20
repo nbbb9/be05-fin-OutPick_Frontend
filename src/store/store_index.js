@@ -3,7 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
   plugins: [
-    createPersistedState()
+    createPersistedState()//vuex-persistedstate 플러그인 사용
   ],
   state: {
     showNav: true,
@@ -17,6 +17,8 @@ export default createStore({
     eventListener: [],
     hasNotifications: false, // 알림 상태
     notifications: [], // 알림 데이터 배열 추가
+    hasNotificationsOffice: false, // 알림 상태
+    notificationsOffice: [], // 알림 데이터 배열 추가
     showModal: false
   },
   mutations: {

@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-9 item-vertical">
                   {{ rq_view.approval }}
-                  <button v-if="rq_view.approval === '반려'" @click="toFeedback" class="btn btn-dark" style="margin-left: 10%;" >피드백</button>
+                  <button v-if="rq_view.approval === '반려'" @click="toFeedback(rq_view.stock_request_id, rq_view.product_id, rq_view.shop_id)" class="btn btn-dark" style="margin-left: 10%;" >피드백</button>
                 </div>
               </div>
             </div>
@@ -201,10 +201,8 @@ export default {
     }
 
 
-    const toFeedback = () => {
-      router.push({
-        name : "DetailStoreStockRequest"
-      })
+    const toFeedback = (stock_request_id, product_id, shop_id) => {
+      router.push({ name: 'DetailStoreStockRequest', params: { stock_request_id, product_id , shop_id } });
     }
 
 
