@@ -40,3 +40,13 @@ export function analyze_price_list(year, shop_id) {
         "shop_id": shop_id
     })
 }
+
+// 매장별 상품의 판매량 순위
+export function analyze_product_list(year, shop_id) {
+    return user_axios.post(`/analyze/product_sales_analyze`, {
+    
+        "year": year,
+        "shop_id": shop_id
+          
+    }) 
+}

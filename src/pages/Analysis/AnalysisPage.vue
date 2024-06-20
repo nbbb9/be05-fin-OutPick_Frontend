@@ -70,7 +70,6 @@
           </div>
           <div v-if="!isTab1" class="col-md-12">
             <canvas id="chart_4_2" width="400" height="250"></canvas>
-            집 가세요
           </div>
         </div>
         <!-- 차트 4 끝! -->
@@ -129,7 +128,8 @@ import {ref, watch} from "vue"
 import { Chart , registerables} from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {analyze_sales_list, analyze_sales_shop_list, 
-  analyze_first_list, analyze_second_list, analyze_price_list} from "@/analysis_axios"
+  analyze_first_list, analyze_second_list, analyze_price_list,
+  analyze_product_list} from "@/analysis_axios"
 import { useStore } from "vuex";
 
 export default {
@@ -353,7 +353,41 @@ export default {
         });
       
       } else {
-        console.log("뒈지고 싶다.")
+        await analyze_product_list(select_year.value, sel_2_shop_id.value)
+          .then ((response) => {
+          data_4.value = response.data;
+          })
+          .catch (e => {
+            console.error(e);
+          })
+
+          const chart = document.getElementById('chart_4_2').getContext('2d');
+
+          Chart.register(...registerables, zoomPlugin);
+          
+          if(barChart4){
+            barChart4.destroy();
+          }
+
+          barChart4 = new Chart(chart, {
+              type: 'bar',
+              data: {
+                  labels: data_4.value.product_name,
+                  datasets: [{
+                      label: '판매량', borderWidth: 3,
+                      data: data_4.value.quantity
+                    }]
+              },
+              options: {
+                  maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+                  plugins: { legend: {display: false},
+                              zoom: {pan: {enabled: true,mode: 'x'},
+                              zoom: {wheel: {enabled: true},pinch: {enabled: true},mode: 'x'}}
+                  }
+              }
+            });
+
+        console.log("뒈지고 싶다.");
       }
 
     }
