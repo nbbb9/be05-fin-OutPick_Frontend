@@ -324,8 +324,13 @@
       //   const discount_rate = input.value;
       // }
 
-      
 
+      // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
+      const triggerShow = () => {
+        store.dispatch('triggerShow', true);
+        console.log(store.state.showNav)
+      }
+      triggerShow();
 
 
       // const update_discount_rate = async () => {
@@ -340,12 +345,6 @@
       //     })
       // }
 
-      // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
-      const triggerShow = () => {
-        store.dispatch('triggerShow', false);
-        console.log(store.state.showNav)
-      }
-      triggerShow();
 
       const selectMenu = (selectId) => {
         console.log("select Id:", selectId);
