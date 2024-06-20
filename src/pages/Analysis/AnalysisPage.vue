@@ -55,10 +55,10 @@
 
         <!-- 2차 분류 -->
         <div class="row" m-2>
-          <div class="col-md-4">
+          <div class="col-md-4" v-if="show_change">
             <button class="btn btn-dark" @click="changeTab" >{{ isTab1 ? 'Tab1' : 'Tab2' }}</button>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-8" v-if="show_shop">
             <h3>선택한 매장 : {{ sel_2_shop_name }}</h3>
           </div>
         </div>
@@ -75,7 +75,7 @@
         <!-- 차트 4 끝! -->
         
         <!-- 1차 분류 -->
-        <div class="row m-2">
+        <div class="row m-2" v-if="show_classification">
           <div class="col-md-4">
             <select v-model="sel_3_first" class="form-select">
               <option value="계절">계절</option>
@@ -90,7 +90,7 @@
             </select>
           </div>
           <div class="col-md-4">
-            <button class="btn btn-outline-light text-black" @click="set_3">적용</button>
+            <button v-if="show_button" class="btn btn-outline-light text-black" @click="set_3">적용</button>
           </div>
         </div>
 
@@ -100,7 +100,7 @@
         </div>
         
         <!-- 차트 3 시작 -->
-        <div class="row" style="border: 1px solid black;" >
+        <div class="row">
           <div class="col-3">
             <canvas id="chart_3_1" width="40" height="200" ></canvas>  
           </div> 
@@ -148,6 +148,11 @@ export default {
     let barChart3_3;
     let barChart3_4;
     let barChart4;
+
+    const show_change = ref(false);
+    const show_shop = ref(false);
+    const show_classification = ref(false);
+    const show_button = ref(false);
 
     const select_year = ref();  // 사용자가 선택한 년
     const data_1 = ref();       // 회사 판매량과 금액을 담을 변수
@@ -231,7 +236,7 @@ export default {
     const data_2 = ref();
     const sel_2_shop_id = ref();
     const sel_2_shop_name = ref();
-
+    
     const set_2 = async () => {
 
       isChart2.value = true;
@@ -292,6 +297,8 @@ export default {
                       sel_2_shop_id.value = data_2.value.shop_id[elementIndex];
                       sel_2_shop_name.value = data_2.value.shop_name[elementIndex];
                       console.log(`Clicked on index: ${sel_2_shop_id.value}, label: ${sel_2_shop_name.value}`);
+                      show_change.value = true;
+                      show_shop.value = true;
                   }
               },
               plugins: {zoom: {pan: { enabled: true, mode: 'x'},
@@ -311,7 +318,6 @@ export default {
     const isTab1 = ref(true);
     const data_4 = ref();
     // const data_4_2 = ref();
-
     const changeTab = ()=> {
       isTab1.value = !isTab1.value;
       set_4()
@@ -323,6 +329,8 @@ export default {
         await analyze_price_list(select_year.value, sel_2_shop_id.value)
         .then ((response) => {
           data_4.value = response.data;
+          show_classification.value = true;
+          show_button.value = true;
         })
 
       // chart 부분
@@ -565,7 +573,11 @@ export default {
       sel_3_first,
       set_3,
       sel_3_second,
-      sel_3_second_list
+      sel_3_second_list,
+      show_change,
+      show_shop,
+      show_button,
+      show_classification
     }
   }
 
