@@ -312,7 +312,8 @@
         try {
           await update_discount(product_id.value, shop_id.value, discount_rate.value)
             .then(() => {
-              location.reload();
+              //location.reload();
+              get_item_list();
             })
 
         } catch(e) {

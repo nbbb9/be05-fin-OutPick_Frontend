@@ -26,7 +26,7 @@ export function shop_item_list(shopId, token) {
 }
 
 // 할인율 수정
-export function update_discount(product_id,shop_id, discount) {
+export function update_discount(product_id,shop_id,discount) {
     return user_axios.put(`/product/discount?discount=${discount}`,
                     {
                             "product_id" : product_id,

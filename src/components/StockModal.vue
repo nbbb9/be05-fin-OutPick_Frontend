@@ -4,9 +4,9 @@
         <span class="close" @click="close">&times;</span>
         <p>{{ modal_message }}</p>
         <input  @input="validateInput" v-model="discount_rate" placeholder="입력" />
+        <button @click="submit" class="btn btn-dark">확인</button>
         <p v-if="error_message" class="error_message">{{ error_message }}</p>
         <P v-if="success_message" class="success_message">{{ success_message }}</P>
-        <button @click="submit" class="btn btn-dark">확인</button>
     </div>
   </div>
 </template>
@@ -52,11 +52,11 @@ export default defineComponent({
 
     const submit = () => {
         if (discount_rate.value === '') {
-          error_message.value = '수량을 입력해주세요.';
+          error_message.value = '할인율을 입력해주세요.';
           return;
         }
         emit('submit', discount_rate.value);
-        success_message.value = '작성 완료!';
+        success_message.value = '할인율 수정 완료!';
         setTimeout(() => {
           success_message.value = '';
           close();
