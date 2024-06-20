@@ -357,9 +357,6 @@ export default {
           .then ((response) => {
           data_4.value = response.data;
           })
-          .catch (e => {
-            console.error(e);
-          })
 
           const chart = document.getElementById('chart_4_2').getContext('2d');
 
@@ -386,8 +383,6 @@ export default {
                   }
               }
             });
-
-        console.log("뒈지고 싶다.");
       }
 
     }
