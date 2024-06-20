@@ -22,7 +22,7 @@
           </div>
 
           <!-- chart 1부분 -->
-          <div class="row m-2" >
+          <div v-if="!isChart1" class="row m-2" >
             <div class="col-md-12" >
               <canvas id="chart_1" width="200" height="250" ></canvas>
             </div>
@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="row m-2" >
+          <div v-if="!isChart2" class="row m-2" >
             <div class="col-md-12" >
               <canvas id="chart_2" width="200" height="250" ></canvas>
             </div>
@@ -55,15 +55,22 @@
 
         <!-- 2차 분류 -->
         <div class="row" m-2>
-          <div class="col-md-12">
+          <div class="col-md-4">
+            <button class="btn btn-dark" @click="changeTab" >{{ isTab1 ? 'Tab1' : 'Tab2' }}</button>
+          </div>
+          <div class="col-md-8">
             <h3>선택한 매장 : {{ sel_2_shop_name }}</h3>
           </div>
         </div>
 
         <!-- 차트 4 시작 -->
         <div class="row">
-          <div class="col-md-12">
-            <canvas id="chart_4" width="400" height="250"></canvas>
+          <div v-if="isTab1" class="col-md-12">
+            <canvas id="chart_4_1" width="400" height="250"></canvas>
+          </div>
+          <div v-if="!isTab1" class="col-md-12">
+            <canvas id="chart_4_2" width="400" height="250"></canvas>
+            집 가세요
           </div>
         </div>
         <!-- 차트 4 끝! -->
@@ -90,23 +97,22 @@
 
         <div v-if="isChart3" class="text-center" >
           <div class="spinner-grow text-primary" role="status">
-            <!-- <span class="visually-hidden">Loading...</span> -->
           </div>
         </div>
         
         <!-- 차트 3 시작 -->
-        <div class="row">
+        <div class="row" style="border: 1px solid black;" >
           <div class="col-3">
-            <canvas id="chart_3_1" width="40" height="200"></canvas>  
+            <canvas id="chart_3_1" width="40" height="200" ></canvas>  
           </div> 
           <div class="col-3">
-            <canvas id="chart_3_2" width="40" height="200"></canvas>
+            <canvas id="chart_3_2" width="40" height="200" ></canvas>
           </div> 
           <div class="col-3">
-            <canvas id="chart_3_3" width="40" height="200"></canvas>
+            <canvas id="chart_3_3" width="40" height="200" ></canvas>
           </div> 
           <div class="col-3">
-            <canvas id="chart_3_4" width="40" height="200"></canvas>
+            <canvas id="chart_3_4" width="40" height="200" ></canvas>
           </div> 
         </div>
         <!-- 차트 3 끝! -->
@@ -302,16 +308,25 @@ export default {
 
 
     // chart4
+    const isTab1 = ref(true);
     const data_4 = ref();
+    // const data_4_2 = ref();
+
+    const changeTab = ()=> {
+      isTab1.value = !isTab1.value;
+      set_4()
+    }
 
     const set_4 = async() => {
-      await analyze_price_list(select_year.value, sel_2_shop_id.value)
+      
+      if(isTab1.value){
+        await analyze_price_list(select_year.value, sel_2_shop_id.value)
         .then ((response) => {
           data_4.value = response.data;
         })
 
       // chart 부분
-      const chart = document.getElementById('chart_4').getContext('2d');
+      const chart = document.getElementById('chart_4_1').getContext('2d');
 
       Chart.register(...registerables, zoomPlugin);
       
@@ -335,7 +350,11 @@ export default {
                           zoom: {wheel: {enabled: true},pinch: {enabled: true},mode: 'x'}}
               }
           }
-      });
+        });
+      
+      } else {
+        console.log("뒈지고 싶다.")
+      }
 
     }
 
@@ -497,6 +516,13 @@ export default {
           }
       });
     }
+
+      // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
+      const triggerShow = () => {
+        store.dispatch('triggerShow', true);
+        console.log(store.state.showNav)
+      }
+      triggerShow();
     
     return{
       select_year,
@@ -505,6 +531,8 @@ export default {
       isChart2,
       sel_2_shop_name,
       isChart3,
+      isTab1,
+      changeTab,
       sel_3_first,
       set_3,
       sel_3_second,
