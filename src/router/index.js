@@ -18,7 +18,6 @@ import ListWarehouse from "@/pages/Stock/ListWarehouse.vue";
 import ListStoreStock from "@/pages/Store/ListStoreStock.vue"
 import AddStoreStockRequest from "@/pages/Store/StoreStockRequest/AddStoreStockRequest.vue"
 import ListStoreStockRequest from "@/pages/Store/StoreStockRequest/ListStoreStockRequest.vue"
-import DetailStoreStockRequest from "@/pages/Store/StoreStockRequest/DetailStoreStockRequest.vue"
 import ListStoreSales from "@/pages/Store/ListStoreSales.vue"
 import AddStoreProposal from "@/pages/Store/StoreProposal/AddStoreProposal.vue"
 import ListStoreProposal from "@/pages/Store/StoreProposal/ListStoreProposal.vue"
@@ -28,6 +27,7 @@ import DetailStockRequest from "@/pages/Shop/ListStockRequest/DetailStockRequest
 import ListCompanyStock from "@/pages/Stock/ListCompanyStock.vue";
 import ListShopStock from "@/pages/Stock/ListShopStock.vue";
 import ListProduct from "@/pages/Stock/ListProduct.vue";
+import DetailStoreStockRequest from "@/pages/Store/StoreStockRequest/DetailStoreStockRequest.vue";
 
 const router = createRouter({
     history : createWebHistory(),
@@ -91,7 +91,7 @@ const router = createRouter({
             component : AddStoreStockRequest
         },
         {
-            path : "/store_stock_request_detail",
+            path : "/store_stock_request_detail/:stock_request_id/:product_id/:shop_id",
             name : "DetailStoreStockRequest",
             component : DetailStoreStockRequest
         },
