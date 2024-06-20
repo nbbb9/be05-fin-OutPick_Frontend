@@ -39,7 +39,7 @@ class EventSourceServiceOffice {
     handleStockRequestNotification(event) {
         console.log("handleStockRequestNotification 실행");
         const data = JSON.parse(event.data);
-        const notificationMessage = `매장 ${data.shop_id}에서 재고요청서를 작성했습니다.`;
+        const notificationMessage = `${data.shop_id} 번 매장에서 재고요청서를 작성했습니다.`;
         EventSourceServiceOffice.instance.#store.dispatch('addNotification', notificationMessage);
         // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
     }
@@ -47,7 +47,7 @@ class EventSourceServiceOffice {
     handleAddProposalNotification(event) {
         console.log("handleAddProposalNotification 실행");
         const data = JSON.parse(event.data);
-        const notificationMessage = `매장 ${data.shop_id}에서 건의문을 작성했습니다.`;
+        const notificationMessage = `${data.shop_id} 번 매장에서 건의문을 작성했습니다.`;
         EventSourceServiceOffice.instance.#store.dispatch('addNotification', notificationMessage);
         // EventSourceService.instance.#store.commit('setShowModal', true); // 모달 표시
     }
