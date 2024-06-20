@@ -35,22 +35,22 @@
       <div class="listDiv">
         <table class="table table-hover border-gray">
           <thead style="position: sticky; top:0; z-index: 1;">
-            <tr>
-              <th>건의사항 ID</th>
-              <th>제목</th>
-              <th>요청일</th>
-              <th>카테고리</th>
-              <th>해결 여부</th>
-            </tr>
+          <tr>
+            <th>건의사항 ID</th>
+            <th>제목</th>
+            <th>요청일</th>
+            <th>카테고리</th>
+            <th>해결 여부</th>
+          </tr>
           </thead>
           <tbody>
-            <tr v-for="(p) in filteredProposals" :key="p.proposal_id" @click="select(p.proposal_id)">
-              <td>{{ p.proposal_id }}</td>
-              <td>{{ p.title }}</td>
-              <td>{{ p.date }}</td>
-              <td>{{ p.category }}</td>
-              <td :style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
-            </tr>
+          <tr v-for="(p) in filteredProposals" :key="p.proposal_id" @click="select(p.proposal_id)">
+            <td>{{ p.proposal_id }}</td>
+            <td>{{ p.title }}</td>
+            <td>{{ p.date }}</td>
+            <td>{{ p.category }}</td>
+            <td :style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -129,7 +129,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </div><!--해결방안 작성 모달 끝-->
+
   </div>
 </template>
 
@@ -164,20 +165,20 @@ export default {
 
     const getProposalList = async () => {
       await proposal_list(store.state.loginToken)
-        .then((response) => {
-          proposals.value = response.data;
+          .then((response) => {
+            proposals.value = response.data;
 
-          // 날짜 형식 정리
-          proposals.value.forEach((item) => {
-            const fullDate = item.date;
-            const year = fullDate.slice(0, 4);
-            const month = fullDate.slice(5, 7);
-            const day = fullDate.slice(8, 10);
-            item.date = `${year}-${month}-${day}`;
+            // 날짜 형식 정리
+            proposals.value.forEach((item) => {
+              const fullDate = item.date;
+              const year = fullDate.slice(0, 4);
+              const month = fullDate.slice(5, 7);
+              const day = fullDate.slice(8, 10);
+              item.date = `${year}-${month}-${day}`;
+            });
+
+            copy_p_list.value = [...proposals.value];
           });
-
-          copy_p_list.value = [...proposals.value];
-        });
     };
 
     getProposalList();
@@ -232,17 +233,17 @@ export default {
       if (p_view.value) {
         const data = { proposal_id: p_view.value.proposal_id };
         await proposal_check(data, store.state.loginToken)
-          .then(() => {
-            alert('해결 완료되었습니다.');
-            p_view.value.completed = 'y';
-            proposals.value = proposals.value.map(p =>
-              p.proposal_id === p_view.value.proposal_id ? { ...p, completed: 'y' } : p
-            );
-          })
-          .catch((error) => {
-            console.error('해결 완료 오류:', error);
-            alert('해결 완료 중 오류가 발생했습니다.');
-          });
+            .then(() => {
+              alert('해결 완료되었습니다.');
+              p_view.value.completed = 'y';
+              proposals.value = proposals.value.map(p =>
+                  p.proposal_id === p_view.value.proposal_id ? { ...p, completed: 'y' } : p
+              );
+            })
+            .catch((error) => {
+              console.error('해결 완료 오류:', error);
+              alert('해결 완료 중 오류가 발생했습니다.');
+            });
       }
     };
 
@@ -262,19 +263,19 @@ export default {
           shop_id: p_view.value.shop_id
         };
         await proposal_solution(data, store.state.loginToken)
-          .then(() => {
-            alert('해결방안이 저장되었습니다.');
-            p_view.value.solution = solutionText.value;
-            proposals.value = proposals.value.map(p =>
-              p.proposal_id === p_view.value.proposal_id ? { ...p, solution: solutionText.value } : p
-            );
-            copy_p_list.value = [...proposals.value];
-            closeSolutionModal();
-          })
-          .catch((error) => {
-            console.error('해결방안 저장 오류:', error);
-            alert('해결방안 저장 중 오류가 발생했습니다.');
-          });
+            .then(() => {
+              alert('해결방안이 저장되었습니다.');
+              p_view.value.solution = solutionText.value;
+              proposals.value = proposals.value.map(p =>
+                  p.proposal_id === p_view.value.proposal_id ? { ...p, solution: solutionText.value } : p
+              );
+              copy_p_list.value = [...proposals.value];
+              closeSolutionModal();
+            })
+            .catch((error) => {
+              console.error('해결방안 저장 오류:', error);
+              alert('해결방안 저장 중 오류가 발생했습니다.');
+            });
       }
     };
 
@@ -284,6 +285,7 @@ export default {
       filterProposals();
     });
 
+    //검색
     const filteredProposals = computed(() => copy_p_list.value);
 
     return {
@@ -313,15 +315,15 @@ export default {
 
 /* 폰트 */
 @font-face {
-    font-family: 'LINESeedKR-Rg';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
+  font-family: 'LINESeedKR-Rg';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
 }
 
 
 div{
-font-family: "LINESeedKR-Rg";
+  font-family: "LINESeedKR-Rg";
 }
 
 .container {

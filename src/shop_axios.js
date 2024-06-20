@@ -99,6 +99,9 @@ export function stock_request_detail(stock_request_id, token){
     })
 }
 
+//피드백 내용
+// export function stock_request_feedback()
+
 // 재고 요청서 피드백 차트
 export function stock_request_chart(shop_id, product_id) {
     return user_axios.post('/analyze/stock_request_analyze', {

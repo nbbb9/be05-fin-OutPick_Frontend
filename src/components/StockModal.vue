@@ -60,7 +60,7 @@ export default defineComponent({
         setTimeout(() => {
           success_message.value = '';
           close();
-        }, 2500);
+        }, 1000);
       };
 
     return {
