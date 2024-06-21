@@ -3,20 +3,22 @@ import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
   plugins: [
-    createPersistedState()
+    createPersistedState()//vuex-persistedstate 플러그인 사용
   ],
   state: {
     showNav: true,
     loginToken: "",
-    loginUserName: "여경원",
-    loginUserId: 1,
+    loginUserName: "",
+    loginUserId: 0,
     loginUserRole: "",
-    loginStoreId: 1,
-    loginStoreUser: "여경원 매니저님",
-    loginStoreName: "신대방삼거리역",
+    loginStoreId: 0,
+    loginStoreUser: "",
+    loginStoreName: "",
     eventListener: [],
     hasNotifications: false, // 알림 상태
     notifications: [], // 알림 데이터 배열 추가
+    hasNotificationsOffice: false, // 알림 상태
+    notificationsOffice: [], // 알림 데이터 배열 추가
     showModal: false
   },
   mutations: {
@@ -73,6 +75,16 @@ export default createStore({
       state.showModal = false;
       state.hasNotifications = false;
       state.notifications = [];
+    },
+    SET_SHOW_MODAL(state, payload) {
+      state.showModal = payload;
+    },
+    REMOVE_NOTIFICATION(state, notificationMessage) {
+      const index = state.notifications.findIndex(n => n === notificationMessage);
+      if (index !== -1) {
+        state.notifications.splice(index, 1);
+        state.hasNotifications = state.notifications.length > 0;
+      }
     }
   },
   actions: {
@@ -117,7 +129,12 @@ export default createStore({
     },
     clearNotifications({ commit }) {
       commit('CLEAR_NOTIFICATIONS');
+    },
+    triggerShowModal({ commit }, payload) {
+      commit('SET_SHOW_MODAL', payload);
+    },
+    removeNotification({ commit }, notification) {
+      commit('REMOVE_NOTIFICATION', notification);
     }
-
   }
 });

@@ -11,7 +11,7 @@
     <hr>
 
     <div class="row">
-      
+
       <div class="col-5 listDiv" >
 
         <div class="row" >
@@ -19,12 +19,11 @@
             담당자
           </div>
           <div class="col-8">
-            여경원 대리
-            <!-- 나중에 변수로! -->
+            {{feedback.employee_name}}
           </div>
         </div>
 
-        <div class="mt-3 listDiv-content content" >
+        <div class="mt-3 listDiv-content content">
           {{feedback.feedback_content}}
         </div>
 
@@ -32,13 +31,16 @@
 
       </div>
 
-      <div class="col-5 listDiv" >
-        chart.js 부분~
-      </div>
+      <div class="col-6 full-height">
+        <div class="empty-content full-height">
+          <!-- 여기에 다른 내용을 추가할 수 있습니다 -->
+          <canvas id="chart_1" width="200" height="600" ></canvas>
+        </div>
+      </div> <!-- 오른쪽 영역 끝 -->
 
     </div>
-    
-  
+
+
   </div>
 </template>
 
@@ -46,26 +48,56 @@
 import {useStore} from "vuex"
 import {onMounted, ref} from 'vue';
 import StoreSidebar from '@/components/StoreSidebar.vue'
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import EventSourceService from "@/pages/Sse/EventSourceService";
+import {store_stock_request_feedback} from "@/axios.js"
+import {stock_request_chart} from "@/shop_axios";
+import {Chart, registerables} from "chart.js";
 
 export default {
   components : {
     StoreSidebar
   },
   setup(){
-
+    const route = useRoute();
     const feedback = ref({
-      feedback_content : "집에 가고 싶어서 반려했습니다.",
-      first_classification : "1차 분류",
-      second_classification : "2차 분류"
+      employee_name : '',
+      feedback_content : ''
+    });
+    const stock_request_id = route.params.stock_request_id;
+    const product_id = route.params.product_id;
+    const shop_id = route.params.shop_id;
+
+
+
+    const getFeedback = async(stock_request_id) => {
+      try {
+        await store_stock_request_feedback(stock_request_id)
+            .then((response) => {
+              feedback.value = response.data;
+              // console.log(stock_request_id);
+              // console.log(product_id);
+              // console.log(shop_id);
+
+            });
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          console.error("잘못된 요청입니다!", error.response.data);
+          console.log(stock_request_id);
+        } else {
+          console.error("피드백을 가져오는 중 오류가 발생했습니다!", error);
+        }
+      }
+
+    };
+
+    onMounted(() => {
+      getFeedback(stock_request_id);
+      chart(shop_id, product_id);
+
+
     });
 
-    const getFeedback = () => {
-
-    }
-
-    getFeedback();
 
     const toBack = () => {
       router.push({
@@ -73,7 +105,7 @@ export default {
       })
     }
 
-  
+
     // 페이지 접속시 Nav가 보이지 않게 vuex에서 false로 값을 바꿈
     const store = useStore();   // store 변수
     const triggerShow = () => {
@@ -87,6 +119,42 @@ export default {
       let sse = new EventSourceService(store.state.loginStoreId, store);
       sse.restoreEventListeners();
     });
+
+    // 차트 부분
+    let barChart1;
+    const chart_data = ref();
+    const chart = async () => {
+      await stock_request_chart(shop_id, product_id)
+          .then((response) => {
+            chart_data.value = response.data;
+          })
+
+      const chart = document.getElementById('chart_1').getContext('2d');
+
+      Chart.register(...registerables);
+
+      if(barChart1){
+        barChart1.destroy();
+      }
+
+      barChart1 = new Chart(chart, {
+        type: 'bar',
+        data: {
+          labels: chart_data.value.year_list ,
+          datasets: [
+            {
+              label: '판매량',
+              borderWidth: 3,
+              data: chart_data.value.quantity_list
+            }
+          ]
+        },
+        options: {
+          maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+        }
+      });
+      barChart1
+    }
 
     // 메뉴 이동
     const router = useRouter();
@@ -126,13 +194,14 @@ export default {
           break;
         default:
           break;
-      } 
+      }
     }
 
     return{
       selectMenu,
       feedback,
-      toBack
+      toBack,
+      chart
     }
   }
 
@@ -150,7 +219,7 @@ export default {
 }
 
 div{
-  font-family: "Gowun Dodum", sans-serif; 
+  font-family: "Gowun Dodum", sans-serif;
 }
 
 /* 아이템 가운데 정렬 */

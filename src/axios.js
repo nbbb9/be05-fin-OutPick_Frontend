@@ -59,6 +59,11 @@ export function store_stock_request_list(shopId) {
     return user_axios.get(`/store/stockrequest/list/${shopId}`)
 }
 
+// 매장프로그램 피드백 내용 보기
+export function store_stock_request_feedback(stockRequestId){
+    return user_axios.get(`/store/stockrequest/feedback/${stockRequestId}`)
+}
+
 // 매장프로그램 재고 요청서 등록
 export function store_stock_request_add(data) {
     return user_axios.post('/store/stockrequest/add', data)

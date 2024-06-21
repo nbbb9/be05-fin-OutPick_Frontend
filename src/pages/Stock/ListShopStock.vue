@@ -308,17 +308,14 @@
         discount_rate.value = input;
         console.log("할인률 : ",discount_rate.value);
         console.log("상품 ID : ",product_id.value);
+          try {
+            await update_discount(product_id.value, shop_id.value, discount_rate.value)
 
-        try {
-          await update_discount(product_id.value, shop_id.value, discount_rate.value)
-            .then(() => {
-              //location.reload();
               get_item_list();
-            })
 
-        } catch(e) {
-          console.error(e.message);
-        }
+          } catch(e) {
+            console.error(e.message);
+          }
       };
       
       // const handleInput = async () => {
