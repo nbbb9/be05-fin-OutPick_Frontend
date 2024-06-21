@@ -14,24 +14,24 @@
             <div class="atr row pt-3 align-items-center">
               <strong class="col-4 text-center">지점</strong>
               <div class="col-8 text-center">{{ sr_detail.shop_name }}</div>
-            </div> <!-- 지점 끝 -->
+            </div>
             <div class="atr row pt-3 align-items-center">
               <strong class="col-4 text-center">요청 날짜</strong>
               <div class="col-8 text-center">{{ formattedDate(sr_detail.request_date) }}</div>
-            </div> <!-- 날짜 끝 -->
+            </div>
             <div class="row center">
               <div class="atr pt-3 col-5 row align-items-center">
                 <strong class="col-6 text-left" v-if="loginUserRole === '사원'">매장 매니저</strong>
                 <strong class="col-6 text-left" v-if="loginUserRole === '관리자'">매장 담당자</strong>
                 <div class="col-6 text-right" v-if="loginUserRole === '사원'">{{ sr_detail.manager }}</div>
                 <div class="col-6 text-right" v-if="loginUserRole === '관리자'">{{ sr_detail.employee_name }}</div>
-              </div> <!-- 담당자 끝 -->
+              </div>
               <div class="atr pt-3 col-5 row align-items-center">
                 <strong class="col-6 text-left"> 결재 상태</strong>
                 <div class="col-6 text-right" v-if="loginUserRole === '사원'">{{ sr_detail.approval }}</div>
                 <div class="col-6 text-right" v-if="loginUserRole === '관리자'">{{ sr_detail.admin_approval }}</div>
-              </div> <!-- 결재 상태 끝 -->
-            </div> <!-- 담당자/결재 상태 끝 -->
+              </div>
+            </div>
             <div class="mt-5">
               <table class="table table-hover border-gray">
                 <thead>
@@ -49,23 +49,22 @@
                 </tr>
                 </tbody>
               </table>
-            </div> <!-- 요청 상품 상세 끝 -->
+            </div>
             <br/><br/><br/>
             <div v-if="sr_detail.approval !== '승인' && sr_detail.approval !== '반려' && loginUserRole === '사원'">
               <button class="btn btn-success font-weight-bold" @click="sr_approval">승인</button>
               &emsp;&emsp;&emsp;
-              <button class="btn btn-outline-secondary font-weight-bold" @click="showFeedbackModal">반려작성</button>
+              <button class="btn btn-outline-secondary font-weight-bold" @click="openFeedbackModal">반려작성</button>
             </div>
             <br/><br/>
           </div>
         </div>
-      </div> <!-- 왼쪽 영역 끝 -->
+      </div>
       <div class="col-6 full-height">
         <div class="empty-content full-height">
-          <!-- 여기에 다른 내용을 추가할 수 있습니다 -->
-          <canvas id="chart_1" width="200" height="250" ></canvas>
+          <canvas id="chart_1" width="200" height="250"></canvas>
         </div>
-      </div> <!-- 오른쪽 영역 끝 -->
+      </div>
     </div>
 
     <!-- 피드백 작성 모달 -->
@@ -77,15 +76,15 @@
             <button type="button" class="btn-close" @click="closeFeedbackModal"></button>
           </div>
           <div class="modal-body">
-            <textarea v-model="solutionText" class="form-control" rows="5" placeholder="피드백을 입력하세요"></textarea>
+            <textarea v-model="feedbackText" class="form-control" rows="5" placeholder="피드백을 입력하세요"></textarea>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="closeFeedbackModal">닫기</button>
-            <button type="button" class="btn btn-primary" @click="saveFeedback">저장</button>
+            <button type="button" class="btn btn-primary" @click="sr_reject">저장</button>
           </div>
         </div>
       </div>
-    </div><!--피드백 작성 모달 끝-->
+    </div><!-- 피드백 작성 모달 끝 -->
 
   </div>
 </template>
@@ -108,7 +107,7 @@ export default {
     ShopSidebar
   },
   setup() {
-    const store = useStore(); // store Vuex 변수
+    const store = useStore();
     const router = useRouter();
     const route = useRoute();
 
@@ -118,15 +117,15 @@ export default {
     const shop_id = ref();
     let loginUserRole = computed(() => store.state.loginUserRole);
 
-    // const showFeedbackModal = ref(false);
-    // const feedbackText = ref('');
+    const showFeedbackModal = ref(false);
+    const feedbackText = ref('');
 
     const get_sr_detail = async (stock_request_id) => {
       try {
         const response = await stock_request_detail(stock_request_id, store.state.loginToken);
         sr_detail.value = response.data;
         chart();
-        shop_id.value = response.data.shop_id; // shop_id를 상태에 저장
+        shop_id.value = response.data.shop_id;
       } catch (error) {
         console.error('Error fetching shop details:', error);
         alert('Failed to load stock request details.');
@@ -154,7 +153,7 @@ export default {
     const sr_approval = async () => {
       try {
         await stock_request_approval(stock_request_id.value, store.state.loginToken, shop_id.value);
-        sr_detail.value.approval = '승인'; // 결재상태 승인으로 변경
+        sr_detail.value.approval = '승인';
         alert('승인되었습니다.');
       } catch (error) {
         console.error('Approval failed:', error);
@@ -163,17 +162,23 @@ export default {
     };
 
     const sr_reject = async () => {
+      const data = {
+        stock_request_id: sr_detail.value.stock_request_id,
+        shop_id: shop_id.value,
+        feedback_content: feedbackText.value
+      };
+
       try {
-        await stock_request_reject(stock_request_id.value, store.state.loginToken, shop_id.value);
-        sr_detail.value.approval = '반려'; // 결재상태 반려로 변경
+        await stock_request_reject(stock_request_id.value, store.state.loginToken, data);
+        sr_detail.value.approval = '반려';
         alert('반려되었습니다.');
+        closeFeedbackModal();
       } catch (error) {
         console.error('Rejection failed:', error);
         alert('반려에 실패했습니다.');
       }
     };
 
-    // 차트 부분
     let barChart1;
     const chart_data = ref();
     const chart = async () => {
@@ -203,58 +208,36 @@ export default {
           ]
         },
         options: {
-          maintainAspectRatio: false, // 이 옵션은 캔버스의 크기를 조정할 수 있게 합니다.
+          maintainAspectRatio: false,
         }
       });
       barChart1
     }
 
-    // const openFeedbackModal = () => {
-    //   showFeedbackModal.value = true;
-    // };
-    //
-    // const closeFeedbackModal = () => {
-    //   showFeedbackModal.value = false;
-    // };
-    //
-    // const saveFeedback = async () => {
-    //
-    //   const data = {
-    //     feedback_content: feedbackText.value
-    //   };
-    //   await proposal_solution(data, store.state.loginToken)
-    //       .then(() => {
-    //         alert('해결방안이 저장되었습니다.');
-    //         p_view.value.solution = solutionText.value;
-    //         proposals.value = proposals.value.map(p =>
-    //             p.proposal_id === p_view.value.proposal_id ? { ...p, solution: solutionText.value } : p
-    //         );
-    //         copy_p_list.value = [...proposals.value];
-    //         closeSolutionModal();
-    //       })
-    //       .catch((error) => {
-    //         console.error('해결방안 저장 오류:', error);
-    //         alert('해결방안 저장 중 오류가 발생했습니다.');
-    //       });
-    //
-    // };
+    const openFeedbackModal = () => {
+      showFeedbackModal.value = true;
+    };
 
-    // 메뉴 이동
+    const closeFeedbackModal = () => {
+      showFeedbackModal.value = false;
+    };
+
+
     const selectMenu = (selectMenu) => {
       switch (selectMenu) {
         case 1:
           router.push({
-            name: 'ListShop' // 매장 리스트
+            name: 'ListShop'
           });
           break;
         case 2:
           router.push({
-            name: 'ListStockRequest' // 재고요청서
+            name: 'ListStockRequest'
           });
           break;
         case 3:
           router.push({
-            name: 'ListProposal' // 건의사항
+            name: 'ListProposal'
           });
           break;
         default:
@@ -272,14 +255,17 @@ export default {
       sr_approval,
       sr_reject,
       loginUserRole,
-      shop_id
+      shop_id,
+      openFeedbackModal,
+      showFeedbackModal,
+      closeFeedbackModal,
+      feedbackText
     };
   }
 };
 </script>
 
 <style scoped>
-/* 폰트 */
 @font-face {
   font-family: 'LINESeedKR-Rg';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Rg.woff2') format('woff2');
@@ -291,29 +277,24 @@ div {
   font-family: "LINESeedKR-Rg";
 }
 
-/* 세로 방향 가운데 정렬 */
 td {
   vertical-align: middle;
 }
 
-/* 아이템 가운데 정렬 */
 .center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* 왼쪽 정렬 */
 .text-left {
   text-align: left;
 }
 
-/* 오른쪽 정렬 */
 .text-right {
   text-align: right;
 }
 
-/* list scroll, 그림자 */
 .listDiv {
   max-height: 58vh;
   overflow-y: auto;
@@ -321,14 +302,12 @@ td {
   margin: 1%;
 }
 
-/* 상세 */
 .detail {
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 100%; /* Ensure the detail section takes full height */
+  height: 100%;
 }
 
-/* 상세 옵션들 */
 .atr {
   height: 7vh;
   max-width: 40vw;
@@ -339,7 +318,6 @@ td {
   align-items: center;
 }
 
-/* 색깔 변경 */
 .red-text {
   color: red;
 }
@@ -347,7 +325,6 @@ td {
   color: blue;
 }
 
-/* 글자 굵기 */
 h5 {
   font-weight: bold;
 }
@@ -355,7 +332,7 @@ h5 {
 .empty-content {
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 100%; /* Ensure the empty-content section takes full height */
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -370,12 +347,11 @@ h5 {
   font-weight: bold;
 }
 
-/* New CSS */
 .fixed-height {
-  height: 75vh; /* Set a fixed height for the container */
+  height: 75vh;
 }
 
 .full-height {
-  height: 100%; /* Make children take full height */
+  height: 100%;
 }
 </style>
