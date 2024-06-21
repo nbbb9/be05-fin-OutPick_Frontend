@@ -29,26 +29,30 @@
           </form>
         </div>
 
-        <table class="mt-2 table table-hover border-gray" >
-        <thead>
-          <tr>
-            <th>요청서 ID</th>
-            <th>요청 상품 이름</th>
-            <th>요청일</th>
-            <th>결재상태</th>
-          </tr>
-        </thead>
-        <tbody  >
-          <!--  -->
-          <tr v-on:click="select(rq.stock_request_id)" v-for="(rq) in copy_rq_list" :key="rq.stock_request_id" >
-            <td>{{ rq.stock_request_id }}</td>
-            <td>{{ rq.product_name }}</td>
-            <td>{{ rq.request_date }}</td>
-            <td>{{ rq.approval }}</td>
-            <!-- <td>{{  }}</td> -->
-          </tr>
-        </tbody>
-      </table>
+
+        <!-- 추가한 부분: 테이블 컨테이너 div로 감싸기 -->
+        <div class="table-container">
+          <table class="mt-2 table table-hover border-gray">
+            <thead>
+            <tr>
+              <th>요청서 ID</th>
+              <th>요청 상품 이름</th>
+              <th>요청일</th>
+              <th>결재상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-on:click="select(rq.stock_request_id)" v-for="(rq) in copy_rq_list" :key="rq.stock_request_id">
+              <td>{{ rq.stock_request_id }}</td>
+              <td>{{ rq.product_name }}</td>
+              <td>{{ rq.request_date }}</td>
+              <td>{{ rq.approval }}</td>
+              <!-- <td>{{  }}</td> -->
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- 추가한 부분 끝 -->
 
       </div>
 
@@ -349,6 +353,20 @@ td {
 
 .listDiv, .detail{
   height: 80vh;
+}
+
+/* 추가한 부분: 테이블 컨테이너와 고정 헤더 스타일 */
+.table-container {
+  max-height: 73vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.table-container thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
 }
 
 /* alert 설정 */
