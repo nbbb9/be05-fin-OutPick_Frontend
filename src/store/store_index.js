@@ -8,12 +8,12 @@ export default createStore({
   state: {
     showNav: true,
     loginToken: "",
-    loginUserName: "여경원",
-    loginUserId: 1,
+    loginUserName: "",
+    loginUserId: 0,
     loginUserRole: "",
-    loginStoreId: 1,
-    loginStoreUser: "여경원 매니저님",
-    loginStoreName: "신대방삼거리역",
+    loginStoreId: 0,
+    loginStoreUser: "",
+    loginStoreName: "",
     eventListener: [],
     hasNotifications: false, // 알림 상태
     notifications: [], // 알림 데이터 배열 추가
