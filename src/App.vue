@@ -277,4 +277,14 @@ img {
   background-color: #0D2DA2 !important; /* 호버 시 배경색 유지 */
   color: white !important; /* 호버 시 글자색 유지 */
 }
+
+.link{
+  text-decoration: none;
+  padding : 0.5rem 0.75rem;
+  font-size: 18px;
+  font-weight: 600;
+  color: #fefefe;
+  position: relative;
+  transition: color 0.25s;
+}
 </style>

@@ -13,7 +13,7 @@
           <span class="notification-text">{{ notification.message }}</span>
           <div class="button-group">
             <button type="button" class="btn btn-outline-success" @click="handleMove(notification)">이동</button>
-            <button type="button" class="btn btn-outline-secondary" @click="handleLater(notification)">X</button>
+            <button type="button" class="btn btn-outline-secondary" @click="handleLater(notification)">x</button>
           </div>
         </li>
       </ul>
