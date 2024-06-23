@@ -6,7 +6,8 @@ class EventSourceServiceOffice {
 
     constructor(id, store) {
         if (!EventSourceServiceOffice.instance) {
-            this.#eventSource = new EventSource(`http://localhost:8080/connect/officesse?employee_id=${id}`);
+            // this.#eventSource = new EventSource(`http://localhost:8080/connect/officesse?employee_id=${id}`);
+            this.#eventSource = new EventSource(`http://54.180.195.41:8080/connect/officesse?employee_id=${id}`);
             this.#store = store;
             this.#listener = [];
             EventSourceServiceOffice.instance = this;

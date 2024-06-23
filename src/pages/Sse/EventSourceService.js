@@ -6,7 +6,8 @@ class EventSourceService {
 
     constructor(id, store) {
         if (!EventSourceService.instance) {
-            this.#eventSource = new EventSource(`http://localhost:8080/connect?shop_id=${id}`);
+            // this.#eventSource = new EventSource(`http://localhost:8080/connect?shop_id=${id}`);
+            this.#eventSource = new EventSource(`http://54.180.195.41:8080/connect?shop_id=${id}`);
             this.#store = store;
             this.#listener = [];
             EventSourceService.instance = this;
