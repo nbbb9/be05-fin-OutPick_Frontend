@@ -287,4 +287,13 @@ img {
   position: relative;
   transition: color 0.25s;
 }
+
+/* 네비게이션 선택 항목 스타일 */
+.nav-link.active:hover, .nav-link.active:focus {
+  background-color: #193ace; /* 배경색 변경 */
+  font-size: 30px; /* 폰트 크기 조정 */
+  padding: 10px 40px; /* 패딩 조정 */
+  transition: background-color 0.3s, font-size 0.3s, padding 0.3s; /* 부드러운 전환 효과 */
+}
+
 </style>

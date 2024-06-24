@@ -3,7 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
   plugins: [
-    createPersistedState()//vuex-persistedstate 플러그인 사용
+    createPersistedState() // vuex-persistedstate 플러그인 사용
   ],
   state: {
     showNav: true,
@@ -19,7 +19,8 @@ export default createStore({
     notifications: [], // 알림 데이터 배열 추가
     hasNotificationsOffice: false, // 알림 상태
     notificationsOffice: [], // 알림 데이터 배열 추가
-    showModal: false
+    showModal: false,
+    selectedId: null // 선택된 항목의 ID를 저장
   },
   mutations: {
     SHOW(state, payload) {
@@ -85,6 +86,9 @@ export default createStore({
         state.notifications.splice(index, 1);
         state.hasNotifications = state.notifications.length > 0;
       }
+    },
+    SET_SELECTED_ID(state, payload) {
+      state.selectedId = payload;
     }
   },
   actions: {
@@ -135,6 +139,9 @@ export default createStore({
     },
     removeNotification({ commit }, notification) {
       commit('REMOVE_NOTIFICATION', notification);
+    },
+    setSelectedId({ commit }, payload) {
+      commit('SET_SELECTED_ID', payload);
     }
   }
 });
