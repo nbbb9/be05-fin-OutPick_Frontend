@@ -95,7 +95,10 @@ export default {
                 .then((response) => {
                     console.log(response.data);
                     data.value = response.data;
-                });
+                })
+                .catch((e) => {
+                    console.log(e.message);
+                })
 
             // chart.js 부분
             if (barChart) {
