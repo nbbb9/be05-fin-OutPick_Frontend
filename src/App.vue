@@ -1,9 +1,9 @@
 <template>
   <!-- 네비게이션 바 -->
-  <nav v-if="showNav" class="navbar navbar-expand-lg" style="position: sticky; top:0; z-index: 3;" >
+  <nav v-if="showNav" class="navbar navbar-expand-lg" style="position: sticky; top:0; z-index: 3;">
     <div class="container-fluid">
       <!-- 로고 -->
-      <router-link class="navbar-brand text-white" :to="{ name: 'ListShop' }">
+      <router-link class="navbar-brand text-white" :to="{ name: 'ListShop' }" @click="setActiveTab('ListShop')">
         <img src="./assets/로고_이미지.png" alt="로고">
       </router-link>
 
@@ -16,16 +16,36 @@
       <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShop'}">매장</router-link>
+            <router-link
+              class="nav-link"
+              :class="{ 'active': isActive('ListShop') }"
+              @click="setActiveTab('ListShop')"
+              :to="{ name: 'ListShop' }"
+            >매장</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListShopStock'}">재고</router-link>
+            <router-link
+              class="nav-link"
+              :class="{ 'active': isActive('ListShopStock') }"
+              @click="setActiveTab('ListShopStock')"
+              :to="{ name: 'ListShopStock' }"
+            >재고</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'AnalysisPage'}">통계/분석</router-link>
+            <router-link
+              class="nav-link"
+              :class="{ 'active': isActive('AnalysisPage') }"
+              @click="setActiveTab('AnalysisPage')"
+              :to="{ name: 'AnalysisPage' }"
+            >통계/분석</router-link>
           </li>
           <li class="nav-item" v-if="loginUserRole === '관리자'">
-            <router-link class="nav-link active nav-item-large text-white" aria-current="page" :to="{name: 'ListEmployee'}">관리자</router-link>
+            <router-link
+              class="nav-link"
+              :class="{ 'active': isActive('ListEmployee') }"
+              @click="setActiveTab('ListEmployee')"
+              :to="{ name: 'ListEmployee' }"
+            >관리자</router-link>
           </li>
         </ul>
       </div>
@@ -76,12 +96,12 @@ export default {
     const store = useStore();
     const router = useRouter();
     let showNav = computed(() => store.state.showNav);
-    let isAdmin = computed(() => store.state.isAdmin);
     let loginUserName = computed(() => store.state.loginUserName);
     let loginUserRole = computed(() => store.state.loginUserRole);
     const hasNotifications = computed(() => store.state.hasNotifications);
     const notifications = computed(() => store.state.notifications);
     const showModal = computed(() => store.state.showModal);
+    const activeTab = computed(() => store.state.activeTab);
 
     const logout = () => {
       store.dispatch('triggerLoginUserName', ""); // 로그인 이름 초기화
@@ -106,9 +126,16 @@ export default {
       store.dispatch('triggerShowModal', false); // 모달만 닫기
     };
 
+    const setActiveTab = (tabName) => {
+      store.dispatch('setActiveTab', tabName); // 활성화된 탭 설정
+    };
+
+    const isActive = (tabName) => {
+      return activeTab.value === tabName; // 현재 탭이 활성화된 탭인지 확인
+    };
+
     return {
       showNav,
-      isAdmin,
       loginUserName,
       loginUserRole,
       logout,
@@ -116,7 +143,9 @@ export default {
       notificationImage,
       notifications,
       showNotifications,
-      closeModal
+      closeModal,
+      setActiveTab,
+      isActive
     };
   }
 };
@@ -217,8 +246,8 @@ img {
 }
 
 /* 네비게이션 링크 스타일 */
-.nav-link.active {
-  color: white !important;
+.nav-link {
+  color: white;
   font-size: 24px; /* 폰트 크기 크게 조정 */
 }
 
@@ -289,11 +318,11 @@ img {
 }
 
 /* 네비게이션 선택 항목 스타일 */
-.nav-link.active:hover, .nav-link.active:focus {
-  background-color: #193ace; /* 배경색 변경 */
-  font-size: 30px; /* 폰트 크기 조정 */
+.nav-link.active {
+  color: rgb(228, 228, 148) !important;
+  text-decoration: underline; /* 밑줄 추가 */
+  font-size: 35px; /* 폰트 크기 조정 */
   padding: 10px 40px; /* 패딩 조정 */
-  transition: background-color 0.3s, font-size 0.3s, padding 0.3s; /* 부드러운 전환 효과 */
+  transition: font-size 0.3s, padding 0.3s, text-decoration 0.3s; /* 부드러운 전환 효과 */
 }
-
 </style>

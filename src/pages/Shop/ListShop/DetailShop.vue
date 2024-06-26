@@ -84,7 +84,7 @@
     </div>
 
     <div class="button-container mt-5">
-      <button class="btn btn-primary btn-sm" @click="showMyShopDetails(s)">
+      <button class="btn btn-primary btn-sm" @click="Goto_AnalysisPage">
         통계 보기
       </button>
     </div>
@@ -237,6 +237,10 @@ export default {
       }
     });
 
+    const Goto_AnalysisPage = () => {
+      router.push({ name : 'AnalysisPage' })
+    }
+
     const selectMenu = (selectMenu) => {
       switch (selectMenu) {
         case 1:
@@ -268,6 +272,7 @@ export default {
       address,
       content,
       selectMenu,
+      Goto_AnalysisPage
     };
   },
 };
