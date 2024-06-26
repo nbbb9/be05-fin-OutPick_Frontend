@@ -69,7 +69,7 @@ export function admin_stock_request_detail(streId, token) {
 
 // 재고 요청서 단일 승인
 export function admin_stock_request_confirm(streId, token) {
-    return user_axios.put(`/stockrequest/confirm/${streId}`, null, {
+    return user_axios.put(`/stockrequest/confirm/${streId}`, {}, {
         headers : {
             login_token : token
         }

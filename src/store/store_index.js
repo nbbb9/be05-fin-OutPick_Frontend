@@ -1,4 +1,6 @@
-import { createStore } from "vuex";
+// store/index.js
+
+import { createStore } from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 
 export default createStore({
@@ -20,7 +22,8 @@ export default createStore({
     hasNotificationsOffice: false, // 알림 상태
     notificationsOffice: [], // 알림 데이터 배열 추가
     showModal: false,
-    selectedId: null // 선택된 항목의 ID를 저장
+    selectedId: null, // 선택된 항목의 ID를 저장
+    activeTab: 'ListShop' // 추가된 상태
   },
   mutations: {
     SHOW(state, payload) {
@@ -89,6 +92,9 @@ export default createStore({
     },
     SET_SELECTED_ID(state, payload) {
       state.selectedId = payload;
+    },
+    SET_ACTIVE_TAB(state, tabName) {
+      state.activeTab = tabName;
     }
   },
   actions: {
@@ -142,6 +148,9 @@ export default createStore({
     },
     setSelectedId({ commit }, payload) {
       commit('SET_SELECTED_ID', payload);
+    },
+    setActiveTab({ commit }, tabName) {
+      commit('SET_ACTIVE_TAB', tabName);
     }
   }
 });
