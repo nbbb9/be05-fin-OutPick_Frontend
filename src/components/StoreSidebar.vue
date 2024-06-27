@@ -161,6 +161,7 @@ li {
   border-radius: 20px;
   transform: translateX(-210px);
   transition: 0.5s;
+  z-index: 2
 }
 
 .sidebar:hover {

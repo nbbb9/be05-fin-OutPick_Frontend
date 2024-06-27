@@ -82,6 +82,7 @@ setup(){
             store.dispatch('triggerLoginUserName', response.data.name);
             store.dispatch('triggerLoginUserId', response.data.id);
             store.dispatch('triggerLoginUserRole',response.data.role);
+            store.dispatch('setActiveTab', 'ListShop');
 
             // sse에 listener 추가
             console.log( "야호!" ,store.state.loginUserId);

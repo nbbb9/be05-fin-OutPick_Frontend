@@ -56,6 +56,7 @@
               &emsp;&emsp;&emsp;
               <button class="btn btn-outline-secondary font-weight-bold" @click="openFeedbackModal">반려작성</button>
             </div>
+            <button class="btn btn-primary" @click="toBack" >뒤로가기</button>
             <br/><br/>
           </div>
         </div>
@@ -119,6 +120,12 @@ export default {
 
     const showFeedbackModal = ref(false);
     const feedbackText = ref('');
+
+    const toBack = () => {
+      router.push({
+        name: 'ListStockRequest'
+      });
+    }
 
     const get_sr_detail = async (stock_request_id) => {
       try {
@@ -259,7 +266,8 @@ export default {
       openFeedbackModal,
       showFeedbackModal,
       closeFeedbackModal,
-      feedbackText
+      feedbackText,
+      toBack
     };
   }
 };

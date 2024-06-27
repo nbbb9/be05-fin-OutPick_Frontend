@@ -64,16 +64,6 @@ export default {
 </script>
 
 <style scoped>
-/* 사이드바 스타일 */
-.sidebar {
-  width: 250px;
-  position: fixed;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #f0f0f0;
-}
-
 /* list 형태 제거 */
 ul {
   margin: 0;
@@ -90,7 +80,7 @@ li {
   padding: 13px;
   margin-left: 5px;
   margin-right: 50px;
-  margin-bottom: 20px;
+  margin-top: 20px;
   border-radius: 1em;
   cursor: pointer;
 }

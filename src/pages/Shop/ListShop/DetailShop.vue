@@ -7,7 +7,7 @@
       <!-- 매장이름 & 사진 -->
       <div class="title-image" style="text-align: center;">
         <div>
-          <h1 class="shop-name" style="display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ name }}</h1>
+          <h1 class="shop-name" style="display: flex; white-space: nowrap; justify-content: center; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">{{ name }}</h1>
         </div>
         <div class="image-container" style="display: flex; justify-content: center;">
           <img src="@/assets/로고_슬로건.png" alt="" class="shop-image mt-3" style="max-width: 100%; height: auto; display: block;" />
@@ -18,7 +18,7 @@
       <!-- 매장 상세정보 & 재고 -->
       <div class="shop-detail-and-stock">
         <!-- 매장 상세정보 -->
-        <div class="shop-detail-form mb-3">
+        <div class="shop-detail-form m-1">
           <div class="row">
             <div class="col-6">
               <div class="form-group">
@@ -59,8 +59,8 @@
         <!-- 매장 상세정보 끝 -->
 
         <!-- 매장 재고 조회 -->
-        <div class="shop-stock">
-          <h5 class="stock-header">재고</h5>
+        <div class="m-1 shop-stock">
+          <h5 class="mt-1 stock-header">재고</h5>
           <div class="table-container">
             <table class="table stock-table">
               <thead>
@@ -83,16 +83,10 @@
       <!-- 매장 상세정보 & 재고 끝 -->
     </div>
 
-    <div class="button-container mt-5">
-      <button class="btn btn-primary btn-sm" @click="Goto_AnalysisPage">
-        통계 보기
-      </button>
-    </div>
-
-    <div class="set-content-row vertical-space">
+    <div class="mt-5 set-content-row vertical-space">
       <!-- 재고요청서 -->
       <div class="shop-detail-stock">
-        <h5 class="stock-header">재고요청서</h5>
+        <h5 class="mt-1 stock-header">재고요청서</h5>
         <div class="table-container">
           <table class="table stock-table">
             <thead>
@@ -116,7 +110,7 @@
 
       <!-- 건의사항 -->
       <div class="shop-detail-stock">
-        <h5 class="stock-header">건의사항</h5>
+        <h5 class="mt-1 stock-header">건의사항</h5>
         <div class="table-container">
           <table class="table stock-table">
             <thead>
@@ -138,6 +132,7 @@
       </div>
       <!-- 건의사항 끝 -->
     </div>
+    <button class="btn btn-primary" @click="toBack" >뒤로 가기</button>
   </div>
 </template>
 
@@ -167,6 +162,10 @@ export default {
     let shop_stock_list = ref([]);
     let shop_stock_request_list = ref([]);
     let proposal_list = ref([]);
+
+    const toBack = () => {
+      router.push({ name: 'ListShop' });
+    }
 
     const get_shop_detail = async (shopId) => {
       try {
@@ -272,7 +271,8 @@ export default {
       address,
       content,
       selectMenu,
-      Goto_AnalysisPage
+      Goto_AnalysisPage,
+      toBack
     };
   },
 };
@@ -325,6 +325,7 @@ div {
   width: 85%;
   height: 85%; /* 부모 요소에 맞게 설정, 필요시 고정 높이 추가 */
   overflow: auto; /*이미지가 부모 요소를 벗어나지 않도록 함 */
+  margin-left: 10%;
 }
 
 /* 매장 사진 */
@@ -458,7 +459,7 @@ div {
 /* 재고요청서와 건의사항 */
 .shop-detail-stock {
   max-height: 50vh;
-  overflow: auto;
+  overflow-y: auto;
   width: 50%; /* 전체 영역의 50%를 차지 */
   vertical-align: middle;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
@@ -469,7 +470,6 @@ div {
 
 .shop-detail-stock .table-container {
   max-height: calc(50vh - 40px); /* 헤더 높이를 뺀 나머지 높이를 설정 */
-  overflow-y: auto;
 }
 
 .approved {
