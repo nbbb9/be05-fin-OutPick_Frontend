@@ -31,7 +31,7 @@
               <td>{{ pr.production_request_id }}</td>
               <td>{{ pr.employee_name }}</td>
               <td>{{ pr.request_date }}</td>
-              <td :class="pr.approval === 'n' ? 'red-text' : 'blue-text'">{{ pr.approval === 'n' ? 'N' : 'Y' }}</td>
+              <td :class="pr.approval === 'n' ? 'red-text' : 'blue-text'">{{ pr.approval === 'n' ? '미승인' : '승인' }}</td>
             </tr>
             </tbody>
           </table>
@@ -56,7 +56,7 @@
 
           <div class="atr row pt-3">
             <div class="col-4 row-left">관리자 결재</div>
-            <div class="col-8">{{ pr_detail.approval === 'n' ? 'N' : 'Y' }}</div>
+            <div class="col-8">{{ pr_detail.approval === 'n' ? '미승인' : '승인' }}</div>
           </div>
 
           <div class="mt-5">
@@ -282,7 +282,7 @@ export default {
           router.push({name: "ListCompanyStock"});
           break;
         case 3:
-          router.push({name: "ListAllStockRequest"});
+          router.push({name: "ListAllProductRequest"});
           break;
         case 4:
           router.push({name: "ListProduct"});
@@ -399,14 +399,14 @@ td {
   overflow-y: auto;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
+  /*//height: calc(100vh - 200px);  화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .detail {
   height: 78vh;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  //height: calc(100vh - 200px); /* 화면 크기에 맞게 동적으로 높이 설정 */
+  /*//height: calc(100vh - 200px);  화면 크기에 맞게 동적으로 높이 설정 */
 }
 
 .atr {

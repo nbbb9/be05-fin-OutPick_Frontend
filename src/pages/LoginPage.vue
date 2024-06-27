@@ -23,8 +23,10 @@
     </div>
 
     <!-- 로그인 실패 팝업 -->
-    <div v-if="ifFalse" class="alert alert-danger mt-4">
-      로그인에 실패하셨습니다!
+    <div class="alert_class">
+      <div v-if="ifFalse" class="alert alert-danger mt-4 flex_item_center" style="width: 50%;" >
+        로그인에 실패하셨습니다!
+      </div>
     </div>
 
   </div>
@@ -118,6 +120,8 @@ setup(){
           })
           .catch((e) => {
             console.log("error : ", e.message);
+            // 로그인 실패시 실패했다는 팝업
+            ifFalse.value = true;
           })
       })
       .catch( () => {
@@ -159,7 +163,7 @@ input, select{
   width: 470px;
 }
 
-td {
+td, .alert_class {
   display: flex;
   justify-content: center;
   align-items: center;

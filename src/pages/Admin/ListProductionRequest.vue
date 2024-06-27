@@ -44,7 +44,7 @@
                 <td>{{ pr.production_request_id }}</td>
                 <td>{{ pr.employee_name }}</td>
                 <td>{{ pr.request_date }}</td>
-                <td :class="pr.approval === 'n' ? 'red-text' : 'blue-text'" >{{ pr.approval === 'n' ? 'N' : 'Y' }}</td>
+                <td :class="pr.approval === 'n' ? 'red-text' : 'blue-text'" >{{ pr.approval === 'n' ? '미승인' : '승인' }}</td>
                 <td> <input type="checkbox" v-if="pr.approval === 'n'" v-on:click="checkPr(pr.production_request_id)" > </td>
               </tr>
             </tbody>
@@ -77,7 +77,7 @@
             </div>  <!-- 담장자 끝 -->  
             <div class="atr pt-3 col-5 row row-left">
               <div class="col-6">관리자 결재</div>
-              <div class="col-6">{{ pr_detail.approval === 'n' ? 'N' : 'Y' }}</div>
+              <div class="col-6">{{ pr_detail.approval === 'n' ? '미승인' : '승인' }}</div>
             </div>  <!-- 결재 상태 끝 --> 
           </div>  <!-- 담장자/결재 상태 끝 -->
 

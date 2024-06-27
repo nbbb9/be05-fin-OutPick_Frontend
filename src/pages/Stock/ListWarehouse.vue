@@ -90,7 +90,7 @@ export default {
           router.push({name: "ListCompanyStock"});
           break;
         case 3:
-          router.push({name: "ListAllStockRequest"});
+          router.push({name: "ListAllProductRequest"});
           break;
         case 4:
           router.push({name: "ListProduct"});

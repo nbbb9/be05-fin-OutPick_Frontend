@@ -18,7 +18,7 @@
               <select v-model="filterSelect" class="form-select" >
                 <option value="" disabled selected hidden>관리자 결재 여부</option>
                 <option value="승인">승인</option>
-                <option value="대기">대기</option>
+                <option value="미승인">미승인</option>
               </select>
             </div>
             <div class="col-4 pl-2">
@@ -46,8 +46,8 @@
                 <td>{{ sr.shop_name }}</td>
                 <td>{{ sr.request_date }}</td>
                 <td>{{ sr.approval }}</td>
-                <td :class="sr.admin_approval === '대기' ? 'red-text' : 'blue-text'" >{{ sr.admin_approval }}</td>
-                <td> <input type="checkbox" v-if="sr.admin_approval === '대기'" v-on:click="checkStRe(sr.stock_request_id)" > </td>
+                <td :class="sr.admin_approval === '미승인' ? 'red-text' : 'blue-text'" >{{ sr.admin_approval }}</td>
+                <td> <input type="checkbox" v-if="sr.admin_approval === '미승인'" v-on:click="checkStRe(sr.stock_request_id)" > </td>
               </tr>
             </tbody>
           </table>

@@ -9,6 +9,8 @@
         <!-- 회사 판매량 -->
         <div>
           
+          <h5>회사 전체 판매량</h5>
+
           <select v-model="select_year" @change="set_1" class="form-select">
             <option value="2022">2022년</option>
             <option value="2023">2023년</option>
@@ -16,7 +18,7 @@
           </select>
 
           <div v-if="isChart1" class="text-center">
-            <div class="spinner-grow text-primary" role="status">
+            <div class="spinner-grow text-primary mb-5" role="status">
               <!-- <span class="visually-hidden">Loading...</span> -->
             </div>
           </div>
@@ -29,8 +31,12 @@
           </div> <!-- 차트 부분 끝 -->
         </div> 
 
+        <hr>
+
         <!-- 매장 판매량 -->
         <div>
+
+          <h5>매장 판매량</h5>
 
           <div v-if="isChart2" class="text-center" >
             <div class="spinner-grow text-primary" role="status">
@@ -56,7 +62,7 @@
         <!-- 2차 분류 -->
         <div class="row" m-2>
           <div class="col-md-4" v-if="show_change">
-            <button class="btn btn-dark" @click="changeTab" >{{ isTab1 ? 'Tab1' : 'Tab2' }}</button>
+            <button class="btn btn-dark" @click="changeTab" >{{ isTab1 ? '가격별 판매량' : '매장 판매상품 순위' }}</button>
           </div>
           <div class="col-md-8" v-if="show_shop">
             <h3>선택한 매장 : {{ sel_2_shop_name }}</h3>
@@ -73,6 +79,10 @@
           </div>
         </div>
         <!-- 차트 4 끝! -->
+
+        <hr>
+
+        <h5>1차 분류 별 2차분류에 따른 판매량</h5>
         
         <!-- 1차 분류 -->
         <div class="row m-2" v-if="show_classification">
