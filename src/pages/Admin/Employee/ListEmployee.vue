@@ -36,7 +36,7 @@
                 <th>사원 번호</th>
                 <th>사원 이름</th>
                 <th>상태</th>
-                <th>직위</th>
+                <th>직급</th>
               </tr>
             </thead>
             <tbody  >
@@ -83,7 +83,7 @@
               <div class="col-6" >
                 <div class="row atr">
                   <div class="col-3" >
-                    직위
+                    직급
                   </div>
                   <div class="col-9 item-vertical">
                     {{ em_detail.position }}
@@ -191,7 +191,7 @@
             <div class="col-6" >
               <div class="row atr">
                 <div class="col-3" >
-                  직위
+                  직급
                 </div>
                 <div class="col-9 item-vertical">
                   <!-- <input type="text" v-model="emPosition" class="form-control" > -->

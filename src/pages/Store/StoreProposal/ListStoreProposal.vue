@@ -47,7 +47,7 @@
             <td>{{ p.title }}</td>
             <td>{{ p.date }}</td>
             <td>{{ p.category }}</td>
-            <td v-bind:style="{ color: p.completed === 'y' ? 'red' : 'blue' }" >{{ p.completed }}</td>
+            <td v-bind:style="{ color: p.completed === 'y' ? 'red' : 'blue' }" >{{ p.completed === 'n' ? '미해결' : '해결완료' }}</td>
             <!-- <td>{{  }}</td> -->
           </tr>
         </tbody>

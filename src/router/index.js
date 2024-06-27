@@ -12,7 +12,7 @@ import AnalysisPage from "@/pages/Analysis/AnalysisPage.vue"
 import AnalysisEmployee from "@/pages/Admin/Employee/AnalysisEmployee.vue"
 import ListAdminStockRequest from "@/pages/Admin/ListAdminStockRequest.vue";
 import ListProductionRequest from "@/pages/Admin/ListProductionRequest.vue";
-import ListAllStockRequest from "@/pages/Stock/StockRequest/ListAllStockRequest.vue";
+import ListAllProductRequest from "@/pages/Stock/ProductionRequest/ListAllProductRequest.vue";
 import ListWarehouse from "@/pages/Stock/ListWarehouse.vue";
     
 // 매장
@@ -156,8 +156,8 @@ const router = createRouter({
 
         {
             path : "/production_request_list",
-            name : "ListAllStockRequest",
-            component : ListAllStockRequest
+            name : "ListAllProductRequest",
+            component : ListAllProductRequest
         },
 
         {

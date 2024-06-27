@@ -70,7 +70,7 @@ npm <template>
             <th>핏</th>
             <th>할인율</th>
             <th>소비자 판매가</th>
-            <th>판매가</th>
+            <th>원가</th>
           </thead>
           <tbody>
           <tr>
