@@ -11,7 +11,8 @@
         </div>
         <form v-on:submit.prevent="search" class="flex top-space-2">
           <div class="block-1 top-space-2">
-            <select v-model="shop_name" class="form-control" @change="get_shop_id">
+            <select class="form-select" @change="get_shop_id">
+              <option value="" disabled selected>조회할 매장을 선택하세요</option>
               <option v-for="(sl) in shop_list" :key="sl.shop_id" :value="sl.name">{{ sl.name }}</option>
             </select>
           </div>
@@ -166,7 +167,6 @@
       get_user_shop_list();
       
       // 매장 재고 전체 리스트
-      const shop_name = ref();
       const shop_id = ref();
       const item_list = ref([]);
       const copy_item_list = ref([]);
@@ -178,6 +178,17 @@
             try {
               const response = await shop_item_list(shop_id.value, store.state.loginToken);
               item_list.value = response.data;
+
+              item_list.value.forEach((item) => {
+                const fullDate = item.stock_date
+
+                const year = fullDate.slice(0, 4);
+                const month = fullDate.slice(5, 7);
+                const day = fullDate.slice(8, 10);
+
+                item.stock_date = `${year}-${month}-${day}`;
+              });
+
               console.log("item list : ", item_list.value);
               unique_items()
             } catch (e) {
@@ -189,6 +200,17 @@
             try {
               const response = await shop_stock(shop_id.value, store.state.loginToken);
               item_list.value = response.data;
+
+              item_list.value.forEach((item) => {
+                const fullDate = item.stock_date
+
+                const year = fullDate.slice(0, 4);
+                const month = fullDate.slice(5, 7);
+                const day = fullDate.slice(8, 10);
+
+                item.stock_date = `${year}-${month}-${day}`;
+              });
+
               console.log("item list :", item_list.value);
               unique_items()
             } catch (e) {
@@ -210,9 +232,11 @@
       };
 
       // shop_id 찾기
-      const get_shop_id = () => {
+      const get_shop_id = (event) => {
+        const selectedShopId = event.target.value;
         const shop = shop_list.value.find(s => {
-          return s.name.includes(shop_name.value)});
+          // return s.shop_id === selectedShopId});
+          return s.name.includes(selectedShopId)});
         console.log("shop : ", shop);
         if (shop) {
           shop_id.value = shop.shop_id;
@@ -269,6 +293,7 @@
       // 재고요청서 페이지 할 수 있어
       const router = useRouter()
       const stockRequestList = () => {
+        store.dispatch('setActiveTab', 'ListShop');
         router.push({
           name : "ListStockRequest"
         })
@@ -369,7 +394,6 @@
 
       return{
       shop_list,
-      shop_name,
       unique_items,
       item_list,
       item_detail,

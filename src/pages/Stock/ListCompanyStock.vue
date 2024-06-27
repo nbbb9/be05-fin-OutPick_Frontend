@@ -118,13 +118,13 @@ export default {
           console.log(company_stock_list.value);
           
           company_stock_list.value.forEach((item) => {
-            const fullDate = item.date
+            const fullDate = item.stock_date
 
             const year = fullDate.slice(0, 4);
             const month = fullDate.slice(5, 7);
             const day = fullDate.slice(8, 10);
 
-            item.date = `${year}-${month}-${day}`;
+            item.stock_date = `${year}-${month}-${day}`;
             
           });
 

@@ -49,7 +49,7 @@
             <td>{{ p.title }}</td>
             <td>{{ p.date }}</td>
             <td>{{ p.category }}</td>
-            <td :style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed }}</td>
+            <td :style="{ color: p.completed === 'y' ? 'red' : 'blue' }">{{ p.completed == 'n' ? '미해결' : '해결완료'  }}</td>
           </tr>
           </tbody>
         </table>
@@ -372,8 +372,9 @@ div{
 .detail {
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   padding: 1%;
-  height: 615px;
+  height: 70vh;
   overflow-y: auto;
+  margin: 1%;
   flex: 0.8; /* 상세 내용 부분이 가변적으로 공간을 차지하게 함 */
 }
 

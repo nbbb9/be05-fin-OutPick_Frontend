@@ -59,7 +59,7 @@ li {
   padding : 13px;
   margin-left: 5px;
   margin-right: 50px;
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 10px;
   border-radius: 1em;
 }

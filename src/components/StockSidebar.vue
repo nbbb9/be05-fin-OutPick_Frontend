@@ -115,7 +115,7 @@ li {
   padding: 13px;
   margin-left: 5px;
   margin-right: 50px;
-  margin-bottom: 20px;
+  margin-top: 20px;
   border-radius: 1em;
   cursor: pointer;
 }
