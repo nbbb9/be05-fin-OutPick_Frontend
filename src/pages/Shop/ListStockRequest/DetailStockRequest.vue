@@ -62,7 +62,7 @@
         </div>
       </div>
       <div class="col-6 full-height">
-        <div class="empty-content full-height">
+        <div class="empty-content ">
           <canvas id="chart_1" width="200" height="250"></canvas>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default {
           labels: chart_data.value.year_list ,
           datasets: [
             {
-              label: '판매량',
+              label: '매장별 상품 연간 판매량',
               borderWidth: 3,
               data: chart_data.value.quantity_list
             }
