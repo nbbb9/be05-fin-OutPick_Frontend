@@ -61,7 +61,7 @@
         <!-- 매장 재고 조회 -->
         <div class="m-1 shop-stock">
           <h5 class="mt-1 stock-header">재고</h5>
-          <div class="table-container">
+          <div class="table-container" style="overflow-y: auto;">
             <table class="table stock-table">
               <thead>
               <tr>
