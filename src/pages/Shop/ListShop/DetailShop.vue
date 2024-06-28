@@ -397,7 +397,8 @@ div {
 .shop-stock {
   max-height: 75vh;
   width: 35%; /* 전체 영역의 35%를 차지 */
-  overflow-y: hidden; /* 내부 요소 스크롤을 위해 숨김 */
+  overflow-y: hidden; 
+  /* 내부 요소 스크롤을 위해 숨김 */
   vertical-align: middle;
   box-shadow: 0 6px 7px rgba(79, 79, 79, 0.2);
   margin-bottom: 1rem; /* 하단 여백 추가 */
@@ -407,7 +408,7 @@ div {
 
 .table-container {
   max-height: 50vh;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
 
 .stock-header {
