@@ -194,6 +194,8 @@
           console.log(product.value);
           console.log(name);
           console.log("이것도 실행완료!");
+          size_select.value = '기본';
+          color_select.value = '기본';
           get_sel_list();
         } 
       };
@@ -296,6 +298,8 @@
         }
 
         event.target.value = "";
+        // color_select.value = '기본';
+        // size_select.value = '기본';
       }
 
       const colorSelect = (event) => {
@@ -333,6 +337,8 @@
           }
         }
         event.target.value = "";
+        color_select.value = '기본';
+        size_select.value = '기본';
       }
 
 
