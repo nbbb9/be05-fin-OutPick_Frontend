@@ -17,8 +17,8 @@
             <div class="col-4">
               <select v-model="filterSelect" class="form-select" >
                 <option value="" disabled selected hidden>관리자 결재 여부</option>
-                <option value="y">Y</option>
-                <option value="n">N</option>
+                <option value="y">승인</option>
+                <option value="n">미승인</option>
               </select>
             </div>
             <div class="col-4 pl-2">
