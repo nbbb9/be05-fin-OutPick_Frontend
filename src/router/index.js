@@ -168,15 +168,15 @@ const router = createRouter({
     ]
 });
 
-router.beforeEach((to, from, next) => {
-    const store = useStore();
+// router.beforeEach((to, from, next) => {
+//     const store = useStore();
   
-    // loginToken이 없고, 이동하려는 페이지가 Login 페이지가 아닌 경우 Login 페이지로 리디렉션
-    if (store.state.loginToken.length < 1 && to.name !== 'Login' && to.name !== 'StoreLogin') {
-      next({ name: 'Login' });
-    } else {
-      next();
-    }
-  });
+//     // loginToken이 없고, 이동하려는 페이지가 Login 페이지가 아닌 경우 Login 페이지로 리디렉션
+//     if (store.state.loginToken.length < 1 && to.name !== 'Login' && to.name !== 'StoreLogin') {
+//       next({ name: 'Login' });
+//     } else {
+//       next();
+//     }
+//   });
 
 export default router;
